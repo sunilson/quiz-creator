@@ -10,8 +10,8 @@ import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.RelativeLayout
 import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.presentation.util.clamp
-import com.sunilson.quizcreator.presentation.util.convertToPx
+import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.clamp
+import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
 
 
 class StackedCardsView : RelativeLayout {
@@ -195,7 +195,7 @@ class StackedCardsView : RelativeLayout {
             }
             animation.duration = orderAnimationDuration.toLong()
             animation.start()
-            child.translationZ = i * 10f
+            child.translationZ = i.toFloat()
         }
     }
 }

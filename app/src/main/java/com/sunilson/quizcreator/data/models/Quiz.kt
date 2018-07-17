@@ -1,3 +1,12 @@
 package com.sunilson.quizcreator.data.models
 
-data class Quiz(val id: String, val questions: List<Question>)
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+import java.util.*
+
+@Entity(tableName = "quiz")
+class Quiz(
+        @PrimaryKey
+        var id: String = UUID.randomUUID().toString(),
+        var questions: MutableList<Question> = mutableListOf(),
+        var correctAnswers: Int = 0)

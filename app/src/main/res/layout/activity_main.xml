@@ -1,39 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".presentation.HomePage.MainActivity">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
-        <com.sunilson.quizcreator.presentation.views.StackedCardsView.StackedCardsView
-            android:id="@+id/stackedCardView"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginTop="50dp"
-            app:orderAnimationDuration="500"
-            android:padding="15dp"
-            android:clipToPadding="false"
-            app:popAnimationType="TRANSLATE_RIGHT"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:theme="@style/ToolBarStyle"
             />
+    </android.support.design.widget.AppBarLayout>
 
-        <Button
-            android:id="@+id/addButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add" />
-
-        <Button
-            android:id="@+id/removeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Remove" />
-
-    </LinearLayout>
-</ScrollView>
+    <FrameLayout
+        android:id="@+id/main_activity_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
+</android.support.design.widget.CoordinatorLayout>
