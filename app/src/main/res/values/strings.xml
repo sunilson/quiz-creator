@@ -20,4 +20,6 @@
     <string name="category_add_success">Successfully added category!</string>
     <string name="duplicate_category_error">Duplicate category!</string>
     <string name="question_no_correct_answer_error">Question must contain a correct answer!</string>
+    <string name="generate_quiz">Generate Quiz</string>
+    <string name="select_category">Select category</string>
 </resources>

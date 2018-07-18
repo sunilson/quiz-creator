@@ -6,15 +6,21 @@ import android.databinding.InverseBindingListener
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
+import android.transition.Fade
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.LinearLayout
 import android.widget.Spinner
 import com.sunilson.quizcreator.data.models.Category
+import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.Quiz
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseRecyclerAdapter
 import com.sunilson.quizcreator.presentation.shared.CategorySpinnerAdapter
 import com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput
-import jp.wasabeef.recyclerview.adapters.AnimationAdapter
+import com.sunilson.quizcreator.presentation.views.QuizView.AnswerView
+import com.sunilson.quizcreator.presentation.views.QuizView.QuizView
 import kotlinx.android.synthetic.main.voice_edittext.view.*
 
 @BindingAdapter("categories")
@@ -38,8 +44,7 @@ fun Spinner.itemSelectedCallback(callback: ItemSelectedListener) {
 @BindingAdapter("entries")
 fun RecyclerView.setEntries(entries: List<AdapterElement>?) {
     if (entries != null) {
-        val scaleAdapter = this.adapter as AnimationAdapter
-        val adapter = scaleAdapter.wrappedAdapter as BaseRecyclerAdapter<AdapterElement>
+        val adapter = this.adapter as BaseRecyclerAdapter<AdapterElement>
         adapter.addAll(entries)
     }
 }
@@ -65,6 +70,49 @@ fun setTextValue(editTextWithVoiceInput: EditTextWithVoiceInput, value: String?)
 @InverseBindingAdapter(attribute = "editTextValue")
 fun getTextValue(editTextWithVoiceInput: EditTextWithVoiceInput): String? {
     return editTextWithVoiceInput.voice_edittext.text.toString()
+}
+
+@BindingAdapter("showHideWithTransition")
+fun View.showHideWithTransition(show: Boolean) {
+    android.transition.TransitionManager.beginDelayedTransition(this.parent as ViewGroup, Fade())
+    if (show) this.visibility = View.VISIBLE
+    else this.visibility = View.INVISIBLE
+}
+
+@BindingAdapter("quiz")
+fun QuizView.setQuiz(quiz: Quiz?) {
+    quiz?.let {
+        this.quiz = it
+    }
+}
+
+/*
+
+@BindingAdapter("answers", "answerClickedCallback", requireAll = true)
+fun LinearLayout.setAnswers(answers: List<Answer>, callback: ItemSelectedListener) {
+    answers.forEach { answer ->
+        val textView = TextView(context)
+        textView.text = answer.text
+        textView.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+        textView.setOnClickListener { callback.itemSelected(answer) }
+        this.addView(textView)
+    }
+}
+*/
+
+@BindingAdapter("answers", "answerClickedCallback", requireAll = false)
+fun LinearLayout.setAnswers(question: Question?, callback: ItemSelectedListener) {
+    question?.answers?.forEach { answer ->
+        val answerView = AnswerView(context, answer)
+        answerView.setOnClickListener {
+                for (i in 0 until childCount) {
+                    val child = getChildAt(i) as AnswerView
+                    child.showAnswerResult(child.answer?.id == question.correctAnswerId)
+                }
+            callback.itemSelected(answer)
+        }
+        this.addView(answerView)
+    }
 }
 
 interface ItemSelectedListener {

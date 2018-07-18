@@ -34,10 +34,8 @@ class StackedCardsView : RelativeLayout {
     private var halfHeight: Int = 0
     private var childSpacing: Int = 0
     private var firstMargin: Int = 0
-
     private var currentPopAnimation: Animation? = null
     private var currentPopTarget: View? = null
-
     private var currentAddAnimation: Animation? = null
     private var currentAddTarget: CardView? = null
 
@@ -63,7 +61,12 @@ class StackedCardsView : RelativeLayout {
         maxContentheight = availableHeight - topAndBottomSpacing
     }
 
-    fun addCardBehind() {
+    fun addListOfCards(list: List<View>) {
+        removeAllViews()
+        list.forEach { addCardBehind(it) }
+    }
+
+    fun addCardBehind(view: View) {
         currentAddTarget = CardView(context)
         currentAddTarget!!.useCompatPadding = true
         currentAddTarget!!.cardElevation = 15f
@@ -98,7 +101,9 @@ class StackedCardsView : RelativeLayout {
             }
         }
 
+        currentAddTarget!!.addView(view)
         addView(currentAddTarget, 0)
+
         if (currentAddAnimation != null) {
             currentAddAnimation!!.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(p0: Animation?) {}

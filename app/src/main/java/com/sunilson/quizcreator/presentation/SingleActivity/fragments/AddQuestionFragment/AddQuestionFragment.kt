@@ -39,6 +39,7 @@ class AddQuestionFragment : BaseFragment() {
             addAnswerEditText(view)
         }
 
+        //Add answer button
         view.form_add_answer.setOnClickListener {
             if (view.form_answer_container.childCount < 8) {
                 addAnswerEditText(view, true)
@@ -49,6 +50,7 @@ class AddQuestionFragment : BaseFragment() {
 
         view.form_category_spinner.adapter = categorySpinnerAdapter
 
+        //Add Category Button
         view.form_add_category.setOnClickListener {
             val dialog = SimpleInputDialog.newInstance(getString(R.string.category_name))
             dialog.listener = object : DialogListener<String> {
@@ -65,7 +67,9 @@ class AddQuestionFragment : BaseFragment() {
             dialog.show(fragmentManager, "dialog")
         }
 
+        //Save and Exit Button
         view.form_save_and_exit.setOnClickListener {
+            viewModel.creationQuestion.answers.clear()
 
             for (i in 0 until view.form_answer_container.childCount) {
                 val answerEditText = view.form_answer_container.getChildAt(i) as EditTextWithVoiceInput

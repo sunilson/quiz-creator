@@ -5,6 +5,7 @@ import android.view.*
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.presentation.SingleActivity.fragments.AddQuestionFragment.AddQuestionFragment
 import com.sunilson.quizcreator.presentation.SingleActivity.fragments.AllQuestionsFragment.AllQuestionsFragment
+import com.sunilson.quizcreator.presentation.SingleActivity.fragments.QuizFragment.QuizFragment
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : BaseFragment() {
@@ -14,21 +15,15 @@ class HomeFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         view.add_questions_button.setOnClickListener {
-            mainActivity.replaceFragment(AddQuestionFragment.newInstance(),
-                    R.anim.slide_in_from_right,
-                    R.anim.slide_out_to_left,
-                    R.anim.slide_in_from_left,
-                    R.anim.slide_out_to_right
-            )
+            mainActivity.replaceFragment(AddQuestionFragment.newInstance())
         }
 
         view.view_questions_button.setOnClickListener {
-            mainActivity.replaceFragment(AllQuestionsFragment.newInstance(),
-                    R.anim.slide_in_from_right,
-                    R.anim.slide_out_to_left,
-                    R.anim.slide_in_from_left,
-                    R.anim.slide_out_to_right
-            )
+            mainActivity.replaceFragment(AllQuestionsFragment.newInstance())
+        }
+
+        view.start_quiz.setOnClickListener {
+            mainActivity.replaceFragment(QuizFragment.newInstance())
         }
 
         return view

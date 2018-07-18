@@ -51,10 +51,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, SpeechReco
     }
 
     fun replaceFragment(fragment: BaseFragment,
-                        @AnimRes enterAnimation: Int? = null,
-                        @AnimRes exitAnimation: Int? = null,
-                        @AnimRes reenterAnimation: Int? = null,
-                        @AnimRes returnAnimation: Int? = null,
+                        @AnimRes enterAnimation: Int? = R.anim.slide_in_from_right,
+                        @AnimRes exitAnimation: Int? = R.anim.slide_out_to_left,
+                        @AnimRes reenterAnimation: Int? = R.anim.slide_in_from_left,
+                        @AnimRes returnAnimation: Int? = R.anim.slide_out_to_right,
                         addToBackStack: Boolean = true) {
         var transaction = supportFragmentManager.beginTransaction()
         if (enterAnimation != null && exitAnimation != null && reenterAnimation != null && returnAnimation != null) {
@@ -117,4 +117,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, SpeechReco
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
+
+    override fun onDestroy() {
+        super.onDestroy()
+        quizViewModel.onDestroy()
+    }
 }

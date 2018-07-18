@@ -7,12 +7,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.OvershootInterpolator
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.databinding.FragmentAllQuestionBinding
 import com.sunilson.quizcreator.presentation.SingleActivity.MainActivity
 import com.sunilson.quizcreator.presentation.SingleActivity.fragments.BaseFragment
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.android.synthetic.main.fragment_all_question.view.*
 import javax.inject.Inject
 
@@ -32,10 +30,7 @@ class AllQuestionsFragment : BaseFragment() {
 
         })
 
-        val adapter = ScaleInAnimationAdapter(questionsRecyclerAdapter)
-        adapter.setInterpolator(OvershootInterpolator())
-        adapter.setFirstOnly(true)
-        view.question_recyclerview.adapter = adapter
+        view.question_recyclerview.adapter = questionsRecyclerAdapter
         view.question_recyclerview.layoutManager = LinearLayoutManager(context)
 
         return view

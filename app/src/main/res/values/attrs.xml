@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="StackedCardsView">
-        <attr name="maxChildSpacing" format="integer"/>
-        <attr name="orderAnimationDuration" format="integer"/>
-        <attr name="popAnimationDuration" format="integer"/>
-        <attr name="addAnimationDuration" format="integer"/>
-        <attr name="maxChildHeight" format="integer"/>
-        <attr name="topAndBottomSpacing" format="integer"/>
+        <attr name="maxChildSpacing" format="integer" />
+        <attr name="orderAnimationDuration" format="integer" />
+        <attr name="popAnimationDuration" format="integer" />
+        <attr name="addAnimationDuration" format="integer" />
+        <attr name="maxChildHeight" format="integer" />
+        <attr name="topAndBottomSpacing" format="integer" />
         <attr name="popAnimationType" format="enum">
             <enum name="NONE" value="0" />
             <enum name="TRANSLATE_DOWN" value="1" />
@@ -23,6 +23,6 @@
         </attr>
     </declare-styleable>
     <declare-styleable name="EditTextWithVoiceInput">
-        <attr name="optional" format="boolean"/>
+        <attr name="optional" format="boolean" />
     </declare-styleable>
 </resources>

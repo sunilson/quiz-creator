@@ -22,9 +22,6 @@ abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Co
     fun addAll(elements: List<T>){
         this.data.clear()
         this.data.addAll(elements)
-        this.data.forEachIndexed { index, t ->
-            notifyItemInserted(index)
-        }
         notifyDataSetChanged()
     }
 

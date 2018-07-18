@@ -13,30 +13,34 @@ import com.sunilson.quizcreator.presentation.Application.di.ActivityScope
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseViewModel
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 @ActivityScope
 class QuizViewModel @Inject constructor(val application: Application, val repository: IQuizRepository) : BaseViewModel() {
 
+    init {
+        //currentQuiz.addOnPropertyChangedCallback(object : )
+    }
+
     /******** FETCHING *******/
 
-
-    val currentQuiz: ObservableField<Quiz> = ObservableField()
+    val currentQuiz: ObservableField<Quiz?> = ObservableField()
     val categories: ObservableList<Category> = ObservableArrayList<Category>()
     val questions: ObservableList<Question> = ObservableArrayList<Question>()
 
     fun loadCategories() {
-        repository.loadCategories().subscribe {
+        disposable.add(repository.loadCategories().subscribe {
             categories.clear()
             categories.addAll(it)
-        }
+        })
     }
 
     fun loadQuestions() {
-        repository.loadQuestions().subscribe {
+        disposable.add(repository.loadQuestions().subscribe {
             questions.clear()
             questions.addAll(it)
-        }
+        })
     }
 
     fun queryQuestions(): Flowable<List<Question>> {
@@ -52,8 +56,11 @@ class QuizViewModel @Inject constructor(val application: Application, val reposi
         return repository.addQuestion(creationQuestion).doOnError { errorMessage.set(it.message) }
     }
 
-    fun generateQuiz(): Completable {
-        return Completable.complete()
+    fun generateQuiz() {
+        loading.set(true)
+        disposable.add(repository.generateQuiz(selectedCategory?.id).doFinally { loading.set(false) }.subscribe(
+                { currentQuiz.set(it) },
+                { errorMessage.set(it.message) }))
     }
 
     fun addCategory(name: String): Completable {
@@ -64,10 +71,15 @@ class QuizViewModel @Inject constructor(val application: Application, val reposi
     /******** UTILITY *******/
 
     var selectedCategory: Category? = null
+    val disposable: CompositeDisposable = CompositeDisposable()
 
     fun selectCategory(category: Category) {
         selectedCategory = category
         creationQuestion.categoryId = category.id
+    }
+
+    fun unselectCategory(value: Boolean) {
+        if (!value) selectedCategory = null
     }
 
     fun startQuestionCreation() {
@@ -78,7 +90,12 @@ class QuizViewModel @Inject constructor(val application: Application, val reposi
         errorMessage.set("")
         loading.set(false)
         working.set(false)
+        currentQuiz.set(null)
         selectedCategory = null
         creationQuestion = Question()
+    }
+
+    fun onDestroy() {
+        disposable.dispose()
     }
 }
