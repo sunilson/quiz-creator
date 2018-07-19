@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.sunilson.quizcreator.data.models.Category
-import com.sunilson.quizcreator.presentation.Application.di.FragmentScope
+import com.sunilson.quizcreator.Application.di.FragmentScope
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseSpinnerArrayAdapter
 import javax.inject.Inject
 

@@ -6,27 +6,41 @@
 
         <variable
             name="viewModel"
-            type="com.sunilson.quizcreator.presentation.SingleActivity.QuizViewModel" />
+            type="com.sunilson.quizcreator.presentation.MainActivity.fragments.AllQuestionsFragment.AllQuestionsViewModel" />
 
         <import type="android.view.View" />
 
         <import type="com.sunilson.quizcreator.data.models.Category" />
     </data>
 
-
-    <android.support.constraint.ConstraintLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/question_recyclerview"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:entries="@{viewModel.questions}"
-            />
-    </android.support.constraint.ConstraintLayout>
+            android:animateLayoutChanges="true">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/question_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:entries="@{viewModel.questions}"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:tint="#FFF"
+            android:layout_margin="20dp"
+            android:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_add_black_24dp" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </layout>

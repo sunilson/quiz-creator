@@ -22,4 +22,5 @@
     <string name="question_no_correct_answer_error">Question must contain a correct answer!</string>
     <string name="generate_quiz">Generate Quiz</string>
     <string name="select_category">Select category</string>
+    <string name="question_number">Question %1$d</string>
 </resources>

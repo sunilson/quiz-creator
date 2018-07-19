@@ -7,7 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.presentation.SingleActivity.SpeechRecognizingActivity
+import com.sunilson.quizcreator.presentation.MainActivity.SpeechRecognizingActivity
 import kotlinx.android.synthetic.main.voice_edittext.view.*
 
 

@@ -38,63 +38,63 @@ class QuizRepository @Inject constructor(private val application: Application, p
     override fun generateQuiz(categoryId: String?): Single<Quiz> {
         return Single.just(Quiz(
                 questions = mutableListOf(
-                        Question(text = "Frage 1", answers = mutableListOf(
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
                                 Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 2", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
                                 Answer(text = "Antwort"),
                                 Answer(text = "Antwort")
                         )),
-                        Question(text = "Frage 3", answers = mutableListOf(
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
                                 Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 4", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
                                 Answer(text = "Antwort"),
                                 Answer(text = "Antwort")
                         )),
-                        Question(text = "Frage 4", answers = mutableListOf(
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
                                 Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 4", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
                                 Answer(text = "Antwort"),
                                 Answer(text = "Antwort")
                         )),
-                        Question(text = "Frage 4", answers = mutableListOf(
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
                                 Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 4", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
                                 Answer(text = "Antwort"),
                                 Answer(text = "Antwort")
                         )),
-                        Question(text = "Frage 4", answers = mutableListOf(
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
                                 Answer(text = "Antwort"),
-                                Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
                                 Answer(text = "Antwort"),
                                 Answer(text = "Antwort")
                         )),
-                        Question(text = "Frage 5", answers = mutableListOf(
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
                                 Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
                                 Answer(text = "Antwort"),
+                                Answer(text = "Antwort")
+                        )),
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
+                                Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
+                                Answer(text = "Antwort"),
+                                Answer(text = "Antwort")
+                        )),
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
+                                Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
+                                Answer(text = "Antwort"),
+                                Answer(text = "Antwort")
+                        )),
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
+                                Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
+                                Answer(text = "Antwort"),
+                                Answer(text = "Antwort")
+                        )),
+                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
+                                Answer(text = "Antwort"),
+                                Answer(id= "bla", text = "Antwort"),
                                 Answer(text = "Antwort"),
                                 Answer(text = "Antwort")
                         ))

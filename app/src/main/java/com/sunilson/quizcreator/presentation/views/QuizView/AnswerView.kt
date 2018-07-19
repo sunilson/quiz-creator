@@ -4,12 +4,12 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Answer
 import kotlinx.android.synthetic.main.quiz_question_answer.view.*
 
-class AnswerView : LinearLayout {
+class AnswerView : FrameLayout {
 
     var answer: Answer? = null
         set(value) {

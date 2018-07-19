@@ -12,6 +12,14 @@ fun Int.convertToDp(context: Context) : Int {
     return (this / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).toInt()
 }
 
+fun Float.convertToPx(context: Context) : Float {
+    return (this * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT))
+}
+
+fun Float.convertToDp(context: Context) : Float {
+    return (this / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT))
+}
+
 fun Int.clamp(min: Int, max: Int) : Int {
     return Math.max(min, Math.min(this, max))
 }
