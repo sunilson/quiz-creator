@@ -23,4 +23,8 @@
     <string name="generate_quiz">Generate Quiz</string>
     <string name="select_category">Select category</string>
     <string name="question_number">Question %1$d</string>
+    <string name="save">Save</string>
+    <string name="add_answer_here">Add answer here</string>
+    <string name="delete">Delete</string>
+    <string name="question_not_found">Question was not found!</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.sunilson. quizcreator.presentation.views.QuizView
+package com.sunilson.quizcreator.presentation.views.QuestionCardView
 
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.data.models.Question

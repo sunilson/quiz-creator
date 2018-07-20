@@ -23,6 +23,7 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             app:quiz="@{viewModel.currentQuiz}"
+            app:nextCardDelay="2000"
             app:showHideWithTransition="@{viewModel.currentQuiz != null}" />
 
         <android.support.constraint.ConstraintLayout

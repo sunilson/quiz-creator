@@ -9,4 +9,7 @@ class Quiz(
         @PrimaryKey
         var id: String = UUID.randomUUID().toString(),
         var questions: MutableList<Question> = mutableListOf(),
-        var correctAnswers: Int = 0)
+        var correctAnswers: Int = 0,
+        var duration: Long = 0,
+        var timestamp: Long = 0
+)

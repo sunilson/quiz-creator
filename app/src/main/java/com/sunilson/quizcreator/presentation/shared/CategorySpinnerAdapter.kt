@@ -3,14 +3,13 @@ package com.sunilson.quizcreator.presentation.shared
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import com.sunilson.quizcreator.Application.di.ActivityScope
 import com.sunilson.quizcreator.data.models.Category
-import com.sunilson.quizcreator.Application.di.FragmentScope
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseSpinnerArrayAdapter
 import javax.inject.Inject
 
-@FragmentScope
+@ActivityScope
 class CategorySpinnerAdapter @Inject constructor(context: Context) : BaseSpinnerArrayAdapter<Category>(context, android.R.layout.simple_list_item_1) {
-
 
     fun setCategories(cateogries: List<Category>) {
         data.clear()

@@ -11,8 +11,6 @@ import java.util.*
 class Answer(
         @PrimaryKey
         var id: String = UUID.randomUUID().toString(),
-        var questionID: String = "",
-        var categoryId: String = "",
         var text: String = "",
         var correctAnswer: Boolean = false
 )

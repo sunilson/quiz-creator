@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.sunilson.quizcreator.presentation.views.QuizView.QuestionCardViewModel" />
+            type="com.sunilson.quizcreator.presentation.views.QuestionCardView.QuestionCardViewModel" />
 
         <import type="android.view.View" />
 
@@ -15,35 +15,36 @@
 
     <merge
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/question_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:text='@{viewModel.question.text, default="Ist dies eine wirkliche Frage?"}'
-                android:textAlignment="center"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/question_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text='@{viewModel.question.text, default="Ist dies eine wirkliche Frage?"}'
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/question_answers"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:id="@+id/question_answers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="vertical"
-                app:answerClickedCallback="@{(item) -> viewModel.answerClicked((Answer) item)}"
-                app:answers="@{viewModel.question}"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/question_text" />
+        <LinearLayout
+            android:id="@+id/question_answers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            app:answerClickedCallback="@{(item) -> viewModel.answerClicked((Answer) item)}"
+            app:answers="@{viewModel.question}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/question_text" />
 
     </merge>
 </layout>

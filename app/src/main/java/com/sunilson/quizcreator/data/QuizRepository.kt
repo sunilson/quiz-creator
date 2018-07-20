@@ -2,7 +2,6 @@ package com.sunilson.quizcreator.data
 
 import android.app.Application
 import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.data.models.Category
 import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.data.models.Quiz
@@ -11,15 +10,19 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface IQuizRepository {
-    fun generateQuiz(categoryId: String? = null): Single<Quiz>
+    fun generateQuiz(categoryId: String? = null, shuffleAnswers: Boolean = false, questionAmount: Int = 10): Single<Quiz>
     fun addQuestion(question: Question): Completable
+    fun deleteQuestion(questionId: String): Completable
+    fun updateQuestion(question: Question): Completable
     fun addCategory(category: Category): Completable
     fun loadCategories(): Flowable<List<Category>>
     fun loadQuestions(categoryId: String? = null): Flowable<List<Question>>
+    fun loadQuestionsOnce(categoryId: String? = null): Single<List<Question>>
 }
 
 @Singleton
@@ -29,77 +32,48 @@ class QuizRepository @Inject constructor(private val application: Application, p
 
         validateQuestion(question)?.let { return it }
 
+        question.answers.forEach {
+            if (it.correctAnswer) question.correctAnswerId = it.id
+        }
+
         return Completable.create {
             database.quizDAO().addQuestion(question)
             it.onComplete()
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun generateQuiz(categoryId: String?): Single<Quiz> {
-        return Single.just(Quiz(
-                questions = mutableListOf(
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        )),
-                        Question(text = "Frage 1", correctAnswerId = "bla", answers = mutableListOf(
-                                Answer(text = "Antwort"),
-                                Answer(id= "bla", text = "Antwort"),
-                                Answer(text = "Antwort"),
-                                Answer(text = "Antwort")
-                        ))
-                )
-        ))
+    override fun deleteQuestion(questionId: String): Completable {
+        return Completable.create {
+            val affected = database.quizDAO().removeQuestion(questionId)
+            if (affected == 0) it.onError(IllegalArgumentException(application.getString(R.string.question_not_found)))
+            else it.onComplete()
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun updateQuestion(question: Question): Completable {
+        validateQuestion(question)?.let { return it }
+
+        return Completable.create {
+            database.quizDAO().updateQuestion(question)
+            it.onComplete()
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun generateQuiz(categoryId: String?, shuffleAnswers: Boolean, questionAmount: Int): Single<Quiz> {
+        return database.quizDAO().getAllQuestionsOnce().map { questions ->
+            val quiz = Quiz(
+                    questions = questions.map { question ->
+                        question.answers = question.answers.filterIndexed { index, answer ->
+                            index <= 3
+                        }.toMutableList()
+                        question
+                    }.toMutableList(),
+                    timestamp = Date().time
+            )
+
+            database.quizDAO().addQuiz(quiz)
+            return@map quiz
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadCategories(): Flowable<List<Category>> {
@@ -112,10 +86,14 @@ class QuizRepository @Inject constructor(private val application: Application, p
 
     override fun loadQuestions(categoryId: String?): Flowable<List<Question>> {
         return if (categoryId == null) {
-            database.quizDAO().getAllQuestions()
+            database.quizDAO().getAllQuestions().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         } else {
             Flowable.just(listOf())
         }
+    }
+
+    override fun loadQuestionsOnce(categoryId: String?): Single<List<Question>> {
+        return database.quizDAO().getAllQuestionsOnce().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun addCategory(category: Category): Completable {
@@ -146,6 +124,8 @@ class QuizRepository @Inject constructor(private val application: Application, p
         if (!question.answers.any { it.correctAnswer }) {
             return Completable.error(IllegalArgumentException(application.getString(R.string.question_no_correct_answer_error)))
         }
+
+        //TODO Check If Category exists!
 
         return null
     }

@@ -25,4 +25,7 @@
     <declare-styleable name="EditTextWithVoiceInput">
         <attr name="optional" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="QuizView">
+        <attr name="nextCardDelay" format="integer" />
+    </declare-styleable>
 </resources>

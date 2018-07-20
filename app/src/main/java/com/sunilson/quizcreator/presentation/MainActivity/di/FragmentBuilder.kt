@@ -3,7 +3,7 @@ package com.sunilson.quizcreator.presentation.MainActivity.di
 import com.sunilson.quizcreator.Application.di.FragmentScope
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.AllQuestionsFragment.AllQuestionsFragment
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.CreateQuizFragment.CreateQuizFragment
-import com.sunilson.quizcreator.presentation.MainActivity.fragments.HomeFragment
+import com.sunilson.quizcreator.presentation.MainActivity.fragments.StatisticsFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -12,7 +12,7 @@ abstract class FragmentBuilder {
 
     @ContributesAndroidInjector
     @FragmentScope
-    abstract fun contributeHomeFragment(): HomeFragment
+    abstract fun contributeHomeFragment(): StatisticsFragment
 
     @ContributesAndroidInjector
     @FragmentScope

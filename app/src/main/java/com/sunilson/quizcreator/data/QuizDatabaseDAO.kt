@@ -1,10 +1,6 @@
 package com.sunilson.quizcreator.data
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
-import android.arch.persistence.room.Update
-import com.sunilson.quizcreator.data.models.Answer
+import android.arch.persistence.room.*
 import com.sunilson.quizcreator.data.models.Category
 import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.data.models.Quiz
@@ -14,14 +10,14 @@ import io.reactivex.Single
 @Dao()
 interface QuizDatabaseDAO {
 
-    @Query("SELECT * FROM answer WHERE categoryId == :categoryId")
-    fun getAnswersForCategory(categoryId: String): Single<List<Answer>>
-
     @Query("SELECT * FROM question WHERE categoryId IN (:categoryIds)")
     fun getQuestionsForCategories(categoryIds: Array<String>): Flowable<List<Question>>
 
     @Query("SELECT * FROM question")
-    fun getAllQuestions() : Flowable<List<Question>>
+    fun getAllQuestions(): Flowable<List<Question>>
+
+    @Query("SELECT * FROM question")
+    fun getAllQuestionsOnce(): Single<List<Question>>
 
     @Query("SELECT * FROM category")
     fun getAllCategories(): Flowable<List<Category>>
@@ -32,22 +28,18 @@ interface QuizDatabaseDAO {
     @Query("SELECT * FROM quiz")
     fun getAllQuiz(): Flowable<List<Quiz>>
 
-    @Insert
-    fun addQuiz(question: Question)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addQuiz(quiz: Quiz)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addQuestion(question: Question)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addCategory(category: Category)
 
     @Update
     fun updateQuestion(question: Question)
 
     @Query("DELETE FROM question WHERE id == :id")
-    fun removeQuestion(id: String)
-
-    @Query("DELETE FROM answer WHERE id == :id")
-    fun removeAnswer(id: String)
-
+    fun removeQuestion(id: String) : Int
 }

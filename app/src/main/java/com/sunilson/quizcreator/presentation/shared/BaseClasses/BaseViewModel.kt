@@ -25,7 +25,7 @@ abstract class BaseViewModel(val repository: IQuizRepository)  {
         })
     }
 
-    fun selectCategory(category: Category) {
+    open fun selectCategory(category: Category) {
         selectedCategory = category
     }
 

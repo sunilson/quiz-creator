@@ -1,4 +1,4 @@
-package com.sunilson.quizcreator.presentation.views.QuizView
+package com.sunilson.quizcreator.presentation.views.QuestionCardView
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout
@@ -9,6 +9,7 @@ import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.databinding.QuizQuestionCardViewBinding
+import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
 
 class QuestionCardView : ConstraintLayout {
 
@@ -26,8 +27,7 @@ class QuestionCardView : ConstraintLayout {
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = QuizQuestionCardViewBinding.inflate(inflater, this, true)
-        val padding = resources.getDimension(R.dimen.card_padding).toInt()
-        setPadding(0, padding, 0, padding)
+        setPadding(10.convertToPx(context), 15.convertToPx(context), 2.convertToPx(context), 10.convertToPx(context))
         background = ContextCompat.getDrawable(context, R.drawable.stacked_card_view_background)
     }
 

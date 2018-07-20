@@ -1,12 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/answer_text"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?selectableItemBackground"
-    android:padding="15dp"
-    android:textSize="16sp"
-    tools:text="Dies ist eine Antwort!" />
+
+<layout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.sunilson.quizcreator.presentation.views.AnswerView.AnswerViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <!-- android:visibility="@{viewModel.answered ? View.VISIBLE : View.GONE}" -->
+
+    <merge xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <ImageView
+            android:id="@+id/answer_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:correct="@{viewModel.correct}"
+            app:layout_constraintBottom_toBottomOf="@id/answer_text"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/answer_text"
+            app:layout_constraintTop_toTopOf="@id/answer_text" />
+
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/answer_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:padding="15dp"
+            android:text="@{viewModel.answer.text}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/answer_divider"
+            app:layout_constraintLeft_toRightOf="@id/answer_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dies ist eine Antwort!" />
+
+        <View
+            android:id="@+id/answer_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ededed"
+            android:visibility="@{viewModel.showDivider ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/answer_text" />
+    </merge>
+
+</layout>
+
+
 

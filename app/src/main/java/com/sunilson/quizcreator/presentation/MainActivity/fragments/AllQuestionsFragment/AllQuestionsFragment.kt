@@ -12,6 +12,8 @@ import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.databinding.FragmentAllQuestionBinding
 import com.sunilson.quizcreator.presentation.AddQuestionActivity.AddQuestionActivity
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
+import com.sunilson.quizcreator.presentation.shared.ADD_QUESTIONS_INTENT
+import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
 import kotlinx.android.synthetic.main.fragment_all_question.view.*
 import javax.inject.Inject
 
@@ -31,18 +33,40 @@ class AllQuestionsFragment : BaseFragment() {
         binding.viewModel = allQuestionsViewModel
         val view = binding.root
 
-        questionsRecyclerAdapter = questionsRecyclerAdapterFactory.create(View.OnClickListener {
-
-        })
+        questionsRecyclerAdapter = questionsRecyclerAdapterFactory.create({
+            disposable.add(allQuestionsViewModel.deleteQuestion(it).subscribe({
+                questionsRecyclerAdapter.remove(it)
+            }, {
+                context?.showToast(it.message)
+            }))
+        }, {
+            disposable.add(allQuestionsViewModel.updateQuestion(it).subscribe({
+                questionsRecyclerAdapter.update(it)
+            }, {
+                context?.showToast(it.message)
+            }))
+        }, recyclerView = view.question_recyclerview)
 
         view.question_recyclerview.adapter = questionsRecyclerAdapter
+        view.question_recyclerview.isNestedScrollingEnabled = true
+        view.question_recyclerview.setHasFixedSize(true)
         view.question_recyclerview.layoutManager = LinearLayoutManager(context)
 
         view.fab.setOnClickListener {
-            startActivity(Intent(context, AddQuestionActivity::class.java))
+            startActivityForResult(Intent(context, AddQuestionActivity::class.java), ADD_QUESTIONS_INTENT)
         }
 
         return view
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            ADD_QUESTIONS_INTENT -> {
+                allQuestionsViewModel.loadQuestions()
+            }
+        }
     }
 
     override fun onAttach(context: Context?) {

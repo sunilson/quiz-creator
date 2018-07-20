@@ -5,7 +5,7 @@ import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
 import com.android.databinding.library.baseAdapters.BR
 
-abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Context) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.ViewHolder>() {
+abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Context, protected  val recyclerView: RecyclerView) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.ViewHolder>() {
 
     val data: MutableList<T> = mutableListOf()
 
@@ -19,7 +19,7 @@ abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Co
         notifyItemInserted(data.indexOf(element))
     }
 
-    fun addAll(elements: List<T>){
+    open fun addAll(elements: List<T>){
         this.data.clear()
         this.data.addAll(elements)
         notifyDataSetChanged()
@@ -37,11 +37,11 @@ abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Co
 
     open fun update(element: AdapterElement) {
         val iterator = data.listIterator()
-        for ((_, value) in iterator.withIndex()) {
+        for ((i, value) in iterator.withIndex()) {
             if (value.compareByString == element.compareByString) {
                 iterator.set(element as T)
-                //notifyItemChanged(index)
-                notifyDataSetChanged()
+                notifyItemChanged(i)
+                //notifyDataSetChanged()
             }
         }
     }

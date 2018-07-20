@@ -3,6 +3,7 @@ package com.sunilson.quizcreator.presentation.views.StackedCardsView
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewPropertyAnimator
@@ -13,7 +14,7 @@ import android.widget.RelativeLayout
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.clamp
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
-import com.sunilson.quizcreator.presentation.views.QuizView.QuestionCardView
+import com.sunilson.quizcreator.presentation.views.QuestionCardView.QuestionCardView
 
 
 class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -46,7 +47,7 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
         topAndBottomSpacing = a.getInt(R.styleable.StackedCardsView_topAndBottomSpacing, 50)
         maxChildHeight = a.getInt(R.styleable.StackedCardsView_maxChildHeight, 400.convertToPx(context))
         maxChildSpacing = a.getInt(R.styleable.StackedCardsView_topAndBottomSpacing, 50.convertToPx(context))
-        orderAnimationDuration = a.getInt(R.styleable.StackedCardsView_orderAnimationDuration, 1000)
+        orderAnimationDuration = a.getInt(R.styleable.StackedCardsView_orderAnimationDuration, 500)
         addAnimationDuration = a.getInt(R.styleable.StackedCardsView_addAnimationDuration, 500)
         popAnimationDuration = a.getInt(R.styleable.StackedCardsView_popAnimationDuration, 500)
         popAnimationType = StackAnimationTypes.values()[a.getInt(R.styleable.StackedCardsView_popAnimationType, 1)]
@@ -70,8 +71,10 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
         list.forEach {
             addView(setupView(it), 0)
         }
-        calculateChildMargin()
-        reorder()
+        Handler().postDelayed({
+            calculateChildMargin()
+            reorder()
+        }, 500)
     }
 
     fun addCardBehind(view: View) {
