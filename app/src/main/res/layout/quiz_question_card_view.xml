@@ -24,7 +24,7 @@
             android:ellipsize="end"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text='@{viewModel.question.text, default="Ist dies eine wirkliche Frage?"}'
+            android:text='@{viewModel.question.text}'
             android:textAlignment="center"
             android:textSize="20sp"
             android:textStyle="bold"

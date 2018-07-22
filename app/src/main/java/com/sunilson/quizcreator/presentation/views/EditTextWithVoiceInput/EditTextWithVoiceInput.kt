@@ -55,7 +55,7 @@ class EditTextWithVoiceInput : ConstraintLayout {
         if (optional) delete_button.visibility = View.VISIBLE
 
         background = ContextCompat.getDrawable(context, R.drawable.stacked_card_view_background)
-        setPadding(20.convertToPx(context), 15.convertToPx(context), 20.convertToPx(context), 15.convertToPx(context))
+        setPadding(20.convertToPx(context), 15.convertToPx(context), 0, 15.convertToPx(context))
 
         val layoutParams = LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
         layoutParams.height = resources.getDimensionPixelSize(R.dimen.voice_edittext_height)

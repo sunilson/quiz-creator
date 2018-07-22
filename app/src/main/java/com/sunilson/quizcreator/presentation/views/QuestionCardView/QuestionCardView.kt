@@ -33,8 +33,13 @@ class QuestionCardView : ConstraintLayout {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if(question != null && answerClicked != null) {
-            binding.viewModel = QuestionCardViewModel(question!!, answerClicked!!)
+        if (question != null && answerClicked != null) {
+            binding.viewModel = QuestionCardViewModel(question!!) {
+                if (!it.correctAnswer) {
+                    this.startAnimation(android.view.animation.AnimationUtils.loadAnimation(context, R.anim.error_card_animation))
+                }
+                answerClicked?.invoke(it)
+            }
         }
     }
 }

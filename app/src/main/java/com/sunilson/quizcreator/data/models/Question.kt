@@ -17,8 +17,9 @@ class Question(
         var text: String = "",
         var categoryId: String = "",
         var answers: MutableList<Answer> = mutableListOf(),
-        var correctAnswerId: String = ""
-        ) : BaseObservable(), AdapterElement {
+        var correctAnswerId: String = "",
+        @Ignore var categoryName: String = ""
+) : BaseObservable(), AdapterElement {
 
     @Ignore
     override val compareByString: String = id

@@ -17,7 +17,9 @@ import com.sunilson.quizcreator.Application.di.FragmentScope
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseRecyclerAdapter
+import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.getAnswers
+import com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
 import kotlinx.android.synthetic.main.all_questions_list_item.view.*
 import javax.inject.Inject
 
@@ -38,14 +40,19 @@ class QuestionsRecyclerAdapter(
 
         val holder = ViewHolder(binding)
 
-        binding.root.question_list_item_text.setOnClickListener {
+        binding.root.question_list_item_top_bar.setOnClickListener {
             //binding.root.question_list_item_answers.setInitialAnswers(data[holder.adapterPosition].answers)
             val originalQuestion = data[holder.adapterPosition]
+            originalQuestion.answers.forEachIndexed { index, answer ->
+                val answerView = EditTextWithVoiceInput(context, index > 3, answer)
+                binding.root.question_list_item_answers.addView(answerView)
+            }
             slideToggle(
                     binding.root.question_list_item_content,
                     holder.adapterPosition,
                     binding.root.question_list_item_content.visibility == View.GONE,
-                    answerCount = originalQuestion.answers.size
+                    answerCount = originalQuestion.answers.size,
+                    endCallback = {}
             )
         }
 
@@ -75,10 +82,13 @@ class QuestionsRecyclerAdapter(
         val height =
                 if (!collapsed) 0
                 else context.resources.getDimensionPixelSize(R.dimen.big_button_height) +
+                        30.convertToPx(context) +
                         context.resources.getDimensionPixelSize(R.dimen.big_button_height_top_margin) +
                         answerCount *
                         (context.resources.getDimensionPixelSize(R.dimen.voice_edittext_height) +
                                 2 * context.resources.getDimensionPixelSize(R.dimen.voice_edittext_margin))
+
+        if (height == 0) view.question_list_item_answers.removeAllViews()
 
         if (animation) {
             val slideAnimator = ValueAnimator.ofInt(view.height, height).setDuration(200)
@@ -95,9 +105,9 @@ class QuestionsRecyclerAdapter(
                     if (height != 0) {
                         view.visibility = View.VISIBLE
                     } else {
-                        recyclerView.smoothScrollToPosition(position)
                         view.visibility = View.GONE
                     }
+                    recyclerView.smoothScrollToPosition(position)
                     endCallback?.invoke()
                 }
             })

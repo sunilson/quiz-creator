@@ -7,13 +7,6 @@
         <attr name="addAnimationDuration" format="integer" />
         <attr name="maxChildHeight" format="integer" />
         <attr name="topAndBottomSpacing" format="integer" />
-        <attr name="popAnimationType" format="enum">
-            <enum name="NONE" value="0" />
-            <enum name="TRANSLATE_DOWN" value="1" />
-            <enum name="TRANSLATE_UP" value="2" />
-            <enum name="TRANSLATE_LEFT" value="3" />
-            <enum name="TRANSLATE_RIGHT" value="4" />
-        </attr>
         <attr name="addAnimationType" format="enum">
             <enum name="NONE" value="0" />
             <enum name="TRANSLATE_DOWN" value="1" />

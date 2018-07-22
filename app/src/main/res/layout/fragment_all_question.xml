@@ -19,16 +19,24 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:animateLayoutChanges="true">
+            android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/question_recyclerview"
+            <android.support.v4.widget.SwipeRefreshLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:entries="@{viewModel.questions}"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:refreshing="@{viewModel.loading}"
+                app:onRefreshListener="@{() -> viewModel.loadQuestions()}"
+                >
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/question_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusableInTouchMode="true"
+                    app:entries="@{viewModel.questions}" />
+            </android.support.v4.widget.SwipeRefreshLayout>
         </android.support.constraint.ConstraintLayout>
 
         <android.support.design.widget.FloatingActionButton
@@ -36,9 +44,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:tint="#FFF"
             android:layout_margin="20dp"
             android:backgroundTint="@color/colorPrimary"
+            android:tint="#FFF"
             app:srcCompat="@drawable/ic_add_black_24dp" />
 
     </android.support.design.widget.CoordinatorLayout>

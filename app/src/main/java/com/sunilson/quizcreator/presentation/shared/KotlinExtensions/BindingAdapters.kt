@@ -14,6 +14,9 @@ import android.transition.Fade
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -80,17 +83,33 @@ fun getTextValue(editTextWithVoiceInput: EditTextWithVoiceInput): String? {
     return editTextWithVoiceInput.voice_edittext.text.toString()
 }
 
+
 @BindingAdapter("showHideWithTransition")
-fun View.showHideWithTransition(show: Boolean) {
-    android.transition.TransitionManager.beginDelayedTransition(this.parent as ViewGroup, Fade())
-    if (show) this.visibility = View.VISIBLE
-    else this.visibility = View.INVISIBLE
+fun View.showHideWithTransition(show: Boolean?) {
+    show?.let {
+        val start = if (it) 0f else 1f
+        val end = if (it) 1f else 0f
+        val animation = AlphaAnimation(start, end)
+        animation.duration = 1000
+        animation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(p0: Animation?) {}
+            override fun onAnimationEnd(p0: Animation?) {
+                if (it) this@showHideWithTransition.visibility = View.VISIBLE
+                else this@showHideWithTransition.visibility = View.INVISIBLE
+            }
+
+            override fun onAnimationStart(p0: Animation?) {}
+        })
+        this.startAnimation(animation)
+    }
 }
 
 @BindingAdapter("quiz")
 fun QuizView.setQuiz(quiz: Quiz?) {
     quiz?.let {
-        this.quiz = it
+        android.os.Handler().postDelayed({
+            this.quiz = it
+        }, 1000)
     }
 }
 
@@ -156,23 +175,28 @@ fun View.deleteParent(value: Boolean?) {
 @BindingAdapter("initialEditTextAnswers")
 fun LinearLayout.setInitialAnswers(answers: List<Answer>) {
     val parent = this.parent as View
-    parent.viewTreeObserver.addOnGlobalLayoutListener {
-        val vis = parent.visibility
-        if (this.tag == null || this.tag as Int != vis) {
-            this.tag = vis
-            if (vis == View.VISIBLE) {
-                if (this.childCount == 0) {
-                    TransitionManager.beginDelayedTransition(this.rootView as ViewGroup, Fade())
-                    answers.forEachIndexed { index, answer ->
-                        val answerView = EditTextWithVoiceInput(context, index > 3, answer)
-                        this.addView(answerView)
+    parent.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            val vis = parent.visibility
+            if (this@setInitialAnswers.tag == null || this@setInitialAnswers.tag as Int != vis) {
+                this@setInitialAnswers.tag = vis
+                if (vis == View.VISIBLE) {
+                    if (this@setInitialAnswers.childCount == 0) {
+                        TransitionManager.beginDelayedTransition(this@setInitialAnswers.rootView as ViewGroup, Fade())
+                        answers.forEachIndexed { index, answer ->
+                            val answerView = EditTextWithVoiceInput(context, index > 3, answer)
+                            this@setInitialAnswers.addView(answerView)
+                        }
+                    }
+                } else {
+                    if (this@setInitialAnswers.childCount != 0) {
+                        this@setInitialAnswers.removeAllViews()
+                        parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
                 }
-            } else {
-                this.removeAllViews()
             }
         }
-    }
+    })
 }
 
 

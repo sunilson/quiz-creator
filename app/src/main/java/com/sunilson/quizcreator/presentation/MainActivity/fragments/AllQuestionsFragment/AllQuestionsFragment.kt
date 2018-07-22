@@ -14,6 +14,7 @@ import com.sunilson.quizcreator.presentation.AddQuestionActivity.AddQuestionActi
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
 import com.sunilson.quizcreator.presentation.shared.ADD_QUESTIONS_INTENT
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
+import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator
 import kotlinx.android.synthetic.main.fragment_all_question.view.*
 import javax.inject.Inject
 
@@ -49,6 +50,11 @@ class AllQuestionsFragment : BaseFragment() {
 
         view.question_recyclerview.adapter = questionsRecyclerAdapter
         view.question_recyclerview.isNestedScrollingEnabled = true
+        view.question_recyclerview.itemAnimator = OvershootInLeftAnimator(1f)
+        view.question_recyclerview.itemAnimator!!.addDuration = 300
+        view.question_recyclerview.itemAnimator!!.removeDuration = 300
+        view.question_recyclerview.itemAnimator!!.moveDuration = 300
+        view.question_recyclerview.itemAnimator!!.changeDuration = 300
         view.question_recyclerview.setHasFixedSize(true)
         view.question_recyclerview.layoutManager = LinearLayoutManager(context)
 

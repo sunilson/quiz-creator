@@ -27,7 +27,6 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
     private val addAnimationDuration: Int
     private val popAnimationDuration: Int
     private val addAnimationType: StackAnimationTypes
-    private val popAnimationType: StackAnimationTypes
 
     //Private properties
     private var availableHeight: Int = 0
@@ -50,7 +49,6 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
         orderAnimationDuration = a.getInt(R.styleable.StackedCardsView_orderAnimationDuration, 500)
         addAnimationDuration = a.getInt(R.styleable.StackedCardsView_addAnimationDuration, 500)
         popAnimationDuration = a.getInt(R.styleable.StackedCardsView_popAnimationDuration, 500)
-        popAnimationType = StackAnimationTypes.values()[a.getInt(R.styleable.StackedCardsView_popAnimationType, 1)]
         addAnimationType = StackAnimationTypes.values()[a.getInt(R.styleable.StackedCardsView_addAnimationType, 0)]
         a.recycle()
     }
@@ -136,7 +134,7 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
         return view
     }
 
-    fun removeCard() {
+    fun removeCard(animationTypes: StackAnimationTypes) {
 
         if (childCount != 0) {
             if (currentPopAnimation != null && currentPopTarget != null && currentPopAnimation != null) {
@@ -147,7 +145,7 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
             currentPopTarget = getChildAt(this.childCount - 1)
             currentPopAnimation = currentPopTarget!!.animate()
 
-            when (popAnimationType) {
+            when (animationTypes) {
                 StackAnimationTypes.TRANSLATE_DOWN -> {
                     val animationDistance = height - (currentPopTarget?.layoutParams as RelativeLayout.LayoutParams).topMargin
                     currentPopAnimation = currentPopAnimation!!.translationY(animationDistance.toFloat())
@@ -157,12 +155,14 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
                     currentPopAnimation = currentPopAnimation!!.translationY(-animationDistance.toFloat())
                 }
                 StackAnimationTypes.TRANSLATE_LEFT -> {
-                    val animationDistance = width.toFloat()
+                    val animationDistance = width.toFloat() * 1.5f
                     currentPopAnimation = currentPopAnimation!!.translationX(-animationDistance)
+                    currentPopAnimation = currentPopAnimation!!.rotationBy(-40f)
                 }
                 StackAnimationTypes.TRANSLATE_RIGHT -> {
-                    val animationDistance = width.toFloat()
+                    val animationDistance = width.toFloat() * 1.5f
                     currentPopAnimation = currentPopAnimation!!.translationX(animationDistance)
+                    currentPopAnimation = currentPopAnimation!!.rotationBy(40f)
                 }
             }
 

@@ -5,6 +5,7 @@ import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Category
 import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.data.models.Quiz
+import com.sunilson.quizcreator.presentation.shared.Exceptions.NoQuestionsFoundException
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -21,6 +22,7 @@ interface IQuizRepository {
     fun updateQuestion(question: Question): Completable
     fun addCategory(category: Category): Completable
     fun loadCategories(): Flowable<List<Category>>
+    fun loadQuiz(id: String): Single<Quiz>
     fun loadQuestions(categoryId: String? = null): Flowable<List<Question>>
     fun loadQuestionsOnce(categoryId: String? = null): Single<List<Question>>
 }
@@ -60,20 +62,42 @@ class QuizRepository @Inject constructor(private val application: Application, p
     }
 
     override fun generateQuiz(categoryId: String?, shuffleAnswers: Boolean, questionAmount: Int): Single<Quiz> {
-        return database.quizDAO().getAllQuestionsOnce().map { questions ->
-            val quiz = Quiz(
-                    questions = questions.map { question ->
-                        question.answers = question.answers.filterIndexed { index, answer ->
-                            index <= 3
-                        }.toMutableList()
-                        question
-                    }.toMutableList(),
-                    timestamp = Date().time
-            )
 
-            database.quizDAO().addQuiz(quiz)
-            return@map quiz
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        return if (categoryId != null) {
+            database.quizDAO().getQuestionsForCategoriesOnce(arrayOf(categoryId)).map { questions ->
+                if (questions.isEmpty()) throw NoQuestionsFoundException(application.getString(R.string.no_questions_found))
+                val quiz = processQuizQuestions(questions, questionAmount)
+                database.quizDAO().addQuiz(quiz)
+                return@map quiz
+            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        } else {
+            database.quizDAO().getAllQuestionsOnce().map { questions ->
+                if (questions.isEmpty()) throw NoQuestionsFoundException(application.getString(R.string.no_questions_found))
+                val quiz = processQuizQuestions(questions, questionAmount)
+                database.quizDAO().addQuiz(quiz)
+                return@map quiz
+            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }
+    }
+
+    private fun processQuizQuestions(questions: List<Question>, questionAmount: Int): Quiz {
+        var quizQuestions = questions.map { question ->
+            question.answers = question.answers.filterIndexed { index, answer ->
+                index <= 3
+            }.toMutableList()
+            question
+        }.toMutableList()
+
+        quizQuestions.shuffle()
+        quizQuestions = quizQuestions.take(questionAmount).toMutableList()
+
+        val quiz = Quiz(
+                questions = quizQuestions,
+                timestamp = Date().time
+        )
+
+        database.quizDAO().addQuiz(quiz)
+        return quiz
     }
 
     override fun loadCategories(): Flowable<List<Category>> {
@@ -94,6 +118,10 @@ class QuizRepository @Inject constructor(private val application: Application, p
 
     override fun loadQuestionsOnce(categoryId: String?): Single<List<Question>> {
         return database.quizDAO().getAllQuestionsOnce().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun loadQuiz(id: String): Single<Quiz> {
+        return database.quizDAO().getQuizOnce(id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun addCategory(category: Category): Completable {

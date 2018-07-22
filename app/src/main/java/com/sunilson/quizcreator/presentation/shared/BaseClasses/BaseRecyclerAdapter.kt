@@ -3,9 +3,9 @@ package com.sunilson.quizcreator.presentation.shared.BaseClasses
 import android.content.Context
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
-import com.android.databinding.library.baseAdapters.BR
+import com.sunilson.quizcreator.BR
 
-abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Context, protected  val recyclerView: RecyclerView) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.ViewHolder>() {
+abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Context, protected val recyclerView: RecyclerView) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.ViewHolder>() {
 
     val data: MutableList<T> = mutableListOf()
 
@@ -19,10 +19,13 @@ abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Co
         notifyItemInserted(data.indexOf(element))
     }
 
-    open fun addAll(elements: List<T>){
+    open fun addAll(elements: List<T>) {
+        val size = this.data.size
         this.data.clear()
+        notifyItemRangeRemoved(0, size)
         this.data.addAll(elements)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0, data.size)
+
     }
 
     open fun remove(element: AdapterElement) {
@@ -57,6 +60,6 @@ abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Co
     }
 }
 
-interface AdapterElement  {
-    val compareByString : String
+interface AdapterElement {
+    val compareByString: String
 }

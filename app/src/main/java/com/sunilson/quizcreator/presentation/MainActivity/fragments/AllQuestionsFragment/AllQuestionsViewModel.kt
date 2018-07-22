@@ -14,13 +14,25 @@ import javax.inject.Inject
 @FragmentScope
 class AllQuestionsViewModel @Inject constructor(val application: Application, repository: IQuizRepository) : BaseViewModel(repository) {
 
+    init {
+        loadCategories()
+    }
+
     val questions: ObservableList<Question> = ObservableArrayList<Question>()
 
     fun loadQuestions() {
+        loading.set(true)
         disposable.add(repository.loadQuestionsOnce().subscribe({
+            if (categories.size > 0) {
+                it.forEach { question ->
+                    question.categoryName = categories.find { question.categoryId == it.id }?.name ?: ""
+                }
+            }
             questions.clear()
             questions.addAll(it)
+            loading.set(false)
         }, {
+            loading.set(false)
             Log.d("Linus", it.message)
         }))
     }

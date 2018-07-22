@@ -5,6 +5,7 @@ import com.sunilson.quizcreator.presentation.AddQuestionActivity.di.AddQuestionA
 import com.sunilson.quizcreator.presentation.MainActivity.MainActivity
 import com.sunilson.quizcreator.presentation.MainActivity.di.FragmentBuilder
 import com.sunilson.quizcreator.presentation.MainActivity.di.MainActivityModule
+import com.sunilson.quizcreator.presentation.QuizActivity.QuizActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -18,5 +19,9 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = [AddQuestionActivityModule::class])
     @ActivityScope
     abstract fun provideAddQuestionActivity():AddQuestionActivity
+
+    @ContributesAndroidInjector(modules = [com.sunilson.quizcreator.presentation.QuizActivity.di.FragmentBuilder::class])
+    @ActivityScope
+    abstract fun provideQuizActivity():QuizActivity
 
 }

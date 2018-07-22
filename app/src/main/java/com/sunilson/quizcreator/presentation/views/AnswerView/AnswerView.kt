@@ -1,11 +1,13 @@
 package com.sunilson.quizcreator.presentation.views.AnswerView
 
 import android.content.Context
+import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.databinding.QuizQuestionAnswerBinding
+import com.sunilson.quizcreator.presentation.shared.error_animation_duration
 
 class AnswerView : ConstraintLayout {
 
@@ -45,7 +47,14 @@ class AnswerView : ConstraintLayout {
     }
 
     fun showAnswerResult(correct: Boolean) {
-        answerViewModel?.correct = correct
+        if(correct) {
+            answerViewModel?.correct = correct
+        }else {
+            Handler().postDelayed({
+                answerViewModel?.correct = correct
+            }, error_animation_duration)
+        }
+
         this.setOnClickListener(null)
     }
 }

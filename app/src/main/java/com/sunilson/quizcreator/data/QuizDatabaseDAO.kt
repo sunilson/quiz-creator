@@ -13,6 +13,9 @@ interface QuizDatabaseDAO {
     @Query("SELECT * FROM question WHERE categoryId IN (:categoryIds)")
     fun getQuestionsForCategories(categoryIds: Array<String>): Flowable<List<Question>>
 
+    @Query("SELECT * FROM question WHERE categoryId IN (:categoryIds)")
+    fun getQuestionsForCategoriesOnce(categoryIds: Array<String>): Single<List<Question>>
+
     @Query("SELECT * FROM question")
     fun getAllQuestions(): Flowable<List<Question>>
 
@@ -28,6 +31,9 @@ interface QuizDatabaseDAO {
     @Query("SELECT * FROM quiz")
     fun getAllQuiz(): Flowable<List<Quiz>>
 
+    @Query("SELECT * FROM quiz WHERE id == :id")
+    fun getQuizOnce(id: String): Single<Quiz>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addQuiz(quiz: Quiz)
 
@@ -41,5 +47,5 @@ interface QuizDatabaseDAO {
     fun updateQuestion(question: Question)
 
     @Query("DELETE FROM question WHERE id == :id")
-    fun removeQuestion(id: String) : Int
+    fun removeQuestion(id: String): Int
 }
