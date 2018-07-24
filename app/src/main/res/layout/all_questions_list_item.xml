@@ -37,6 +37,12 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                questionIcon="@{obj.type}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp" />
+
             <TextView
                 android:id="@+id/question_list_item_text"
                 android:layout_width="0dp"
@@ -53,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{obj.categoryName}"
                 tools:text="Kategorie" />
+
         </LinearLayout>
 
 
@@ -60,8 +67,8 @@
             android:id="@+id/question_list_item_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:visibility="gone"
             android:padding="15dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

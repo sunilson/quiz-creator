@@ -7,12 +7,13 @@ import com.sunilson.quizcreator.data.IQuizRepository
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.data.models.Category
 import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseViewModel
 import io.reactivex.Completable
 import javax.inject.Inject
 
 @FragmentScope
-class AddQuestionViewModel @Inject constructor(val application: Application, repository: IQuizRepository) : BaseViewModel(repository){
+class AddQuestionViewModel @Inject constructor(val application: Application, repository: IQuizRepository) : BaseViewModel(repository) {
 
     var creationQuestion: Question = Question()
 
@@ -31,13 +32,12 @@ class AddQuestionViewModel @Inject constructor(val application: Application, rep
         creationQuestion.categoryId = category.id
     }
 
-    fun startQuestionCreation() {
+    fun startQuestionCreation(questionType: QuestionType) {
         creationQuestion = Question(
                 text = "Ist dies eine Frage?",
+                type = questionType,
                 answers = mutableListOf(
-                        Answer(text = "Ich bin eine Antwort"),
-                        Answer(text = "Ich bin eine Antwort"),
-                        Answer(text = "Ich bin eine Antwort"),
+                        Answer(text = "Ich bin eine Antwort", correctAnswer = true),
                         Answer(text = "Ich bin eine Antwort"),
                         Answer(text = "Ich bin eine Antwort"),
                         Answer(text = "Ich bin eine Antwort")

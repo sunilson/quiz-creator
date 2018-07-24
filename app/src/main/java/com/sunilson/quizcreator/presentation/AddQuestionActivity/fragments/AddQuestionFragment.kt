@@ -12,7 +12,9 @@ import android.widget.Toast
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.databinding.FragmentAddQuestionBinding
+import com.sunilson.quizcreator.presentation.AddQuestionActivity.AddQuestionActivity
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
 import com.sunilson.quizcreator.presentation.shared.CategorySpinnerAdapter
 import com.sunilson.quizcreator.presentation.shared.Dialogs.DialogListener
@@ -36,7 +38,6 @@ class AddQuestionFragment : BaseFragment() {
         binding.viewModel = viewModel
         val view = binding.root
 
-        //Add answer button
         view.form_add_answer.setOnClickListener {
             if (view.form_answer_container.childCount < 8) {
                 addAnswerEditText(view, true)
@@ -45,9 +46,8 @@ class AddQuestionFragment : BaseFragment() {
             }
         }
         view.form_category_spinner.adapter = categorySpinnerAdapter
-        //Add Category Button
         view.form_add_category.setOnClickListener {
-            val dialog = SimpleInputDialog.newInstance(getString(R.string.category_name))
+            val dialog = SimpleInputDialog.newInstance(getString(R.string.add_category))
             dialog.listener = object : DialogListener<String> {
                 override fun onResult(result: String?) {
                     result?.let {
@@ -61,8 +61,6 @@ class AddQuestionFragment : BaseFragment() {
             }
             dialog.show(fragmentManager, "dialog")
         }
-
-        //Save and Exit Button
         view.form_save_and_exit.setOnClickListener {
             viewModel.creationQuestion.answers.clear()
             viewModel.creationQuestion.answers = view.form_answer_container.getAnswers()
@@ -70,10 +68,13 @@ class AddQuestionFragment : BaseFragment() {
                 //TODO
             }, {}))
         }
+        view.form_save_and_continue.setOnClickListener {
+            (activity!! as AddQuestionActivity).restart(this)
+        }
 
         view.mock_data.setOnClickListener {
             for (i in 0 until 5) {
-                viewModel.startQuestionCreation()
+                viewModel.startQuestionCreation(arguments?.getSerializable("type") as QuestionType)
                 viewModel.creationQuestion = Question(
                         text = "Ist dies eine Frage $i?",
                         categoryId = "general",
@@ -81,13 +82,9 @@ class AddQuestionFragment : BaseFragment() {
                                 Answer(text = "Dies ist eine Antwort A!", correctAnswer = true),
                                 Answer(text = "Dies ist eine Antwort B!"),
                                 Answer(text = "Dies ist eine Antwort! C"),
-                                Answer(text = "Dies ist eine Antwort! D"),
-                                Answer(text = "Dies ist eine Antwort! E"),
-                                Answer(text = "Dies ist eine Antwort! F"),
-                                Answer(text = "Dies ist eine Antwort! G")
+                                Answer(text = "Dies ist eine Antwort! D")
                         )
                 )
-                viewModel.creationQuestion.correctAnswerId = viewModel.creationQuestion.answers[0].id
                 viewModel.createQuestion().subscribe()
                 activity?.setResult(Activity.RESULT_OK)
                 activity?.finish()
@@ -100,7 +97,7 @@ class AddQuestionFragment : BaseFragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         viewModel.loadCategories()
-        viewModel.startQuestionCreation()
+        viewModel.startQuestionCreation(arguments?.getSerializable("type") as QuestionType)
     }
 
     fun addAnswerEditText(view: View, transition: Boolean = false) {
@@ -116,8 +113,12 @@ class AddQuestionFragment : BaseFragment() {
     }
 
     companion object {
-        fun newInstance(): AddQuestionFragment {
-            return AddQuestionFragment()
+        fun newInstance(type: QuestionType): AddQuestionFragment {
+            val bundle = Bundle()
+            bundle.putSerializable("type", type)
+            val fragment = AddQuestionFragment()
+            fragment.arguments = bundle
+            return fragment
         }
     }
 }

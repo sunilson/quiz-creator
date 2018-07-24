@@ -16,4 +16,7 @@ class AnswerViewModel(answer: Answer, showDivider: Boolean = false) : BaseObserv
 
     @get:Bindable
     var correct: Boolean? by NotifyPropertyChangedDelegate(null, BR.correct)
+
+    @get:Bindable
+    var marked: Boolean by NotifyPropertyChangedDelegate(false, BR.marked)
 }

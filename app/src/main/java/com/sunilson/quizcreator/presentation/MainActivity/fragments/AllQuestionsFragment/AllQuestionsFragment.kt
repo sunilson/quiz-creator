@@ -1,5 +1,6 @@
 package com.sunilson.quizcreator.presentation.MainActivity.fragments.AllQuestionsFragment
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
@@ -70,7 +71,9 @@ class AllQuestionsFragment : BaseFragment() {
 
         when (requestCode) {
             ADD_QUESTIONS_INTENT -> {
-                allQuestionsViewModel.loadQuestions()
+                if(resultCode == Activity.RESULT_OK) {
+                    allQuestionsViewModel.loadQuestions()
+                }
             }
         }
     }

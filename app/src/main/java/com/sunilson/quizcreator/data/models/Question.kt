@@ -17,7 +17,7 @@ class Question(
         var text: String = "",
         var categoryId: String = "",
         var answers: MutableList<Answer> = mutableListOf(),
-        var correctAnswerId: String = "",
+        var type: QuestionType = QuestionType.SINGLE_CHOICE,
         @Ignore var categoryName: String = ""
 ) : BaseObservable(), AdapterElement {
 
@@ -31,4 +31,8 @@ class Question(
             if (value != null) text = value
         }
     }
+}
+
+enum class QuestionType {
+    SINGLE_CHOICE, MULTIPLE_CHOICE
 }

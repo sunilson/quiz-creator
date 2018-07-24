@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.data.models.Quiz
 
 
@@ -31,6 +32,16 @@ class TypeConverters {
     @TypeConverter
     fun toQuestion(string: String): Question {
         return gson.fromJson<Question>(string, Question::class.java)
+    }
+
+    @TypeConverter
+    fun toString(questionType: QuestionType): String {
+        return gson.toJson(questionType, QuestionType::class.java)
+    }
+
+    @TypeConverter
+    fun toQuestionType(string: String): QuestionType {
+        return gson.fromJson<QuestionType>(string, QuestionType::class.java)
     }
 
     @TypeConverter

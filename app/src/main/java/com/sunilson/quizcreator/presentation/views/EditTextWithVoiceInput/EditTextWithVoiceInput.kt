@@ -19,43 +19,40 @@ import kotlinx.android.synthetic.main.voice_edittext.view.*
 
 class EditTextWithVoiceInput : ConstraintLayout {
 
-    val viewModel: EditTextWithVoiceInputViewModel
-    val binding: VoiceEdittextBinding
+    private lateinit var viewModel: EditTextWithVoiceInputViewModel
+    private lateinit var binding: VoiceEdittextBinding
 
     val text: String
         get() = voice_edittext.text.toString()
 
-    var answer: Answer? = null
-        set(value) {
-            field = value
-            viewModel.answer = field
-        }
+    val answer: Answer
+        get() = viewModel.answer!!
 
-    var optional: Boolean = false
-        set(value) {
-            field = value
-            viewModel.optional = field
-        }
+    val optional: Boolean
+        get() = viewModel.optional
 
-    constructor(context: Context, optional: Boolean, answer: Answer? = null) : super(context) {
-        this.optional = optional
-        this.answer = answer
+    val correctToggable: Boolean
+        get() = viewModel.correctToggable
+
+    constructor(context: Context, optional: Boolean, correctToggable: Boolean = false, answer: Answer? = null) : super(context) {
+        initBinding(optional, correctToggable, answer)
     }
 
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
         val a = context.theme.obtainStyledAttributes(attributeSet, R.styleable.EditTextWithVoiceInput, 0, 0)
-        optional = a.getBoolean(R.styleable.EditTextWithVoiceInput_optional, false)
+        initBinding(a.getBoolean(R.styleable.EditTextWithVoiceInput_optional, false), a.getBoolean(R.styleable.EditTextWithVoiceInput_correctToggable, false))
         a.recycle()
     }
 
-    init {
+
+    private fun initBinding(optional: Boolean, correctToggable: Boolean = false, answer: Answer? = null) {
         val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = VoiceEdittextBinding.inflate(inflater, this, true)
 
         if (optional) delete_button.visibility = View.VISIBLE
 
         background = ContextCompat.getDrawable(context, R.drawable.stacked_card_view_background)
-        setPadding(20.convertToPx(context), 15.convertToPx(context), 0, 15.convertToPx(context))
+        setPadding(0, 15.convertToPx(context), 0, 15.convertToPx(context))
 
         val layoutParams = LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
         layoutParams.height = resources.getDimensionPixelSize(R.dimen.voice_edittext_height)
@@ -76,7 +73,7 @@ class EditTextWithVoiceInput : ConstraintLayout {
             false
         }
 
-        viewModel = EditTextWithVoiceInputViewModel(answer, optional)
+        viewModel = EditTextWithVoiceInputViewModel(answer, optional, correctToggable)
         binding.viewModel = viewModel
     }
 }

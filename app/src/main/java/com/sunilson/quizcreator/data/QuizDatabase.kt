@@ -9,7 +9,7 @@ import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.data.models.Quiz
 
 
-@Database(entities = [(Answer::class), (Question::class), (Quiz::class), (Category::class)], version = 5)
+@Database(entities = [(Answer::class), (Question::class), (Quiz::class), (Category::class)], version = 6)
 @TypeConverters(com.sunilson.quizcreator.data.TypeConverters::class)
 abstract class QuizDatabase : RoomDatabase() {
     abstract fun quizDAO(): QuizDatabaseDAO

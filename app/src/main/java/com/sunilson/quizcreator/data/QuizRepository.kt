@@ -34,10 +34,6 @@ class QuizRepository @Inject constructor(private val application: Application, p
 
         validateQuestion(question)?.let { return it }
 
-        question.answers.forEach {
-            if (it.correctAnswer) question.correctAnswerId = it.id
-        }
-
         return Completable.create {
             database.quizDAO().addQuestion(question)
             it.onComplete()

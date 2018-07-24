@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import com.sunilson.quizcreator.Application.di.FragmentScope
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseRecyclerAdapter
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.getAnswers
@@ -41,10 +42,9 @@ class QuestionsRecyclerAdapter(
         val holder = ViewHolder(binding)
 
         binding.root.question_list_item_top_bar.setOnClickListener {
-            //binding.root.question_list_item_answers.setInitialAnswers(data[holder.adapterPosition].answers)
             val originalQuestion = data[holder.adapterPosition]
             originalQuestion.answers.forEachIndexed { index, answer ->
-                val answerView = EditTextWithVoiceInput(context, index > 3, answer)
+                val answerView = EditTextWithVoiceInput(context, index > 3, originalQuestion.type == QuestionType.MULTIPLE_CHOICE, answer)
                 binding.root.question_list_item_answers.addView(answerView)
             }
             slideToggle(

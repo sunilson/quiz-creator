@@ -35,7 +35,7 @@ fun LinearLayout.getAnswers(): MutableList<Answer> {
     val result = mutableListOf<Answer>()
     for (i in 0 until this.childCount) {
         val answerEditText = this.getChildAt(i) as EditTextWithVoiceInput
-        result.add(Answer(text = answerEditText.text, correctAnswer = i == 0))
+        result.add(answerEditText.answer!!)
     }
     return result
 }

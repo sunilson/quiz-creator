@@ -64,7 +64,7 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
         }
     }
 
-    fun addListOfCards(list: List<View>) {
+    fun addListOfCards(list: List<QuestionCardView>) {
         removeAllViews()
         list.forEach {
             addView(setupView(it), 0)
@@ -75,7 +75,7 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
         }, 500)
     }
 
-    fun addCardBehind(view: View) {
+    fun addCardBehind(view: QuestionCardView) {
         currentAddTarget = setupView(view)
 
         //If there is a removal in progress, cancel and remove immediately
@@ -128,7 +128,7 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
         }
     }
 
-    private fun setupView(view: View): View {
+    private fun setupView(view: QuestionCardView): QuestionCardView {
         val layoutParams = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, childHeight)
         view.layoutParams = layoutParams
         return view

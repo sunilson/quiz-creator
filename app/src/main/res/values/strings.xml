@@ -16,7 +16,6 @@
     <string name="add_category">+ Add Category</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
-    <string name="category_name">Category name</string>
     <string name="category_add_success">Successfully added category!</string>
     <string name="duplicate_category_error">Duplicate category!</string>
     <string name="question_no_correct_answer_error">Question must contain a correct answer!</string>
@@ -31,4 +30,5 @@
     <string name="quiz_not_valid">Quiz not valid!</string>
     <string name="exit_quiz_question">Do you really want to exit this quiz?</string>
     <string name="exit_quiz">Exit Quiz</string>
+    <string name="category_name">Category name</string>
 </resources>

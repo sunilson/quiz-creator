@@ -11,50 +11,47 @@ import com.sunilson.quizcreator.presentation.shared.error_animation_duration
 
 class AnswerView : ConstraintLayout {
 
-    var answer: Answer? = null
-        set(value) {
-            field = value
-            if (value != null) answerViewModel?.answer = value
+    val answer: Answer?
+        get() {
+            return if (answerViewModel != null) answerViewModel.answer
+            else null
         }
 
-    var showDivider: Boolean = false
-        set(value) {
-            field = value
-            answerViewModel?.showDivider = value
-        }
-
-    val binding: QuizQuestionAnswerBinding
-    var answerViewModel: AnswerViewModel? = null
+    private lateinit var binding: QuizQuestionAnswerBinding
+    private lateinit var answerViewModel: AnswerViewModel
 
     constructor(context: Context, answer: Answer, showDivider: Boolean) : super(context) {
-        this.answer = answer
-        this.showDivider = showDivider
+        initWithViewModel(answer, showDivider)
     }
 
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
-    init {
+    private fun initWithViewModel(answer: Answer, showDivider: Boolean) {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = QuizQuestionAnswerBinding.inflate(inflater, this, true)
+        answerViewModel = AnswerViewModel(answer, showDivider)
+        binding.viewModel = answerViewModel
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        if (answer != null && answerViewModel == null) {
-            answerViewModel = AnswerViewModel(answer!!, showDivider)
-            binding.viewModel = answerViewModel
-        }
+    fun mark() {
+        answerViewModel.marked = !answerViewModel.marked
     }
 
-    fun showAnswerResult(correct: Boolean) {
-        if(correct) {
-            answerViewModel?.correct = correct
-        }else {
-            Handler().postDelayed({
-                answerViewModel?.correct = correct
-            }, error_animation_duration)
-        }
+    fun unmark() {
+        answerViewModel.marked = false
+    }
 
-        this.setOnClickListener(null)
+    fun showAnswerResult() {
+        if (answer != null) {
+            if (answer!!.correctAnswer) {
+                answerViewModel.correct = true
+            } else {
+                unmark()
+                Handler().postDelayed({
+                    answerViewModel.correct = false
+                }, error_animation_duration)
+            }
+            this.setOnClickListener(null)
+        }
     }
 }

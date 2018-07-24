@@ -11,12 +11,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import com.sunilson.quizcreator.R
+import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.data.models.Quiz
 import com.sunilson.quizcreator.presentation.shared.stack_fade_in_duration
 import com.sunilson.quizcreator.presentation.shared.timer_fade_delay_between
 import com.sunilson.quizcreator.presentation.shared.timer_fade_half_duration
 import com.sunilson.quizcreator.presentation.shared.timer_fade_scale_duration
-import com.sunilson.quizcreator.presentation.views.QuestionCardView.QuestionCardView
+import com.sunilson.quizcreator.presentation.views.QuestionCardView.MultipleChoiceQuestionCardView
+import com.sunilson.quizcreator.presentation.views.QuestionCardView.SingleChoiceQuestionCardView
 import com.sunilson.quizcreator.presentation.views.StackedCardsView.StackAnimationTypes
 import kotlinx.android.synthetic.main.quiz_view.view.*
 import java.util.*
@@ -58,11 +60,23 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
                             value.timestamp = Date().time
                             field = value
                             stack_view.addListOfCards(it.questions.mapIndexed { index, question ->
-                                QuestionCardView(context, question) {
-                                    if (it.correctAnswer) quiz!!.correctAnswers++
-                                    Handler().postDelayed({
-                                        stack_view.removeCard(if (it.correctAnswer) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT)
-                                    }, nextCardDelay.toLong())
+                                when (question.type) {
+                                    QuestionType.SINGLE_CHOICE -> {
+                                        SingleChoiceQuestionCardView(context, question) {
+                                            if (it) quiz!!.correctAnswers++
+                                            Handler().postDelayed({
+                                                stack_view.removeCard(if (it) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT)
+                                            }, nextCardDelay.toLong())
+                                        }
+                                    }
+                                    else -> {
+                                        MultipleChoiceQuestionCardView(context, question) {
+                                            if (it) quiz!!.correctAnswers++
+                                            Handler().postDelayed({
+                                                stack_view.removeCard(if (it) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT)
+                                            }, nextCardDelay.toLong())
+                                        }
+                                    }
                                 }
                             })
                         }

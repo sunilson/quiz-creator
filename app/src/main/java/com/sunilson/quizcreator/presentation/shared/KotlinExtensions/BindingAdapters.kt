@@ -22,10 +22,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.data.models.Answer
-import com.sunilson.quizcreator.data.models.Category
-import com.sunilson.quizcreator.data.models.Question
-import com.sunilson.quizcreator.data.models.Quiz
+import com.sunilson.quizcreator.data.models.*
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseRecyclerAdapter
 import com.sunilson.quizcreator.presentation.shared.CategorySpinnerAdapter
@@ -127,14 +124,18 @@ fun LinearLayout.setAnswers(answers: List<Answer>, callback: ItemSelectedListene
 }
 */
 
-@BindingAdapter("answers", "answerClickedCallback", requireAll = false)
-fun LinearLayout.setAnswers(question: Question?, callback: ItemSelectedListener) {
+@BindingAdapter("answers", "multiplePossible", "answerClickedCallback", requireAll = true)
+fun LinearLayout.setAnswers(question: Question?, multiplePossible: Boolean, callback: ItemSelectedListener) {
     question?.answers?.forEachIndexed { index, answer ->
         val answerView = AnswerView(context, answer, index != question.answers.size - 1)
         answerView.setOnClickListener {
-            for (i in 0 until childCount) {
-                val child = getChildAt(i) as AnswerView
-                child.showAnswerResult(child.answer!!.correctAnswer)
+            if (!multiplePossible) {
+                for (i in 0 until childCount) {
+                    val child = getChildAt(i) as AnswerView
+                    child.showAnswerResult()
+                }
+            } else {
+                answerView.mark()
             }
             callback.itemSelected(answer)
         }
@@ -142,8 +143,8 @@ fun LinearLayout.setAnswers(question: Question?, callback: ItemSelectedListener)
     }
 }
 
-@BindingAdapter("correct")
-fun ImageView.answerIcon(correct: Boolean?) {
+@BindingAdapter("correct", "marked", requireAll = false)
+fun ImageView.answerIcon(correct: Boolean?, marked: Boolean = false) {
     if (correct != null) {
         android.transition.TransitionManager.beginDelayedTransition(this.parent as ViewGroup, ChangeBounds())
         if (correct) {
@@ -154,6 +155,14 @@ fun ImageView.answerIcon(correct: Boolean?) {
             ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.wrong)))
         }
         this.visibility = View.VISIBLE
+    } else {
+        android.transition.TransitionManager.beginDelayedTransition(this.parent as ViewGroup, ChangeBounds())
+        if (marked) {
+            this.setImageDrawable(android.support.v4.content.ContextCompat.getDrawable(context, R.drawable.ic_check_circle_black_24dp))
+            ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disabled)))
+        } else {
+            this.setImageDrawable(null)
+        }
     }
 }
 
@@ -172,8 +181,8 @@ fun View.deleteParent(value: Boolean?) {
 
 }
 
-@BindingAdapter("initialEditTextAnswers")
-fun LinearLayout.setInitialAnswers(answers: List<Answer>) {
+@BindingAdapter("initialEditTextAnswers", "questionType", requireAll = false)
+fun LinearLayout.setInitialAnswers(answers: List<Answer>, type: QuestionType?) {
     val parent = this.parent as View
     parent.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
@@ -184,7 +193,7 @@ fun LinearLayout.setInitialAnswers(answers: List<Answer>) {
                     if (this@setInitialAnswers.childCount == 0) {
                         TransitionManager.beginDelayedTransition(this@setInitialAnswers.rootView as ViewGroup, Fade())
                         answers.forEachIndexed { index, answer ->
-                            val answerView = EditTextWithVoiceInput(context, index > 3, answer)
+                            val answerView = EditTextWithVoiceInput(context, index > 3, (type != null && type == QuestionType.MULTIPLE_CHOICE), answer = answer)
                             this@setInitialAnswers.addView(answerView)
                         }
                     }
@@ -199,6 +208,83 @@ fun LinearLayout.setInitialAnswers(answers: List<Answer>) {
     })
 }
 
+
+/*
+@BindingAdapter("correctAnswerAttrChanged")
+fun setCorrectAnswerListener(view: ImageView, listener: InverseBindingListener) {
+    view.setOnClickListener {
+        when {
+            view.tag == true -> view.tag = false
+            view.tag == false -> view.tag = true
+            else -> view.tag = false
+        }
+        listener.onChange()
+    }
+}
+*/
+
+@BindingAdapter("correctAnswer", "correctAnswerAttrChanged", "correctAnswerToggable", requireAll = false)
+fun setCorrectAnswer(view: ImageView, answer: Answer?, listener: InverseBindingListener, toggable: Boolean) {
+    if (answer != null) {
+        view.tag = answer
+        if (toggable) {
+            if (answer.correctAnswer) {
+                ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.correct)))
+            } else {
+                ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.disabled)))
+            }
+
+            view.setOnClickListener {
+                answer.correctAnswer = !answer.correctAnswer
+                view.tag = answer
+                if (answer.correctAnswer) {
+                    ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.correct)))
+                } else {
+                    ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.disabled)))
+                }
+                listener.onChange()
+            }
+        } else {
+            if (answer.correctAnswer) {
+                ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.correct)))
+            } else {
+                view.visibility = View.GONE
+            }
+        }
+    } else {
+        view.visibility = View.GONE
+    }
+}
+
+@InverseBindingAdapter(attribute = "correctAnswer")
+fun getCorrectAnswer(view: ImageView): Answer? {
+    return view.tag as Answer
+}
+
+@BindingAdapter("questionIcon")
+fun ImageView.setQuestionIcon(type: QuestionType) {
+    when (type) {
+        QuestionType.SINGLE_CHOICE -> {
+            this.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_check_black_24dp))
+        }
+        QuestionType.MULTIPLE_CHOICE -> {
+            this.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_done_all_black_24dp))
+        }
+    }
+}
+
+/*
+@BindingAdapter("correctAnswerToggable", "answerForCorrectIcon", requireAll = false)
+fun ImageView.correctAnswerIcon(correctAnswerIconToggable: Boolean?, answer: Answer?) {
+    if (answer != null && correctAnswerIconToggable != null) {
+        if (correctAnswerIconToggable) {
+
+        } else {
+
+        }
+    }
+}
+*/
 
 interface ItemSelectedListener {
     fun itemSelected(item: Any)
