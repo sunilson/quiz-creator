@@ -15,5 +15,5 @@ class EditTextWithVoiceInputViewModel(answer: Answer?, optional: Boolean = false
     var optional: Boolean by NotifyPropertyChangedDelegate(optional, BR.optional)
 
     @get:Bindable
-    var correctToggable: Boolean by NotifyPropertyChangedDelegate(optional, BR.correctToggable)
+    var correctToggable: Boolean by NotifyPropertyChangedDelegate(correctToggable, BR.correctToggable)
 }

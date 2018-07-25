@@ -3,6 +3,8 @@ package com.sunilson.quizcreator.presentation.QuizActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.sunilson.quizcreator.R
+import com.sunilson.quizcreator.presentation.QuizActivity.fragments.QuizFragment.QuizFragment
+import com.sunilson.quizcreator.presentation.QuizActivity.fragments.ResultFragment.ResultFragment
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseActivity
 import com.sunilson.quizcreator.presentation.shared.Dialogs.DialogListener
 import com.sunilson.quizcreator.presentation.shared.Dialogs.SimpleConfirmDialog
@@ -32,6 +34,10 @@ class QuizActivity : BaseActivity(), HasSupportFragmentInjector {
             this.showToast(getString(com.sunilson.quizcreator.R.string.quiz_not_valid))
             finish()
         }
+    }
+
+    fun showResult() {
+        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, ResultFragment.newInstance()).commit()
     }
 
     override fun onBackPressed() {

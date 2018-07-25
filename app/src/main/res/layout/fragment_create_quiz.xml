@@ -19,6 +19,56 @@
         android:animateLayoutChanges="true">
 
         <TextView
+            android:id="@+id/shuffle_answers_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="@string/shuffle_answers"
+            app:layout_constraintBottom_toBottomOf="@id/shuffle_answers"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/shuffle_answers"
+            app:layout_constraintTop_toTopOf="@id/shuffle_answers"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Switch
+            android:id="@+id/shuffle_answers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.shuffleAnswers}"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@id/single_or_multiple"
+            app:layout_constraintLeft_toRightOf="@id/shuffle_answers_text"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/single_or_multiple_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="@string/only_single_choice"
+            app:layout_constraintBottom_toBottomOf="@id/single_or_multiple"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/single_or_multiple"
+            app:layout_constraintTop_toTopOf="@id/single_or_multiple"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Switch
+            android:id="@+id/single_or_multiple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.singleOrMultiple}"
+            app:layout_constraintBottom_toTopOf="@id/categoryswitch"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toRightOf="@id/single_or_multiple_text"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/shuffle_answers"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
             android:id="@+id/quiz_category_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,7 +90,7 @@
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintLeft_toRightOf="@id/quiz_category_textview"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/single_or_multiple"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <Spinner

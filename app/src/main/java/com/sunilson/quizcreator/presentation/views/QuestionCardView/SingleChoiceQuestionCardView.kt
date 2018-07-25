@@ -11,6 +11,7 @@ class SingleChoiceQuestionCardView(context: Context, question: Question, questio
 
     override fun initializeViewModel() {
         binding.viewModel = QuestionCardViewModel(question) {
+            it.chosen = true
             if (!it.correctAnswer) {
                 this.startAnimation(android.view.animation.AnimationUtils.loadAnimation(context, R.anim.error_card_animation))
             }

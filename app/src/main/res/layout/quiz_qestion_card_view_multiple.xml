@@ -9,7 +9,6 @@
             type="com.sunilson.quizcreator.presentation.views.QuestionCardView.QuestionCardViewModel" />
 
         <import type="android.view.View" />
-
         <import type="com.sunilson.quizcreator.data.models.Answer" />
         <import type="com.sunilson.quizcreator.data.models.QuestionType" />
     </data>
@@ -53,6 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Confirm"
+            android:visibility="@{ viewModel.showConfirmButton ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

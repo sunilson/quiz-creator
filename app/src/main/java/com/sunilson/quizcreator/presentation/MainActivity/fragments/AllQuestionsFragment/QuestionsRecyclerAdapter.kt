@@ -20,6 +20,7 @@ import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseRecyclerAdapter
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.getAnswers
+import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
 import com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
 import kotlinx.android.synthetic.main.all_questions_list_item.view.*
 import javax.inject.Inject
@@ -59,11 +60,15 @@ class QuestionsRecyclerAdapter(
         binding.root.question_list_item_answers_save.setOnClickListener {
             val originalQuestion = data[holder.adapterPosition]
             originalQuestion.answers = binding.root.question_list_item_answers.getAnswers()
-            slideToggle(binding.root.question_list_item_content, holder.adapterPosition, endCallback = {
-                Handler().postDelayed({
-                    saveQuestionCallback(originalQuestion)
-                }, 250)
-            })
+            if (!originalQuestion.answers.any { it.correctAnswer }) {
+                context.showToast(context.getString(R.string.one_answer_correct_error))
+            } else {
+                slideToggle(binding.root.question_list_item_content, holder.adapterPosition, endCallback = {
+                    Handler().postDelayed({
+                        saveQuestionCallback(originalQuestion)
+                    }, 250)
+                })
+            }
         }
 
         binding.root.question_list_item_answers_delete.setOnClickListener {

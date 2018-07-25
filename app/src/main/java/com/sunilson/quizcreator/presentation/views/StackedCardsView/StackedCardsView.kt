@@ -134,7 +134,7 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
         return view
     }
 
-    fun removeCard(animationTypes: StackAnimationTypes) {
+    fun removeCard(animationTypes: StackAnimationTypes, finished: (() -> Unit)? = null) {
 
         if (childCount != 0) {
             if (currentPopAnimation != null && currentPopTarget != null && currentPopAnimation != null) {
@@ -177,6 +177,7 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
                             reorder()
                             currentPopTarget = null
                             currentPopAnimation = null
+                            finished?.invoke()
                         }
                     })
                     .start()

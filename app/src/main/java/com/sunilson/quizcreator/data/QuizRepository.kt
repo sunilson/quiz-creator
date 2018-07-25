@@ -4,6 +4,7 @@ import android.app.Application
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Category
 import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.data.models.Quiz
 import com.sunilson.quizcreator.presentation.shared.Exceptions.NoQuestionsFoundException
 import io.reactivex.Completable
@@ -16,7 +17,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface IQuizRepository {
-    fun generateQuiz(categoryId: String? = null, shuffleAnswers: Boolean = false, questionAmount: Int = 10): Single<Quiz>
+    fun generateQuiz(categoryId: String? = null, shuffleAnswers: Boolean = false, onlySingleChoice: Boolean = false, questionAmount: Int = 10): Single<Quiz>
     fun addQuestion(question: Question): Completable
     fun deleteQuestion(questionId: String): Completable
     fun updateQuestion(question: Question): Completable
@@ -57,26 +58,31 @@ class QuizRepository @Inject constructor(private val application: Application, p
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun generateQuiz(categoryId: String?, shuffleAnswers: Boolean, questionAmount: Int): Single<Quiz> {
-
-        return if (categoryId != null) {
-            database.quizDAO().getQuestionsForCategoriesOnce(arrayOf(categoryId)).map { questions ->
-                if (questions.isEmpty()) throw NoQuestionsFoundException(application.getString(R.string.no_questions_found))
-                val quiz = processQuizQuestions(questions, questionAmount)
-                database.quizDAO().addQuiz(quiz)
-                return@map quiz
-            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    override fun generateQuiz(categoryId: String?, shuffleAnswers: Boolean, onlySingleChoice: Boolean, questionAmount: Int): Single<Quiz> {
+        val single = if (onlySingleChoice && categoryId != null) {
+            database.quizDAO().getAllQuestionsOnce(QuestionType.SINGLE_CHOICE, arrayOf(categoryId))
+        } else if (onlySingleChoice) {
+            database.quizDAO().getAllQuestionsOnce(QuestionType.SINGLE_CHOICE)
+        } else if (categoryId != null) {
+            database.quizDAO().getAllQuestionsOnce(arrayOf(categoryId))
         } else {
-            database.quizDAO().getAllQuestionsOnce().map { questions ->
-                if (questions.isEmpty()) throw NoQuestionsFoundException(application.getString(R.string.no_questions_found))
-                val quiz = processQuizQuestions(questions, questionAmount)
-                database.quizDAO().addQuiz(quiz)
-                return@map quiz
-            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            database.quizDAO().getAllQuestionsOnce()
         }
+
+        return single.map { questions ->
+            if (questions.isEmpty()) throw NoQuestionsFoundException(application.getString(R.string.no_questions_found))
+            val quiz = processQuizQuestions(questions, questionAmount, shuffleAnswers)
+            database.quizDAO().addQuiz(quiz)
+            return@map quiz
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
-    private fun processQuizQuestions(questions: List<Question>, questionAmount: Int): Quiz {
+    private fun processQuizQuestions(questions: List<Question>, questionAmount: Int, shuffleAnswers: Boolean): Quiz {
+
+        if (shuffleAnswers) {
+            //TODO Antworten von anderen Fragen der gleichen Kategorie holen
+        }
+
         var quizQuestions = questions.map { question ->
             question.answers = question.answers.filterIndexed { index, answer ->
                 index <= 3

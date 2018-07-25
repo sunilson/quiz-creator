@@ -12,5 +12,6 @@ class Answer(
         @PrimaryKey
         var id: String = UUID.randomUUID().toString(),
         var text: String = "",
-        var correctAnswer: Boolean = false
+        var correctAnswer: Boolean = false,
+        var chosen: Boolean = false
 )

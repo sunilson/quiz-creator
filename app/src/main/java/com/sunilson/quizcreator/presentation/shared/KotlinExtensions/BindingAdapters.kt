@@ -17,10 +17,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
-import android.widget.AdapterView
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Spinner
+import android.widget.*
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.*
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
@@ -79,7 +76,6 @@ fun setTextValue(editTextWithVoiceInput: EditTextWithVoiceInput, value: String?)
 fun getTextValue(editTextWithVoiceInput: EditTextWithVoiceInput): String? {
     return editTextWithVoiceInput.voice_edittext.text.toString()
 }
-
 
 @BindingAdapter("showHideWithTransition")
 fun View.showHideWithTransition(show: Boolean?) {
@@ -159,7 +155,7 @@ fun ImageView.answerIcon(correct: Boolean?, marked: Boolean = false) {
         android.transition.TransitionManager.beginDelayedTransition(this.parent as ViewGroup, ChangeBounds())
         if (marked) {
             this.setImageDrawable(android.support.v4.content.ContextCompat.getDrawable(context, R.drawable.ic_check_circle_black_24dp))
-            ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disabled)))
+            ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.unselected)))
         } else {
             this.setImageDrawable(null)
         }
@@ -231,7 +227,7 @@ fun setCorrectAnswer(view: ImageView, answer: Answer?, listener: InverseBindingL
             if (answer.correctAnswer) {
                 ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.correct)))
             } else {
-                ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.disabled)))
+                ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.unselected)))
             }
 
             view.setOnClickListener {
@@ -240,7 +236,7 @@ fun setCorrectAnswer(view: ImageView, answer: Answer?, listener: InverseBindingL
                 if (answer.correctAnswer) {
                     ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.correct)))
                 } else {
-                    ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.disabled)))
+                    ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.unselected)))
                 }
                 listener.onChange()
             }
@@ -248,11 +244,13 @@ fun setCorrectAnswer(view: ImageView, answer: Answer?, listener: InverseBindingL
             if (answer.correctAnswer) {
                 ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.correct)))
             } else {
-                view.visibility = View.GONE
+                ImageViewCompat.setImageTintList(view, ColorStateList.valueOf(ContextCompat.getColor(view.context, R.color.disabled)))
             }
         }
     } else {
         view.visibility = View.GONE
+        val edittext = (view.parent as ViewGroup).findViewById<EditText>(R.id.voice_edittext)
+        edittext.setPadding(15.convertToPx(view.context), edittext.paddingTop, edittext.paddingRight, edittext.paddingBottom)
     }
 }
 

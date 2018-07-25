@@ -31,4 +31,9 @@
     <string name="exit_quiz_question">Do you really want to exit this quiz?</string>
     <string name="exit_quiz">Exit Quiz</string>
     <string name="category_name">Category name</string>
+    <string name="one_answer_correct_error">Atleast 1 correct answer required!</string>
+    <string name="shuffle_answers">Shuffle answers</string>
+    <string name="only_single_choice">Only single choice</string>
+    <string name="view_questions">View_questions</string>
+    <string name="Exit">exit</string>
 </resources>

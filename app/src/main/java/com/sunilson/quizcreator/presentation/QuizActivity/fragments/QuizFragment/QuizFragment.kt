@@ -1,4 +1,4 @@
-package com.sunilson.quizcreator.presentation.QuizActivity
+package com.sunilson.quizcreator.presentation.QuizActivity.fragments.QuizFragment
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.databinding.FragmentQuizBinding
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
+import com.sunilson.quizcreator.presentation.QuizActivity.QuizActivity
+import com.sunilson.quizcreator.presentation.QuizActivity.QuizViewModel
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
+import kotlinx.android.synthetic.main.fragment_quiz.view.*
 
 class QuizFragment : BaseFragment() {
 
@@ -26,7 +29,12 @@ class QuizFragment : BaseFragment() {
                 activity!!.finish()
             }))
         }
+
         val view = binding.root
+        view.quiz_view.quizFinishedCallback = {
+            (activity as QuizActivity).showResult()
+        }
+
         return view
     }
 

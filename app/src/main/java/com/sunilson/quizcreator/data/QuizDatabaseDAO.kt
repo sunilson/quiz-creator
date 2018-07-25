@@ -3,6 +3,7 @@ package com.sunilson.quizcreator.data
 import android.arch.persistence.room.*
 import com.sunilson.quizcreator.data.models.Category
 import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.data.models.Quiz
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -10,17 +11,23 @@ import io.reactivex.Single
 @Dao()
 interface QuizDatabaseDAO {
 
-    @Query("SELECT * FROM question WHERE categoryId IN (:categoryIds)")
-    fun getQuestionsForCategories(categoryIds: Array<String>): Flowable<List<Question>>
-
-    @Query("SELECT * FROM question WHERE categoryId IN (:categoryIds)")
-    fun getQuestionsForCategoriesOnce(categoryIds: Array<String>): Single<List<Question>>
-
     @Query("SELECT * FROM question")
     fun getAllQuestions(): Flowable<List<Question>>
 
+    @Query("SELECT * FROM question WHERE categoryId IN (:categoryIds)")
+    fun getAllQuestions(categoryIds: Array<String>): Flowable<List<Question>>
+
     @Query("SELECT * FROM question")
     fun getAllQuestionsOnce(): Single<List<Question>>
+
+    @Query("SELECT * FROM question WHERE type == :type")
+    fun getAllQuestionsOnce(type: QuestionType): Single<List<Question>>
+
+    @Query("SELECT * FROM question WHERE categoryId IN (:categoryIds)")
+    fun getAllQuestionsOnce(categoryIds: Array<String>): Single<List<Question>>
+
+    @Query("SELECT * FROM question WHERE categoryId IN (:categoryIds) AND type == :type")
+    fun getAllQuestionsOnce(type: QuestionType, categoryIds: Array<String>): Single<List<Question>>
 
     @Query("SELECT * FROM category")
     fun getAllCategories(): Flowable<List<Category>>

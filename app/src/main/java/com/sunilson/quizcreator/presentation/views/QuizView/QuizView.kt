@@ -27,6 +27,7 @@ import java.util.*
 class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
     var nextCardDelay: Int = 0
+    var quizFinishedCallback: (() -> Unit)? = null
 
     var quiz: Quiz? = null
         set(value) {
@@ -65,7 +66,9 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
                                         SingleChoiceQuestionCardView(context, question) {
                                             if (it) quiz!!.correctAnswers++
                                             Handler().postDelayed({
-                                                stack_view.removeCard(if (it) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT)
+                                                stack_view.removeCard(if (it) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT) {
+                                                    checkFinished()
+                                                }
                                             }, nextCardDelay.toLong())
                                         }
                                     }
@@ -73,7 +76,10 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
                                         MultipleChoiceQuestionCardView(context, question) {
                                             if (it) quiz!!.correctAnswers++
                                             Handler().postDelayed({
-                                                stack_view.removeCard(if (it) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT)
+                                                stack_view.removeCard(if (it) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT) {
+                                                    checkFinished()
+                                                }
+                                                checkFinished()
                                             }, nextCardDelay.toLong())
                                         }
                                     }
@@ -85,6 +91,13 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
                 animatorSet.start()
             }
         }
+
+    private fun checkFinished() {
+        if (stack_view.childCount == 0) {
+            quizFinishedCallback?.invoke()
+        }
+    }
+
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.QuizView, 0, 0)
