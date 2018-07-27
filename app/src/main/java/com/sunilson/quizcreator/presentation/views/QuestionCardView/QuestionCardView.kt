@@ -17,6 +17,7 @@ abstract class QuestionCardView(context: Context,
     init {
         setPadding(10.convertToPx(context), 15.convertToPx(context), 2.convertToPx(context), 10.convertToPx(context))
         background = ContextCompat.getDrawable(context, R.drawable.stacked_card_view_background)
+        isClickable = true
     }
 
     abstract fun initializeViewModel()

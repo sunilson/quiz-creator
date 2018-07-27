@@ -2,11 +2,12 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#ffffff</color>
+    <color name="white">#ffffff</color>
     <color name="colorAccent">#FF4081</color>
     <color name="errorTextColor">#ff0000</color>
 
     <color name="disabled">#ededed</color>
     <color name="unselected">#9c9c9c</color>
-    <color name="correct">#42ed39</color>
+    <color name="correct">#3ebc37</color>
     <color name="wrong">#ff0000</color>
 </resources>

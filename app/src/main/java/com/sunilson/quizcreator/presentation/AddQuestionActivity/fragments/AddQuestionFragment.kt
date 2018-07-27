@@ -10,8 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.data.models.Answer
-import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.databinding.FragmentAddQuestionBinding
 import com.sunilson.quizcreator.presentation.AddQuestionActivity.AddQuestionActivity
@@ -65,30 +63,16 @@ class AddQuestionFragment : BaseFragment() {
             viewModel.creationQuestion.answers.clear()
             viewModel.creationQuestion.answers = view.form_answer_container.getAnswers()
             disposable.add(viewModel.createQuestion().subscribe({
-                //TODO
+                activity?.setResult(Activity.RESULT_OK)
+                activity?.finish()
             }, {}))
         }
         view.form_save_and_continue.setOnClickListener {
-            (activity!! as AddQuestionActivity).restart(this)
-        }
-
-        view.mock_data.setOnClickListener {
-            for (i in 0 until 5) {
-                viewModel.startQuestionCreation(arguments?.getSerializable("type") as QuestionType)
-                viewModel.creationQuestion = Question(
-                        text = "Ist dies eine Frage $i?",
-                        categoryId = "general",
-                        answers = mutableListOf(
-                                Answer(text = "Dies ist eine Antwort A!", correctAnswer = true),
-                                Answer(text = "Dies ist eine Antwort B!"),
-                                Answer(text = "Dies ist eine Antwort! C"),
-                                Answer(text = "Dies ist eine Antwort! D")
-                        )
-                )
-                viewModel.createQuestion().subscribe()
-                activity?.setResult(Activity.RESULT_OK)
-                activity?.finish()
-            }
+            viewModel.creationQuestion.answers.clear()
+            viewModel.creationQuestion.answers = view.form_answer_container.getAnswers()
+            disposable.add(viewModel.createQuestion().subscribe({
+                (activity!! as AddQuestionActivity).restart(this)
+            }, {}))
         }
 
         return view

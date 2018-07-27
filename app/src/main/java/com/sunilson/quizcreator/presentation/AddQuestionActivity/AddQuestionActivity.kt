@@ -20,17 +20,23 @@ class AddQuestionActivity : BaseActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_question)
-        supportFragmentManager.beginTransaction().replace(R.id.add_question_framelayout, AddQuestionTypeFragment.newInstance()).commit()
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.add_question_framelayout, AddQuestionTypeFragment.newInstance())
+                .commit()
     }
 
     fun startCreation(type: QuestionType) {
-        supportFragmentManager.beginTransaction().replace(R.id.add_question_framelayout, AddQuestionFragment.newInstance(type)).commit()
+        supportFragmentManager
+                .beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left, R.anim.slide_in_from_left, R.anim.slide_out_to_right)
+                .addToBackStack("egal")
+                .replace(R.id.add_question_framelayout, AddQuestionFragment.newInstance(type))
+                .commit()
     }
 
     fun restart(current: Fragment) {
-        supportFragmentManager.beginTransaction().remove(current).commit()
-        supportFragmentManager.executePendingTransactions()
-        supportFragmentManager.beginTransaction().replace(R.id.add_question_framelayout, AddQuestionTypeFragment.newInstance()).commit()
+        supportFragmentManager.popBackStack()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector

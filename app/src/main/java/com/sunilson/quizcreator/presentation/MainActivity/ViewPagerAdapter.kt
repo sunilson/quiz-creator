@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.AllQuestionsFragment.AllQuestionsFragment
-import com.sunilson.quizcreator.presentation.MainActivity.fragments.StatisticsFragment
+import com.sunilson.quizcreator.presentation.MainActivity.fragments.StatisticsFragment.StatisticsFragment
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.CreateQuizFragment.CreateQuizFragment
 
 

@@ -10,10 +10,15 @@ import com.sunilson.quizcreator.databinding.FragmentQuizBinding
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
 import com.sunilson.quizcreator.presentation.QuizActivity.QuizActivity
 import com.sunilson.quizcreator.presentation.QuizActivity.QuizViewModel
+import com.sunilson.quizcreator.presentation.shared.AudioService
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
 import kotlinx.android.synthetic.main.fragment_quiz.view.*
+import javax.inject.Inject
 
 class QuizFragment : BaseFragment() {
+
+    @Inject
+    lateinit var audioService: AudioService
 
     val viewModel: QuizViewModel by lazy { (activity!! as QuizActivity).quizViewModel }
     var quizId: String = ""
@@ -32,8 +37,14 @@ class QuizFragment : BaseFragment() {
 
         val view = binding.root
         view.quiz_view.quizFinishedCallback = {
-            (activity as QuizActivity).showResult()
+            disposable.add(viewModel.storeQuiz().subscribe({
+                (activity as QuizActivity).showResult()
+            }, {
+                (activity as QuizActivity).showResult()
+                context?.showToast(getString(R.string.store_quiz_error))
+            }))
         }
+        view.quiz_view.audioService = audioService
 
         return view
     }

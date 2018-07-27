@@ -3,10 +3,7 @@ package com.sunilson.quizcreator.data
 import android.arch.persistence.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.sunilson.quizcreator.data.models.Answer
-import com.sunilson.quizcreator.data.models.Question
-import com.sunilson.quizcreator.data.models.QuestionType
-import com.sunilson.quizcreator.data.models.Quiz
+import com.sunilson.quizcreator.data.models.*
 
 
 class TypeConverters {
@@ -22,6 +19,16 @@ class TypeConverters {
     @TypeConverter
     fun toAnswer(string: String): Answer {
         return gson.fromJson<Answer>(string, Answer::class.java)
+    }
+
+    @TypeConverter
+    fun toString(statistics: Statistics): String {
+        return gson.toJson(statistics, Statistics::class.java)
+    }
+
+    @TypeConverter
+    fun toStatistics(string: String): Statistics {
+        return gson.fromJson<Statistics>(string, Statistics::class.java)
     }
 
     @TypeConverter
@@ -52,6 +59,28 @@ class TypeConverters {
     @TypeConverter
     fun toQuiz(string: String): Quiz {
         return gson.fromJson<Quiz>(string, Quiz::class.java)
+    }
+
+    @TypeConverter
+    fun toCategoryRateMap(string: String): Map<String, Float> {
+        val listType = object : TypeToken<Map<String, Float>>() {}.type
+        return gson.fromJson(string, listType)
+    }
+
+    @TypeConverter
+    fun rateMapToString(rates: Map<String, Float>): String {
+        return gson.toJson(rates)
+    }
+
+    @TypeConverter
+    fun toIntList(string: String): List<Int> {
+        val listType = object : TypeToken<List<Int>>() {}.type
+        return gson.fromJson(string, listType)
+    }
+
+    @TypeConverter
+    fun intListToString(list: List<Int>): String {
+        return gson.toJson(list)
     }
 
     @TypeConverter

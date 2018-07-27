@@ -1,10 +1,7 @@
 package com.sunilson.quizcreator.data
 
 import android.arch.persistence.room.*
-import com.sunilson.quizcreator.data.models.Category
-import com.sunilson.quizcreator.data.models.Question
-import com.sunilson.quizcreator.data.models.QuestionType
-import com.sunilson.quizcreator.data.models.Quiz
+import com.sunilson.quizcreator.data.models.*
 import io.reactivex.Flowable
 import io.reactivex.Single
 
@@ -38,11 +35,17 @@ interface QuizDatabaseDAO {
     @Query("SELECT * FROM quiz")
     fun getAllQuiz(): Flowable<List<Quiz>>
 
+    @Query("SELECT * FROM quiz")
+    fun getAllQuizOnce(): Single<List<Quiz>>
+
     @Query("SELECT * FROM quiz WHERE id == :id")
     fun getQuizOnce(id: String): Single<Quiz>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addQuiz(quiz: Quiz)
+
+    @Query("DELETE FROM quiz")
+    fun deleteAllQuiz()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addQuestion(question: Question)
@@ -55,4 +58,13 @@ interface QuizDatabaseDAO {
 
     @Query("DELETE FROM question WHERE id == :id")
     fun removeQuestion(id: String): Int
+
+    @Query("SELECT * FROM statistics WHERE id == 'statistics'")
+    fun getStatistics(): Flowable<Statistics>
+
+    @Query("SELECT * FROM statistics WHERE id == 'statistics'")
+    fun getStatisticsOnce(): Single<Statistics>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun setStatistics(statistics: Statistics)
 }

@@ -5,6 +5,7 @@ import com.sunilson.quizcreator.Application.di.ActivityScope
 import com.sunilson.quizcreator.data.IQuizRepository
 import com.sunilson.quizcreator.data.models.Quiz
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseViewModel
+import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -16,5 +17,9 @@ class QuizViewModel @Inject constructor(repository: IQuizRepository) : BaseViewM
         return repository.loadQuiz(id).doAfterSuccess {
             currentQuiz.set(it)
         }
+    }
+
+    fun storeQuiz(): Completable {
+        return repository.storeQuiz(currentQuiz.get()!!)
     }
 }

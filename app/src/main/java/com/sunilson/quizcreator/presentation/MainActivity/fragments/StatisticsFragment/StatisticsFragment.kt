@@ -1,34 +1,36 @@
-package com.sunilson.quizcreator.presentation.MainActivity.fragments
+package com.sunilson.quizcreator.presentation.MainActivity.fragments.StatisticsFragment
 
 import android.os.Bundle
 import android.view.*
-import com.anychart.anychart.AnyChart
-import com.anychart.anychart.DataEntry
-import com.anychart.anychart.ValueDataEntry
-import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.presentation.AddQuestionActivity.fragments.AddQuestionViewModel
-import kotlinx.android.synthetic.main.fragment_statistics.view.*
+import com.sunilson.quizcreator.databinding.FragmentStatisticsBinding
+import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
 import javax.inject.Inject
 
 
 class StatisticsFragment : BaseFragment() {
 
     @Inject
-    lateinit var viewMOdel: AddQuestionViewModel
+    lateinit var viewModel: StatisticsFragmentViewModel
+
+    lateinit var binding: FragmentStatisticsBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-        val view = inflater.inflate(R.layout.fragment_statistics, container, false)
+        binding = FragmentStatisticsBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
 
+        val view = binding.root
 
+        /*
         val pie = AnyChart.pie()
-
         val data = mutableListOf<DataEntry>()
         data.add(ValueDataEntry("John", 10000))
         data.add(ValueDataEntry("Jake", 12000))
         data.add(ValueDataEntry("Peter", 18000))
         pie.setData(data)
         view.statistics_view.setChart(pie)
+        */
+
         return view
     }
 

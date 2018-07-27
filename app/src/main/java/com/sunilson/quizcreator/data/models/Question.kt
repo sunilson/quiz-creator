@@ -18,6 +18,7 @@ class Question(
         var categoryId: String = "",
         var answers: MutableList<Answer> = mutableListOf(),
         var type: QuestionType = QuestionType.SINGLE_CHOICE,
+        var correctlyAnswered: Boolean = false,
         @Ignore var categoryName: String = ""
 ) : BaseObservable(), AdapterElement {
 

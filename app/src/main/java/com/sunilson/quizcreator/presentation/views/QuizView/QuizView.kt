@@ -11,12 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import com.sunilson.quizcreator.R
+import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.data.models.Quiz
-import com.sunilson.quizcreator.presentation.shared.stack_fade_in_duration
-import com.sunilson.quizcreator.presentation.shared.timer_fade_delay_between
-import com.sunilson.quizcreator.presentation.shared.timer_fade_half_duration
-import com.sunilson.quizcreator.presentation.shared.timer_fade_scale_duration
+import com.sunilson.quizcreator.presentation.shared.*
 import com.sunilson.quizcreator.presentation.views.QuestionCardView.MultipleChoiceQuestionCardView
 import com.sunilson.quizcreator.presentation.views.QuestionCardView.SingleChoiceQuestionCardView
 import com.sunilson.quizcreator.presentation.views.StackedCardsView.StackAnimationTypes
@@ -28,6 +26,7 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
 
     var nextCardDelay: Int = 0
     var quizFinishedCallback: (() -> Unit)? = null
+    var audioService: AudioService? = null
 
     var quiz: Quiz? = null
         set(value) {
@@ -64,23 +63,12 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
                                 when (question.type) {
                                     QuestionType.SINGLE_CHOICE -> {
                                         SingleChoiceQuestionCardView(context, question) {
-                                            if (it) quiz!!.correctAnswers++
-                                            Handler().postDelayed({
-                                                stack_view.removeCard(if (it) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT) {
-                                                    checkFinished()
-                                                }
-                                            }, nextCardDelay.toLong())
+                                            handleQuestionClicked(it, question)
                                         }
                                     }
                                     else -> {
                                         MultipleChoiceQuestionCardView(context, question) {
-                                            if (it) quiz!!.correctAnswers++
-                                            Handler().postDelayed({
-                                                stack_view.removeCard(if (it) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT) {
-                                                    checkFinished()
-                                                }
-                                                checkFinished()
-                                            }, nextCardDelay.toLong())
+                                            handleQuestionClicked(it, question)
                                         }
                                     }
                                 }
@@ -92,8 +80,26 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
             }
         }
 
+    private fun handleQuestionClicked(correct: Boolean, question: Question) {
+        if (correct) {
+            audioService?.playCorrectSound()
+            quiz!!.correctAnswers++
+            question.correctlyAnswered = true
+        } else {
+            audioService?.playErrorSound()
+        }
+        Handler().postDelayed({
+            stack_view.removeCard(if (correct) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT) {
+                checkFinished()
+            }
+            checkFinished()
+        }, nextCardDelay.toLong())
+    }
+
     private fun checkFinished() {
         if (stack_view.childCount == 0) {
+            quiz!!.finished = true
+            quiz!!.duration = Date().time - quiz!!.timestamp
             quizFinishedCallback?.invoke()
         }
     }

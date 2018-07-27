@@ -18,6 +18,11 @@ import android.view.ViewTreeObserver
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.*
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.*
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
@@ -27,6 +32,7 @@ import com.sunilson.quizcreator.presentation.views.AnswerView.AnswerView
 import com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
 import com.sunilson.quizcreator.presentation.views.QuizView.QuizView
 import kotlinx.android.synthetic.main.voice_edittext.view.*
+import org.joda.time.DateTime
 
 @BindingAdapter("categories")
 fun Spinner.setEntries(categories: List<Category>?) {
@@ -268,6 +274,86 @@ fun ImageView.setQuestionIcon(type: QuestionType) {
         QuestionType.MULTIPLE_CHOICE -> {
             this.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_done_all_black_24dp))
         }
+    }
+}
+
+@BindingAdapter("statsTest")
+fun PieChart.statsTest(statistics: Statistics) {
+    val dataSet = PieDataSet(
+            listOf(
+                    PieEntry(statistics.finishedQuizAmount.toFloat(), "Finished Quizes"),
+                    PieEntry(statistics.unfinishedQuizAmount.toFloat(), "Unfinished Quizes")),
+            "Label")
+
+    dataSet.setColors(ContextCompat.getColor(context, R.color.colorPrimary), ContextCompat.getColor(context, R.color.colorAccent))
+    dataSet.valueTextSize = 24f
+    dataSet.valueTextColor = ContextCompat.getColor(context, R.color.white)
+    this.data = PieData(dataSet)
+    this.legend.isEnabled = false
+    this.description.isEnabled = false
+    this.setDrawEntryLabels(false)
+    this.invalidate()
+}
+
+@BindingAdapter("sevenDayQuizAmount", "sevenDayGoodQuizAmount")
+fun BarChart.sevenDayQuizAmount(days: List<Int>, goodDays: List<Int>) {
+
+    if (days.isEmpty()) return
+    val entries = days.reversed().mapIndexed { index, value -> BarEntry(index.toFloat(), value.toFloat()) }
+    val goodEntries = goodDays.reversed().mapIndexed { index, value -> BarEntry(index.toFloat(), value.toFloat()) }
+
+
+    val dataSet = BarDataSet(entries, context.getString(R.string.finished))
+    dataSet.color = ContextCompat.getColor(context, R.color.unselected)
+    val dataSetGood = BarDataSet(goodEntries, context.getString(R.string.finished_good))
+    dataSetGood.color = ContextCompat.getColor(context, R.color.correct)
+
+    val barData = BarData(listOf(dataSet, dataSetGood))
+    barData.barWidth = 0.42f
+    barData.setDrawValues(false)
+    this.data = barData
+    this.data.isHighlightEnabled = false
+    this.data.groupBars(0f, 0.06f, 0.02f)
+
+    val dataLabels = days.reversed().mapIndexed { index, value ->
+        val date = DateTime.now().minusDays(index)
+        date.dayOfWeek
+    }.reversed()
+
+    this.description.isEnabled = false
+    this.setPinchZoom(false)
+    this.setScaleEnabled(false)
+    this.setDrawBorders(false)
+    this.setFitBars(true)
+    this.axisLeft.granularity = 1f
+    this.axisRight.isEnabled = false
+    this.xAxis.setDrawGridLines(false)
+    this.xAxis.position = XAxis.XAxisPosition.BOTTOM
+    this.setExtraOffsets(0f, 0f, 0f, 0f)
+    this.xAxis.valueFormatter = IAxisValueFormatter { value, axis ->
+        when (dataLabels[value.toInt()]) {
+            1 -> context.getString(R.string.monday)
+            2 -> context.getString(R.string.tuesday)
+            3 -> context.getString(R.string.wednesday)
+            4 -> context.getString(R.string.thursday)
+            5 -> context.getString(R.string.friday)
+            6 -> context.getString(R.string.saturday)
+            else -> context.getString(R.string.sunday)
+        }.take(3)
+    }
+
+    this.invalidate()
+}
+
+@BindingAdapter("categorySuccessRates")
+fun LinearLayout.categorySuccessRates(rates: Map<String, Float>) {
+    this.removeAllViews()
+    rates.forEach { s, fl ->
+        val view = com.sunilson.quizcreator.presentation.views.CustomProgressBar.CustomProgressBar(context, s, fl)
+        view.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT).apply {
+            this.topMargin = 15.convertToPx(context)
+        }
+        this.addView(view)
     }
 }
 

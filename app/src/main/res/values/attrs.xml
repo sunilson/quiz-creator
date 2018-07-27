@@ -22,4 +22,8 @@
     <declare-styleable name="QuizView">
         <attr name="nextCardDelay" format="integer" />
     </declare-styleable>
+    <declare-styleable name="CustomProgressBar">
+        <attr name="progress" format="float" />
+        <attr name="progress_label" format="string" />
+    </declare-styleable>
 </resources>

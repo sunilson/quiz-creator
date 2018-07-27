@@ -36,4 +36,21 @@
     <string name="only_single_choice">Only single choice</string>
     <string name="view_questions">View_questions</string>
     <string name="Exit">exit</string>
+    <string name="store_quiz_error">Could not store quiz!</string>
+    <string name="success_rates_for_categories">Success rates for categories</string>
+    <string name="monday">Monday</string>
+    <string name="sunday">Sunday</string>
+    <string name="saturday">Saturday</string>
+    <string name="friday">Friday</string>
+    <string name="thursday">Thursday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="finished_quizes_in_last_7_days">Finished Quizes in last 7 days</string>
+    <string name="finished">Finished</string>
+    <string name="finished_good">Finished with 80% or more correct</string>
+    <string name="success_rates">Success Rates</string>
+    <string name="question_success_rates">Question success Rates</string>
+    <string name="all_categories">All categories</string>
+    <string name="other_statistics">Other statistics</string>
+    <string name="reset">Reset</string>
 </resources>

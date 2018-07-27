@@ -3,7 +3,7 @@ package com.sunilson.quizcreator.presentation.MainActivity.di
 import com.sunilson.quizcreator.Application.di.FragmentScope
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.AllQuestionsFragment.AllQuestionsFragment
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.CreateQuizFragment.CreateQuizFragment
-import com.sunilson.quizcreator.presentation.MainActivity.fragments.StatisticsFragment
+import com.sunilson.quizcreator.presentation.MainActivity.fragments.StatisticsFragment.StatisticsFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
