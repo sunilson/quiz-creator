@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.sunilson.quizcreator.R
+import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.databinding.FragmentAddQuestionBinding
 import com.sunilson.quizcreator.presentation.AddQuestionActivity.AddQuestionActivity
@@ -85,7 +86,11 @@ class AddQuestionFragment : BaseFragment() {
     }
 
     fun addAnswerEditText(view: View, transition: Boolean = false) {
-        val answerView = EditTextWithVoiceInput(context!!, view.form_answer_container.childCount > 3)
+        val answerView = EditTextWithVoiceInput(
+                context!!,
+                view.form_answer_container.childCount > 3,
+                arguments?.getSerializable("type") as QuestionType == QuestionType.MULTIPLE_CHOICE,
+                Answer(text =  getString(R.string.answer_default_text)))
         if (transition) android.transition.TransitionManager.beginDelayedTransition(view.form_container, ChangeBounds())
         view.form_answer_container.addView(answerView)
     }

@@ -57,7 +57,6 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
                             alphaAnimator.duration = stack_fade_in_duration
                             alphaAnimator.start()
 
-                            value.timestamp = Date().time
                             field = value
                             stack_view.addListOfCards(it.questions.mapIndexed { index, question ->
                                 when (question.type) {

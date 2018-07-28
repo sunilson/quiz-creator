@@ -53,4 +53,10 @@
     <string name="all_categories">All categories</string>
     <string name="other_statistics">Other statistics</string>
     <string name="reset">Reset</string>
+    <string name="answer_default_text">Answer default text</string>
+    <string name="questions">Questions</string>
+    <string name="categories">Categories</string>
+    <string name="answers">Answers</string>
+    <string name="category">Category</string>
+    <string name="question">Question</string>
 </resources>

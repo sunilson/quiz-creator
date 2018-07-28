@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
+import java.util.*
 
 fun Int.convertToPx(context: Context): Int {
     return (this * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).toInt()
@@ -31,11 +32,25 @@ fun Context.showToast(message: String? = "No message given!", duration: Int = To
     Toast.makeText(this, message, duration).show()
 }
 
+fun MutableList<Answer>.popRandomElement(id: String, chance: Float = 0.5f): Answer {
+    val random = Random()
+    return if (random.nextFloat() <= chance) {
+        val randomInt = random.nextInt(this.size)
+        val result = this[randomInt]
+        this.removeAt(randomInt)
+        result
+    } else {
+        val correspondingAnswer = this.find { it.id == id }
+        this.remove(correspondingAnswer)
+        correspondingAnswer!!
+    }
+}
+
 fun LinearLayout.getAnswers(): MutableList<Answer> {
     val result = mutableListOf<Answer>()
     for (i in 0 until this.childCount) {
         val answerEditText = this.getChildAt(i) as EditTextWithVoiceInput
-        result.add(answerEditText.answer)
+        result.add(answerEditText.answer ?: Answer())
     }
     return result
 }

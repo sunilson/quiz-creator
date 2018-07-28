@@ -25,8 +25,8 @@ class EditTextWithVoiceInput : ConstraintLayout {
     val text: String
         get() = voice_edittext.text.toString()
 
-    val answer: Answer
-        get() = viewModel.answer!!
+    val answer: Answer?
+        get() = viewModel.answer
 
     val optional: Boolean
         get() = viewModel.optional

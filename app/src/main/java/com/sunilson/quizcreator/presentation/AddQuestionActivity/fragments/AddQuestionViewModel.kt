@@ -37,10 +37,10 @@ class AddQuestionViewModel @Inject constructor(val application: Application, rep
                 text = "Ist dies eine Frage?",
                 type = questionType,
                 answers = mutableListOf(
-                        Answer(text = "Ich bin eine Antwort", correctAnswer = true),
-                        Answer(text = "Ich bin eine Antwort"),
-                        Answer(text = "Ich bin eine Antwort"),
-                        Answer(text = "Ich bin eine Antwort")
+                        Answer(text = application.getString(R.string.answer_default_text), correctAnswer = true),
+                        Answer(text = application.getString(R.string.answer_default_text)),
+                        Answer(text = application.getString(R.string.answer_default_text)),
+                        Answer(text = application.getString(R.string.answer_default_text))
                 )
         )
     }

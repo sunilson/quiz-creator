@@ -5,6 +5,7 @@ import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.*
 import com.sunilson.quizcreator.presentation.shared.Exceptions.NoQuestionsFoundException
 import com.sunilson.quizcreator.presentation.shared.GOOD_THRESHOLD
+import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.popRandomElement
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -81,75 +82,10 @@ class QuizRepository @Inject constructor(private val application: Application, p
     }
 
     override fun storeQuiz(quiz: Quiz): Completable {
-
         return if (quiz.finished) {
             database.quizDAO().getAllQuizOnce().flatMapCompletable { res ->
-
-                val result = Statistics()
-                val allQuizes = res.toMutableList()
-                //Add new quiz to all quizes
-                allQuizes[allQuizes.indexOfFirst { it.id == quiz.id }] = quiz
-
-                val finishedQuizes = allQuizes.filter { it.finished }
-                val quizCorrectRates = finishedQuizes.map { q ->
-                    (q.correctAnswers * 100) / q.questions.size
-                }
-
-                val correctPerCategoryAmount = mutableMapOf<String, Int>()
-                val wrongPerCategoryRate = mutableMapOf<String, Int>()
-                val categoryRateResult = mutableMapOf<String, Float>()
-                var wholeDuration: Long = 0
-
-                finishedQuizes.forEach { q ->
-                    wholeDuration += q.duration
-                    q.questions.forEach { question ->
-                        if (correctPerCategoryAmount[question.categoryId] == null) {
-                            correctPerCategoryAmount[question.categoryId] = 0
-                        }
-                        if (wrongPerCategoryRate[question.categoryId] == null) {
-                            wrongPerCategoryRate[question.categoryId] = 0
-                        }
-
-                        if (question.correctlyAnswered) {
-                            val currentVal = correctPerCategoryAmount[question.categoryId]!!
-                            correctPerCategoryAmount[question.categoryId] = currentVal + 1
-                        } else {
-                            val currentVal = wrongPerCategoryRate[question.categoryId]!!
-                            wrongPerCategoryRate[question.categoryId] = currentVal + 1
-                        }
-                    }
-                }
-
-                correctPerCategoryAmount.forEach { s, i ->
-                    categoryRateResult[s] = (i * 100f) / (correctPerCategoryAmount[s]!! + wrongPerCategoryRate[s]!!)
-                }
-
-                val finishedQuizLastSevenDays = mutableListOf(0, 0, 0, 0, 0, 0, 0)
-                val finishedGoodQuizLastSevenDays = mutableListOf(0, 0, 0, 0, 0, 0, 0)
-
-                finishedQuizes.filter {
-                    DateTime(it.timestamp).isAfter(DateTime.now().minusDays(7)) && it.finished
-                }.forEach { quiz ->
-                    val index = DateTime.now().dayOfMonth - DateTime(quiz.timestamp).dayOfMonth
-                    if (index < finishedQuizLastSevenDays.size) {
-                        finishedQuizLastSevenDays[index]++
-                        if (quiz.questions.filter { it.correctlyAnswered }.size * 100 / quiz.questions.size >= GOOD_THRESHOLD) {
-                            finishedGoodQuizLastSevenDays[index]++
-                        }
-                    }
-                }
-
-                result.finishedQuizAmount = finishedQuizes.size
-                result.unfinishedQuizAmount = allQuizes.size - finishedQuizes.size
-                result.averageCorrectRate = quizCorrectRates.average().toFloat()
-                result.averageCorrectRatePerCategory = categoryRateResult
-                result.averageDuration = wholeDuration / finishedQuizes.size
-                result.finishedQuizAmountSevenDays = finishedQuizLastSevenDays
-                result.finishedGoodQuizAmountSevenDays = finishedGoodQuizLastSevenDays
-
-                database.quizDAO().setStatistics(result)
+                database.quizDAO().setStatistics(calculateStatistics(res, quiz))
                 database.quizDAO().addQuiz(quiz)
-
                 Completable.complete()
             }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         } else {
@@ -160,27 +96,109 @@ class QuizRepository @Inject constructor(private val application: Application, p
         }
     }
 
-    private fun processQuizQuestions(questions: List<Question>, questionAmount: Int, shuffleAnswers: Boolean): Quiz {
+    private fun calculateStatistics(res: List<Quiz>, quiz: Quiz): Statistics {
+        val result = Statistics()
+        val allQuizes = res.toMutableList()
+        //Add new quiz to all quizes
+        allQuizes[allQuizes.indexOfFirst { it.id == quiz.id }] = quiz
 
-        if (shuffleAnswers) {
-            //TODO Antworten von anderen Fragen der gleichen Kategorie holen
+        val finishedQuizes = allQuizes.filter { it.finished }
+        val quizCorrectRates = finishedQuizes.map { q ->
+            (q.correctAnswers * 100) / q.questions.size
         }
 
-        var quizQuestions = questions.map { question ->
-            question.answers = question.answers.filterIndexed { index, answer ->
-                index <= 3
+        val correctPerCategoryAmount = mutableMapOf<String, Int>()
+        val wrongPerCategoryRate = mutableMapOf<String, Int>()
+        val categoryRateResult = mutableMapOf<String, Float>()
+        var wholeDuration: Long = 0
+
+        finishedQuizes.forEach { q ->
+            wholeDuration += q.duration
+            q.questions.forEach { question ->
+                if (correctPerCategoryAmount[question.categoryId] == null) {
+                    correctPerCategoryAmount[question.categoryId] = 0
+                }
+                if (wrongPerCategoryRate[question.categoryId] == null) {
+                    wrongPerCategoryRate[question.categoryId] = 0
+                }
+
+                if (question.correctlyAnswered) {
+                    val currentVal = correctPerCategoryAmount[question.categoryId]!!
+                    correctPerCategoryAmount[question.categoryId] = currentVal + 1
+                } else {
+                    val currentVal = wrongPerCategoryRate[question.categoryId]!!
+                    wrongPerCategoryRate[question.categoryId] = currentVal + 1
+                }
+            }
+        }
+
+        correctPerCategoryAmount.forEach { s, i ->
+            categoryRateResult[s] = (i * 100f) / (correctPerCategoryAmount[s]!! + wrongPerCategoryRate[s]!!)
+        }
+
+        val finishedQuizLastSevenDays = mutableListOf(0, 0, 0, 0, 0, 0, 0)
+        val finishedGoodQuizLastSevenDays = mutableListOf(0, 0, 0, 0, 0, 0, 0)
+
+        finishedQuizes.filter {
+            DateTime(it.timestamp).isAfter(DateTime.now().minusDays(7)) && it.finished
+        }.forEach { quiz ->
+            val index = DateTime.now().dayOfMonth - DateTime(quiz.timestamp).dayOfMonth
+            if (index < finishedQuizLastSevenDays.size) {
+                finishedQuizLastSevenDays[index]++
+                if (quiz.questions.filter { it.correctlyAnswered }.size * 100 / quiz.questions.size >= GOOD_THRESHOLD) {
+                    finishedGoodQuizLastSevenDays[index]++
+                }
+            }
+        }
+
+        result.finishedQuizAmount = finishedQuizes.size
+        result.unfinishedQuizAmount = allQuizes.size - finishedQuizes.size
+        result.averageCorrectRate = quizCorrectRates.average().toFloat()
+        result.averageCorrectRatePerCategory = categoryRateResult
+        result.averageDuration = wholeDuration / finishedQuizes.size
+        result.finishedQuizAmountSevenDays = finishedQuizLastSevenDays
+        result.finishedGoodQuizAmountSevenDays = finishedGoodQuizLastSevenDays
+
+        return result
+    }
+
+    private fun processQuizQuestions(questions: List<Question>, questionAmount: Int, shuffleAnswers: Boolean): Quiz {
+
+        var quizQuestions = questions.toMutableList()
+
+        if (shuffleAnswers) {
+            val answerPool = mutableMapOf<String, MutableList<Answer>>()
+            quizQuestions.forEach { question ->
+                if (answerPool[question.categoryId] == null) answerPool[question.categoryId] = mutableListOf()
+                question.answers.forEach {
+                    if (!it.correctAnswer) answerPool[question.categoryId]?.add(it)
+                }
+            }
+
+            quizQuestions = quizQuestions.map { question ->
+                question.answers = question.answers.map { answer ->
+                    if (answer.correctAnswer) answer
+                    else {
+                        answerPool[question.categoryId]!!.popRandomElement(answer.id, 1f)
+                    }
+                }.toMutableList()
+                question
             }.toMutableList()
+        }
+
+        quizQuestions = quizQuestions.map { question ->
+            val tempAnswers = question.answers.shuffled().take(4).toMutableList()
+            if (question.type == QuestionType.SINGLE_CHOICE && !tempAnswers.any { it.correctAnswer }) {
+                tempAnswers[Random().nextInt(5)] = question.answers.first { it.correctAnswer }
+            }
+            question.answers = tempAnswers
             question
         }.toMutableList()
 
         quizQuestions.shuffle()
         quizQuestions = quizQuestions.take(questionAmount).toMutableList()
 
-        val quiz = Quiz(
-                questions = quizQuestions,
-                timestamp = Date().time
-        )
-
+        val quiz = Quiz(questions = quizQuestions)
         database.quizDAO().addQuiz(quiz)
         return quiz
     }

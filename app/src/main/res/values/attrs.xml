@@ -26,4 +26,8 @@
         <attr name="progress" format="float" />
         <attr name="progress_label" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="DividerHeadline">
+        <attr name="text" format="string" />
+    </declare-styleable>
 </resources>

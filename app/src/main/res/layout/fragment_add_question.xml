@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -12,7 +13,7 @@
         <import type="com.sunilson.quizcreator.data.models.Category" />
     </data>
 
-    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView
         android:id="@+id/form_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -23,47 +24,88 @@
             android:animateLayoutChanges="true"
             android:padding="15dp">
 
+            <com.sunilson.quizcreator.presentation.views.DividerHeadline
+                android:id="@+id/question_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/form_question"
+                app:layout_constraintStart_toStartOf="@+id/form_question"
+                app:layout_constraintTop_toTopOf="parent"
+                app:text="@string/question" />
+
             <com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
                 android:id="@+id/form_question"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
                 app:editTextValue="@={viewModel.creationQuestion.observableText}"
+                app:layout_constraintBottom_toTopOf="@id/form_category_spinner_container"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/question_title"
                 app:optional="false" />
 
-            <Spinner
-                android:id="@+id/form_category_spinner"
-                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-                android:layout_width="0dp"
+            <com.sunilson.quizcreator.presentation.views.DividerHeadline
+                android:id="@+id/category_spinner_title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:categories="@{viewModel.categories}"
-                app:itemSelectedCallback="@{(item) -> viewModel.selectCategory((Category) item)}"
-                app:layout_constraintBottom_toTopOf="@id/form_answer_container"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/form_category_spinner_container"
+                app:layout_constraintStart_toStartOf="@+id/form_category_spinner_container"
+                app:layout_constraintTop_toBottomOf="@+id/form_question"
+                app:text="@string/category" />
+
+            <RelativeLayout
+                android:id="@+id/form_category_spinner_container"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/voice_edittext_height"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/stacked_card_view_background"
+                app:layout_constraintBottom_toTopOf="@id/answers_title"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/form_add_category"
-                app:layout_constraintTop_toBottomOf="@id/form_question" />
+                app:layout_constraintTop_toBottomOf="@id/form_question">
+
+                <Spinner
+                    android:id="@+id/form_category_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/voice_edittext_height"
+                    android:layout_centerInParent="true"
+                    android:padding="15dp"
+                    app:categories="@{viewModel.categories}"
+                    app:itemSelectedCallback="@{(item) -> viewModel.selectCategory((Category) item)}" />
+            </RelativeLayout>
 
             <ImageButton
                 android:id="@+id/form_add_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_add_black_24dp"
-                app:layout_constraintBottom_toTopOf="@id/form_answer_container"
-                app:layout_constraintLeft_toRightOf="@id/form_category_spinner"
+                app:layout_constraintBottom_toBottomOf="@id/form_category_spinner_container"
+                app:layout_constraintLeft_toRightOf="@id/form_category_spinner_container"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/form_question" />
+                app:layout_constraintTop_toTopOf="@id/form_category_spinner_container" />
+
+            <com.sunilson.quizcreator.presentation.views.DividerHeadline
+                android:id="@+id/answers_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/form_answer_container"
+                app:layout_constraintStart_toStartOf="@+id/form_answer_container"
+                app:layout_constraintTop_toBottomOf="@+id/form_category_spinner_container"
+                app:text="@string/answers" />
 
             <LinearLayout
                 android:id="@+id/form_answer_container"
+                initialEditTextAnswers="@{viewModel.creationQuestion.answers}"
+                questionType="@{viewModel.creationQuestion.type}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                initialEditTextAnswers="@{viewModel.creationQuestion.answers}"
-                questionType="@{viewModel.creationQuestion.type}"
-                app:layout_constraintTop_toBottomOf="@id/form_category_spinner">
+                app:layout_constraintTop_toBottomOf="@id/answers_title">
 
             </LinearLayout>
 
