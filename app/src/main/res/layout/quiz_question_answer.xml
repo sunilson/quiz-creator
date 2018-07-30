@@ -22,27 +22,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:correct="@{viewModel.correct}"
-            app:marked="@{viewModel.marked}"
             app:layout_constraintBottom_toBottomOf="@id/answer_text"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/answer_text"
-            app:layout_constraintTop_toTopOf="@id/answer_text" />
+            app:layout_constraintTop_toTopOf="@id/answer_text"
+            app:marked="@{viewModel.marked}" />
 
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/answer_text"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:background="?selectableItemBackground"
-            android:padding="15dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:padding="10dp"
             android:text="@{viewModel.answer.text}"
             android:textSize="16sp"
+            app:autoSizeMaxTextSize="16sp"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeTextType="uniform"
             app:layout_constraintBottom_toTopOf="@id/answer_divider"
             app:layout_constraintLeft_toRightOf="@id/answer_image"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Dies ist eine Antwort!" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/answer_divider"

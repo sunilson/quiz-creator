@@ -23,7 +23,7 @@ class MultipleChoiceQuestionCardView(context: Context, question: Question, quest
 
             val containsIncorrectAnswers = question.answers.any { (!it.correctAnswer && it.chosen) || (it.correctAnswer && !it.chosen) }
             if (containsIncorrectAnswers) this.startAnimation(android.view.animation.AnimationUtils.loadAnimation(context, R.anim.error_card_animation))
-            questionSubmitted(containsIncorrectAnswers)
+            questionSubmitted(!containsIncorrectAnswers)
         }
     }
 

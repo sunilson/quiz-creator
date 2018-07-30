@@ -12,6 +12,9 @@ import javax.inject.Inject
 @ActivityScope
 class QuizViewModel @Inject constructor(repository: IQuizRepository) : BaseViewModel(repository) {
     var currentQuiz: ObservableField<Quiz?> = ObservableField()
+    val correctQuestions: Int by lazy {
+        currentQuiz.get()!!.correctAnswers
+    }
 
     fun loadQuiz(id: String): Single<Quiz> {
         return repository.loadQuiz(id).doAfterSuccess {

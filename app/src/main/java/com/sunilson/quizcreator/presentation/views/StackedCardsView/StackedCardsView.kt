@@ -44,7 +44,7 @@ class StackedCardsView(context: Context, attrs: AttributeSet) : RelativeLayout(c
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.StackedCardsView, 0, 0)
         topAndBottomSpacing = a.getInt(R.styleable.StackedCardsView_topAndBottomSpacing, 50)
-        maxChildHeight = a.getInt(R.styleable.StackedCardsView_maxChildHeight, 400.convertToPx(context))
+        maxChildHeight = a.getInt(R.styleable.StackedCardsView_maxChildHeight, 450.convertToPx(context))
         maxChildSpacing = a.getInt(R.styleable.StackedCardsView_topAndBottomSpacing, 50.convertToPx(context))
         orderAnimationDuration = a.getInt(R.styleable.StackedCardsView_orderAnimationDuration, 500)
         addAnimationDuration = a.getInt(R.styleable.StackedCardsView_addAnimationDuration, 500)
