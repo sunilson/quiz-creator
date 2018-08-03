@@ -8,6 +8,6 @@
         android:color="#ededed"
         />
 
-    <corners android:radius="10dp" />
+    <corners android:radius="@dimen/global_border_radius" />
 
 </shape>

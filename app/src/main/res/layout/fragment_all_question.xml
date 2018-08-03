@@ -21,14 +21,156 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v4.widget.SwipeRefreshLayout
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/searchbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
+                android:animateLayoutChanges="true"
+                app:layout_constraintBottom_toTopOf="@id/swipe_layout"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <FrameLayout
+                    android:id="@+id/searchbar_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/close_searchbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/ic_check_white_24dp"
+                    android:visibility="gone"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
+                    android:id="@+id/searchbar_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/voice_edittext_height"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="55dp"
+                    android:visibility="gone"
+                    app:changeListener="@{(str) -> viewModel.search((String) str)}"
+                    app:editTextValue="@{viewModel.searchQuery}"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RelativeLayout
+                    android:id="@+id/category_spinner_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/voice_edittext_height"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/stacked_card_view_background"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/searchbar_edittext">
+
+                    <Spinner
+                        android:id="@+id/category_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:paddingBottom="12dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="12dp"
+                        app:categories="@{viewModel.searchCategories}"
+                        app:itemSelectedCallback="@{(item) -> viewModel.selectSearchCategory((Category) item)}"
+                        app:selectedCategory="@{viewModel.selectedSearchCategory}" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/searchbar_tags"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/open_searchbar"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:id="@+id/category_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/tag_background"
+                        android:gravity="center"
+                        android:onClick="@{() -> viewModel.selectSearchCategory((Category) null)}"
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:visibility="@{viewModel.selectedSearchCategory != null ? View.VISIBLE : View.GONE}">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center"
+                            android:text="@{viewModel.selectedSearchCategory.name}"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_close_white_24dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/query_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/tag_background"
+                        android:gravity="center"
+                        android:onClick='@{() -> viewModel.search("")}'
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:visibility="@{viewModel.searchQuery.length > 0 ? View.VISIBLE : View.GONE}">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center"
+                            android:text="@{viewModel.searchQuery}"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_close_white_24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/open_searchbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_search_black_24dp"
+                    app:layout_constraintBottom_toBottomOf="@id/searchbar_tags"
+                    app:layout_constraintLeft_toRightOf="@id/searchbar_tags"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/searchbar_tags" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:refreshing="@{viewModel.loading}"
+                app:layout_constraintTop_toBottomOf="@id/searchbar"
                 app:onRefreshListener="@{() -> viewModel.loadQuestions()}"
-                >
+                app:refreshing="@{viewModel.loading}">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/question_recyclerview"
@@ -39,15 +181,37 @@
             </android.support.v4.widget.SwipeRefreshLayout>
         </android.support.constraint.ConstraintLayout>
 
-        <android.support.design.widget.FloatingActionButton
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="20dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:tint="#FFF"
-            app:srcCompat="@drawable/ic_add_black_24dp" />
+            android:layout_gravity="bottom|right"
+            android:layout_margin="10dp"
+            app:fab_addButtonColorNormal="@color/colorPrimary"
+            app:fab_addButtonColorPressed="@color/colorPrimary"
+            app:fab_colorNormal="@color/colorPrimary"
+            app:fab_icon="@drawable/ic_add_white_24dp"
+            app:fab_labelStyle="@style/menu_labels_style"
+            app:fab_labelsPosition="left">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_add_single"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/correct"
+                app:fab_colorPressed="@color/correct"
+                app:fab_icon="@drawable/ic_check_white_24dp"
+                app:fab_title="@string/single_choice" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_add_multiple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/correct"
+                app:fab_colorPressed="@color/correct"
+                app:fab_icon="@drawable/ic_done_all_white_24dp"
+                app:fab_title="@string/multiple_choice" />
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     </android.support.design.widget.CoordinatorLayout>
 

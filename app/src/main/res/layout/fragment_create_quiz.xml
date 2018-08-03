@@ -13,85 +13,73 @@
         <import type="com.sunilson.quizcreator.data.models.Category" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/shuffle_answers_text"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:text="@string/shuffle_answers"
-            app:layout_constraintBottom_toBottomOf="@id/shuffle_answers"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/shuffle_answers"
-            app:layout_constraintTop_toTopOf="@id/shuffle_answers"
-            app:layout_constraintVertical_chainStyle="packed" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <Switch
-            android:id="@+id/shuffle_answers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="@={viewModel.shuffleAnswers}"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintBottom_toTopOf="@id/single_or_multiple"
-            app:layout_constraintLeft_toRightOf="@id/shuffle_answers_text"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            <TextView
+                android:id="@+id/shuffle_answers_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/shuffle_answers" />
 
-        <TextView
-            android:id="@+id/single_or_multiple_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:text="@string/only_single_choice"
-            app:layout_constraintBottom_toBottomOf="@id/single_or_multiple"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/single_or_multiple"
-            app:layout_constraintTop_toTopOf="@id/single_or_multiple"
-            app:layout_constraintVertical_chainStyle="packed" />
+            <Switch
+                android:id="@+id/shuffle_answers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@={viewModel.shuffleAnswers}" />
+        </LinearLayout>
 
-        <Switch
-            android:id="@+id/single_or_multiple"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="@={viewModel.singleOrMultiple}"
-            app:layout_constraintBottom_toTopOf="@id/categoryswitch"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toRightOf="@id/single_or_multiple_text"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/shuffle_answers"
-            app:layout_constraintVertical_chainStyle="packed" />
 
-        <TextView
-            android:id="@+id/quiz_category_textview"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:text="@string/select_category"
-            app:layout_constraintBottom_toBottomOf="@id/categoryswitch"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/categoryswitch"
-            app:layout_constraintTop_toTopOf="@id/categoryswitch"
-            app:layout_constraintVertical_chainStyle="packed" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <Switch
-            android:id="@+id/categoryswitch"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/single_or_multiple_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/only_single_choice" />
+
+            <Switch
+                android:id="@+id/single_or_multiple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@={viewModel.singleOrMultiple}" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onCheckedChanged="@{(cb, isChecked) -> viewModel.unselectCategory(isChecked)}"
-            app:layout_constraintBottom_toTopOf="@id/category_quiz_spinner"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toRightOf="@id/quiz_category_textview"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/single_or_multiple"
-            app:layout_constraintVertical_chainStyle="packed" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/quiz_category_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/select_category" />
+
+            <Switch
+                android:id="@+id/categoryswitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onCheckedChanged="@{(cb, isChecked) -> viewModel.unselectCategory(isChecked)}" />
+        </LinearLayout>
 
         <Spinner
             android:id="@+id/category_quiz_spinner"
@@ -100,23 +88,27 @@
             android:layout_height="wrap_content"
             android:visibility="@{categoryswitch.checked ? View.VISIBLE : View.GONE}"
             app:categories="@{viewModel.categories}"
-            app:itemSelectedCallback="@{(item) -> viewModel.selectCategory((Category) item)}"
-            app:layout_constraintBottom_toTopOf="@id/generate_quiz_button"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/categoryswitch"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:itemSelectedCallback="@{(item) -> viewModel.selectCategory((Category) item)}" />
 
-        <Button
-            android:id="@+id/generate_quiz_button"
+        <com.sunilson.quizcreator.presentation.views.CustomButton
+            android:id="@+id/select_question_amount_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/generate_quiz"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/category_quiz_spinner"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:buttonText="@string/max_question_amount"
+            />
 
-    </android.support.constraint.ConstraintLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.maxQuestionAmount + ``}"
+            />
+
+        <com.sunilson.quizcreator.presentation.views.CustomButton
+            android:id="@+id/generate_quiz_button"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:buttonIcon="@drawable/ic_play_arrow_white_24dp"
+            app:buttonText="@string/generate_quiz" />
+
+    </LinearLayout>
 </layout>

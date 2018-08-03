@@ -1,4 +1,4 @@
-package com.sunilson.quizcreator.Application.di
+package com.sunilson.quizcreator.Application.di.scopes
 
 import javax.inject.Scope
 

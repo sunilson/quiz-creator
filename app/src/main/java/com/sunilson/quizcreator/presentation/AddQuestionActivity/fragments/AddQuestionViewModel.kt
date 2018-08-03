@@ -1,7 +1,7 @@
 package com.sunilson.quizcreator.presentation.AddQuestionActivity.fragments
 
 import android.app.Application
-import com.sunilson.quizcreator.Application.di.FragmentScope
+import com.sunilson.quizcreator.Application.di.scopes.FragmentScope
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.IQuizRepository
 import com.sunilson.quizcreator.data.models.Answer

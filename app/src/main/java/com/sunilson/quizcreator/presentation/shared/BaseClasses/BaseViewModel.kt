@@ -18,7 +18,7 @@ abstract class BaseViewModel(val repository: IQuizRepository)  {
     val working: ObservableBoolean = ObservableBoolean(false)
     val disposable: CompositeDisposable = CompositeDisposable()
 
-    fun loadCategories() {
+    open fun loadCategories() {
         disposable.add(repository.loadCategories().subscribe {
             categories.clear()
             categories.addAll(it)

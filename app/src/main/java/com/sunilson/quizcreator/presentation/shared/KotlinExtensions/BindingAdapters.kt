@@ -23,6 +23,7 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.*
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
@@ -31,14 +32,29 @@ import com.sunilson.quizcreator.presentation.shared.CategorySpinnerAdapter
 import com.sunilson.quizcreator.presentation.views.AnswerView.AnswerView
 import com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
 import com.sunilson.quizcreator.presentation.views.QuizView.QuizView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.voice_edittext.view.*
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
+import java.util.concurrent.TimeUnit
 
 @BindingAdapter("categories")
 fun Spinner.setEntries(categories: List<Category>?) {
     if (categories != null) {
         val adapter = this.adapter as CategorySpinnerAdapter
         adapter.setCategories(categories)
+    }
+}
+
+@BindingAdapter("selectedCategory")
+fun Spinner.selectedCategory(item: Category?) {
+    if (item != null) {
+        val adapter = this.adapter as CategorySpinnerAdapter
+        this.setSelection(adapter.getPosition(item))
+    } else {
+        this.setSelection(0)
     }
 }
 
@@ -345,16 +361,33 @@ fun BarChart.sevenDayQuizAmount(days: List<Int>, goodDays: List<Int>) {
     this.invalidate()
 }
 
-@BindingAdapter("categorySuccessRates")
-fun LinearLayout.categorySuccessRates(rates: Map<String, Float>) {
-    this.removeAllViews()
-    rates.forEach { s, fl ->
-        val view = com.sunilson.quizcreator.presentation.views.CustomProgressBar.CustomProgressBar(context, s, fl)
-        view.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT).apply {
-            this.topMargin = 15.convertToPx(context)
+@BindingAdapter("categorySuccessRates", "categoryDates", "categories", requireAll = true)
+fun LinearLayout.categorySuccessRates(rates: Map<String, Float>, dates: Map<String, Long>, categories: List<Category>) {
+    if (rates.size == categories.size) {
+        this.removeAllViews()
+        rates.forEach { s, fl ->
+            val view = com.sunilson.quizcreator.presentation.views.CustomProgressBar.CustomProgressBar(
+                    context,
+                    categories.find { it.id == s }!!.name,
+                    fl,
+                    "Last answered on ${DateTimeFormat.shortDate().print(LocalDate(dates[s]))}")
+            view.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT).apply {
+                this.topMargin = 15.convertToPx(context)
+            }
+            this.addView(view)
         }
-        this.addView(view)
     }
+}
+
+@BindingAdapter("changeListener")
+fun EditTextWithVoiceInput.changeListener(callback: ItemSelectedListener) {
+    RxTextView
+            .textChanges(this.findViewById(R.id.voice_edittext))
+            .filter { it.isNotEmpty() }
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { callback.itemSelected(it.toString()) }
 }
 
 /*

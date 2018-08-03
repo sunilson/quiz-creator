@@ -23,11 +23,13 @@ interface IQuizRepository {
     fun deleteQuestion(questionId: String): Completable
     fun updateQuestion(question: Question): Completable
     fun addCategory(category: Category): Completable
+    fun updateCategory(category: Category): Completable
+    fun deleteCategory(categoryId: String): Completable
     fun loadCategories(): Flowable<List<Category>>
     fun loadCategoriesOnce(): Single<List<Category>>
     fun loadQuiz(id: String): Single<Quiz>
-    fun loadQuestions(categoryId: String? = null): Flowable<List<Question>>
-    fun loadQuestionsOnce(categoryId: String? = null): Single<List<Question>>
+    fun loadQuestions(categoryId: String? = null, query: String? = null): Flowable<List<Question>>
+    fun loadQuestionsOnce(categoryId: String? = null, query: String? = null): Single<List<Question>>
     fun getStatistics(): Flowable<Statistics>
     fun resetStatistics(): Completable
 }
@@ -110,6 +112,7 @@ class QuizRepository @Inject constructor(private val application: Application, p
         val correctPerCategoryAmount = mutableMapOf<String, Int>()
         val wrongPerCategoryRate = mutableMapOf<String, Int>()
         val categoryRateResult = mutableMapOf<String, Float>()
+        val categoryDates = mutableMapOf<String, Long>()
         var wholeDuration: Long = 0
 
         finishedQuizes.forEach { q ->
@@ -121,6 +124,9 @@ class QuizRepository @Inject constructor(private val application: Application, p
                 if (wrongPerCategoryRate[question.categoryId] == null) {
                     wrongPerCategoryRate[question.categoryId] = 0
                 }
+                if (categoryDates[question.categoryId] == null) {
+                    categoryDates[question.categoryId] = q.timestamp
+                }
 
                 if (question.correctlyAnswered) {
                     val currentVal = correctPerCategoryAmount[question.categoryId]!!
@@ -129,6 +135,8 @@ class QuizRepository @Inject constructor(private val application: Application, p
                     val currentVal = wrongPerCategoryRate[question.categoryId]!!
                     wrongPerCategoryRate[question.categoryId] = currentVal + 1
                 }
+
+                if (categoryDates[question.categoryId]!! < q.timestamp) categoryDates[question.categoryId] = q.timestamp
             }
         }
 
@@ -158,6 +166,7 @@ class QuizRepository @Inject constructor(private val application: Application, p
         result.averageDuration = wholeDuration / finishedQuizes.size
         result.finishedQuizAmountSevenDays = finishedQuizLastSevenDays
         result.finishedGoodQuizAmountSevenDays = finishedGoodQuizLastSevenDays
+        result.lastAbsolvedDatePerCategory = categoryDates
 
         return result
     }
@@ -219,16 +228,39 @@ class QuizRepository @Inject constructor(private val application: Application, p
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun loadQuestions(categoryId: String?): Flowable<List<Question>> {
-        return if (categoryId == null) {
-            database.quizDAO().getAllQuestions().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    override fun loadQuestions(categoryId: String?, query: String?): Flowable<List<Question>> {
+        val result = if (categoryId != null) {
+            database.quizDAO().getAllQuestions(arrayOf(categoryId)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         } else {
-            Flowable.just(listOf())
+            database.quizDAO().getAllQuestions().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }
+
+        return result.map { questions ->
+            if (query == null) questions
+            else {
+                questions.filter {
+                    it.text.contains(query, ignoreCase = true)
+                }
+            }
         }
     }
 
-    override fun loadQuestionsOnce(categoryId: String?): Single<List<Question>> {
-        return database.quizDAO().getAllQuestionsOnce().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    override fun loadQuestionsOnce(categoryId: String?, query: String?): Single<List<Question>> {
+
+        val result = if (categoryId != null) {
+            database.quizDAO().getAllQuestionsOnce(arrayOf(categoryId)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        } else {
+            database.quizDAO().getAllQuestionsOnce().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }
+
+        return result.map { questions ->
+            if (query == null) questions
+            else {
+                questions.filter {
+                    it.text.contains(query, ignoreCase = true)
+                }
+            }
+        }
     }
 
     override fun loadQuiz(id: String): Single<Quiz> {
@@ -245,13 +277,28 @@ class QuizRepository @Inject constructor(private val application: Application, p
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
+    override fun updateCategory(category: Category): Completable {
+        return Completable.create {
+            database.quizDAO().updateCategory(category)
+            it.onComplete()
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun deleteCategory(categoryId: String): Completable {
+        return Completable.create {
+            database.quizDAO().removeQuestionsWithCategory(categoryId)
+            database.quizDAO().removeCategory(categoryId)
+            it.onComplete()
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    }
+
     override fun getStatistics(): Flowable<Statistics> {
         return database.quizDAO().getStatistics().map {
             val newMap = mutableMapOf<String, Float>()
             val allCategories = loadCategoriesOnce().blockingGet()
 
             it.averageCorrectRatePerCategory.forEach { s, fl ->
-                newMap[allCategories.first { it.id == s }.name] = fl
+                newMap[allCategories.first { it.id == s }.id] = fl
             }
 
             it.averageCorrectRatePerCategory = newMap

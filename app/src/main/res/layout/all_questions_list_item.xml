@@ -18,10 +18,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_margin="@dimen/card_margin"
         android:background="@drawable/stacked_card_view_background"
         android:orientation="horizontal">
 
@@ -31,7 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="15dp"
+            android:padding="@dimen/card_padding"
             app:layout_constraintBottom_toTopOf="@id/question_list_item_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -50,7 +47,7 @@
                 android:layout_weight="1"
                 android:paddingRight="10dp"
                 android:text="@{obj.text}"
-                android:textSize="20sp"
+                android:textSize="@dimen/card_title_text_size"
                 tools:text="Dies ist eine Frage" />
 
             <TextView
@@ -84,22 +81,26 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
+            <com.sunilson.quizcreator.presentation.views.CustomButton
                 android:id="@+id/question_list_item_answers_save"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/big_button_height"
                 android:layout_marginTop="@dimen/big_button_height_top_margin"
-                android:text="@string/save"
+                app:buttonText="@string/save"
+                app:buttonIcon="@drawable/ic_save_black_24dp"
+                app:type="CONFIRM"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/question_list_item_answers_delete"
                 app:layout_constraintTop_toBottomOf="@id/question_list_item_answers" />
 
-            <Button
+            <com.sunilson.quizcreator.presentation.views.CustomButton
                 android:id="@+id/question_list_item_answers_delete"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/big_button_height"
-                android:text="@string/delete"
+                app:buttonText="@string/delete"
+                app:buttonIcon="@drawable/ic_delete_black_24dp"
+                app:type="CANCEL"
                 app:layout_constraintBottom_toBottomOf="@id/question_list_item_answers_save"
                 app:layout_constraintLeft_toRightOf="@id/question_list_item_answers_save"
                 app:layout_constraintRight_toRightOf="parent"

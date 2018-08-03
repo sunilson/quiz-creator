@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#1E88E5</color>
     <color name="colorPrimaryDark">#ffffff</color>
     <color name="white">#ffffff</color>
     <color name="colorAccent">#FF4081</color>
     <color name="errorTextColor">#ff0000</color>
-
+    <color name="divider_color">#d1d1d1</color>
     <color name="disabled">#ededed</color>
     <color name="unselected">#9c9c9c</color>
     <color name="correct">#3ebc37</color>
     <color name="wrong">#ff0000</color>
+
+    <color name="button_default_text_color">#ffffff</color>
+    <color name="button_default_stroke">#ffffff</color>
+    <color name="button_default_background">#1E88E5</color>
+    <color name="button_default_background_selected">#2196F3</color>
+
+    <color name="button_confirm_text_color">#ffffff</color>
+    <color name="button_confirm_stroke">#ffffff</color>
+    <color name="button_confirm_background">#8BC34A</color>
+    <color name="button_confirm_background_selected">#9CCC65</color>
+
+    <color name="button_cancel_text_color">#ffffff</color>
+    <color name="button_cancel_stroke">#ffffff</color>
+    <color name="button_cancel_background">#F44336</color>
+    <color name="button_cancel_background_selected">#EF5350</color>
+
 </resources>

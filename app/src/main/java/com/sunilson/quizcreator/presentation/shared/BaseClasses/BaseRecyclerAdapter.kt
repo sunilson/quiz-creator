@@ -22,6 +22,8 @@ abstract class BaseRecyclerAdapter<T : AdapterElement>(protected val context: Co
     open fun addAll(elements: List<T>) {
         val size = this.data.size
         this.data.clear()
+        recyclerView.recycledViewPool.clear()
+        recyclerView.setRecycledViewPool(RecyclerView.RecycledViewPool())
         notifyItemRangeRemoved(0, size)
         this.data.addAll(elements)
         notifyItemRangeInserted(0, data.size)

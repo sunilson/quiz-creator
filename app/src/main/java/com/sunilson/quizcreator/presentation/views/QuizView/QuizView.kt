@@ -58,6 +58,7 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
                             alphaAnimator.start()
 
                             field = value
+                            quiz?.timestamp = Date().time
                             stack_view.addListOfCards(it.questions.mapIndexed { index, question ->
                                 when (question.type) {
                                     QuestionType.SINGLE_CHOICE -> {

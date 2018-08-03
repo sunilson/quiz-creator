@@ -22,6 +22,7 @@ import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.getAnswers
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
 import com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
 import kotlinx.android.synthetic.main.fragment_add_question.view.*
+import kotlinx.android.synthetic.main.fragment_all_question.view.*
 import javax.inject.Inject
 
 class AddQuestionFragment : BaseFragment() {

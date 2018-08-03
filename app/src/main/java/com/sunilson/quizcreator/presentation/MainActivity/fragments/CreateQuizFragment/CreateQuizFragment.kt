@@ -12,6 +12,8 @@ import com.sunilson.quizcreator.databinding.FragmentCreateQuizBinding
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
 import com.sunilson.quizcreator.presentation.QuizActivity.QuizActivity
 import com.sunilson.quizcreator.presentation.shared.CategorySpinnerAdapter
+import com.sunilson.quizcreator.presentation.shared.Dialogs.DialogListener
+import com.sunilson.quizcreator.presentation.shared.Dialogs.NumberSelectionDialog.NumberSelectionDialog
 import kotlinx.android.synthetic.main.fragment_create_quiz.view.*
 import javax.inject.Inject
 
@@ -37,6 +39,18 @@ class CreateQuizFragment : BaseFragment() {
             }, {
 
             }))
+        }
+
+        view.select_question_amount_button.setOnClickListener {
+            val dialog = NumberSelectionDialog.newInstance(getString(R.string.max_quiz_questions), createQuizViewModel.maxQuestionAmount.get())
+            dialog.listener = object : DialogListener<Int> {
+                override fun onResult(result: Int?) {
+                    if (result != null) {
+                        createQuizViewModel.maxQuestionAmount.set(if (result > 0) result else 1)
+                    }
+                }
+            }
+            dialog.show(fragmentManager, "dialog")
         }
 
         return view

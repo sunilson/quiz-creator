@@ -13,7 +13,7 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sunilson.quizcreator.Application.di.FragmentScope
+import com.sunilson.quizcreator.Application.di.scopes.FragmentScope
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.data.models.QuestionType

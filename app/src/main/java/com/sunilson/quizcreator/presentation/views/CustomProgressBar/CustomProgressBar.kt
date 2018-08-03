@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import com.sunilson.quizcreator.R
@@ -34,6 +35,17 @@ class CustomProgressBar : FrameLayout {
             title_text.text = value
         }
 
+    var subTitle: String = ""
+        set(value) {
+            field = value
+            if (value.isEmpty()) {
+                progress_subtitle.visibility = View.GONE
+            } else {
+                progress_subtitle.visibility = View.VISIBLE
+                progress_subtitle.text = field
+            }
+        }
+
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -41,15 +53,17 @@ class CustomProgressBar : FrameLayout {
         inflater.inflate(R.layout.custom_progress_bar, this, true)
         val a = context.theme.obtainStyledAttributes(attributeSet, R.styleable.CustomProgressBar, 0, 0)
         title = a.getString(R.styleable.CustomProgressBar_progress_label)
+        subTitle = a.getString(R.styleable.CustomProgressBar_subtitle) ?: ""
         a.recycle()
         progress_bar.max = 100000
         progress_bar.progressTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.correct))
     }
 
-    constructor(context: Context, title: String, value: Float) : super(context) {
+    constructor(context: Context, title: String, value: Float, subTitle: String = "") : super(context) {
         inflater.inflate(R.layout.custom_progress_bar, this, true)
         this.title = title
         this.progress = value
+        this.subTitle = subTitle
         progress_bar.max = 100000
         progress_bar.progressTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.correct))
     }

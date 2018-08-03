@@ -12,6 +12,7 @@ class Statistics(
         var finishedGoodQuizAmountSevenDays: List<Int> = mutableListOf(),
         var averageCorrectRate: Float = 0f,
         var averageCorrectRatePerCategory: Map<String, Float> = mapOf(),
+        var lastAbsolvedDatePerCategory: Map<String, Long> = mapOf(),
         var averageDuration: Long = 0
 ) {
     override fun toString(): String {

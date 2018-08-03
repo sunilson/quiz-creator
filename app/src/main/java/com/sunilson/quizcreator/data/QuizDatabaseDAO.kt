@@ -54,6 +54,15 @@ interface QuizDatabaseDAO {
     fun addCategory(category: Category)
 
     @Update
+    fun updateCategory(category: Category)
+
+    @Query("DELETE FROM question WHERE categoryId == :id")
+    fun removeQuestionsWithCategory(id: String)
+
+    @Query("DELETE FROM category WHERE id == :id")
+    fun removeCategory(id: String)
+
+    @Update
     fun updateQuestion(question: Question)
 
     @Query("DELETE FROM question WHERE id == :id")

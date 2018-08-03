@@ -16,6 +16,7 @@ class SimpleInputDialog : BaseDialogFragment(), DialogWithResult<String> {
 
         builder.setTitle(arguments?.getString("title"))
         val content = LayoutInflater.from(context).inflate(R.layout.input_dialog_body, null)
+        content.dialog_input.setText(arguments?.getString("value"))
         builder.setView(content)
 
         builder.setPositiveButton(R.string.ok) { p0, p1 ->
@@ -29,9 +30,10 @@ class SimpleInputDialog : BaseDialogFragment(), DialogWithResult<String> {
     }
 
     companion object {
-        fun newInstance(title: String) : SimpleInputDialog{
+        fun newInstance(title: String, value: String = ""): SimpleInputDialog {
             val bundle = Bundle()
             bundle.putString("title", title)
+            bundle.putString("value", value)
             val dialog = SimpleInputDialog()
             dialog.arguments = bundle
             return dialog

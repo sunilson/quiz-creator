@@ -13,7 +13,8 @@
     <string name="question_answers_empty">Answers can not be empty</string>
     <string name="category_name_empty">Category name can\'t be empty!</string>
     <string name="general">General</string>
-    <string name="add_category">+ Add Category</string>
+    <string name="add_category">Add Category</string>
+    <string name="update_category">Edit Category</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="category_add_success">Successfully added category!</string>
@@ -35,7 +36,7 @@
     <string name="shuffle_answers">Shuffle answers</string>
     <string name="only_single_choice">Only single choice</string>
     <string name="view_questions">View_questions</string>
-    <string name="Exit">exit</string>
+    <string name="Exit">Exit Quiz</string>
     <string name="store_quiz_error">Could not store quiz!</string>
     <string name="success_rates_for_categories">Success rates for categories</string>
     <string name="monday">Monday</string>
@@ -59,5 +60,9 @@
     <string name="answers">Answers</string>
     <string name="category">Category</string>
     <string name="question">Question</string>
-    <string name="correct_questions">Answered %1$d / %2$d questions correctly</string>
+    <string name="correct_questions">Answered %1$d / %2$d questions correctly in %3$d Seconds</string>
+    <string name="single_choice">Single Choice</string>
+    <string name="multiple_choice">Multiple Choice</string>
+    <string name="max_question_amount">Max question amount</string>
+    <string name="max_quiz_questions">Max. Quiz Questions</string>
 </resources>

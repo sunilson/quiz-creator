@@ -1,6 +1,6 @@
 package com.sunilson.quizcreator.presentation.QuizActivity.di
 
-import com.sunilson.quizcreator.Application.di.FragmentScope
+import com.sunilson.quizcreator.Application.di.scopes.FragmentScope
 import com.sunilson.quizcreator.presentation.QuizActivity.fragments.QuizFragment.QuizFragment
 import com.sunilson.quizcreator.presentation.QuizActivity.fragments.ResultFragment.ResultFragment
 import dagger.Module

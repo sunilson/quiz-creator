@@ -73,6 +73,17 @@ class TypeConverters {
     }
 
     @TypeConverter
+    fun toDateCategoryMap(string: String): Map<String, Long> {
+        val listType = object : TypeToken<Map<String, Long>>() {}.type
+        return gson.fromJson(string, listType)
+    }
+
+    @TypeConverter
+    fun dateCategoryMapToString(rates: Map<String, Long>): String {
+        return gson.toJson(rates)
+    }
+
+    @TypeConverter
     fun toIntList(string: String): List<Int> {
         val listType = object : TypeToken<List<Int>>() {}.type
         return gson.fromJson(string, listType)

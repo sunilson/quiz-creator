@@ -3,12 +3,12 @@ package com.sunilson.quizcreator.presentation.shared
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.sunilson.quizcreator.Application.di.ActivityScope
+import com.sunilson.quizcreator.Application.di.scopes.FragmentScope
 import com.sunilson.quizcreator.data.models.Category
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseSpinnerArrayAdapter
 import javax.inject.Inject
 
-@ActivityScope
+@FragmentScope
 class CategorySpinnerAdapter @Inject constructor(context: Context) : BaseSpinnerArrayAdapter<Category>(context, android.R.layout.simple_list_item_1) {
 
     fun setCategories(cateogries: List<Category>) {
@@ -33,6 +33,14 @@ class CategorySpinnerAdapter @Inject constructor(context: Context) : BaseSpinner
         res.first.textView.text = data[position].name
         res.second!!.setPadding(0, res.second!!.paddingTop, res.second!!.paddingRight, res.second!!.paddingBottom)
         return res.second!!
+    }
+
+    override fun getPosition(item: Category?): Int {
+        data.forEachIndexed { index, value ->
+            if (value.id == item?.id) return index
+        }
+
+        return -1
     }
 
 }

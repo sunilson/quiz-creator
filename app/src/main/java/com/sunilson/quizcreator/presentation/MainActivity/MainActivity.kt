@@ -39,9 +39,10 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
         navigation.setOnNavigationItemSelectedListener {
             when(it.itemId) {
-                R.id.all_questions_fragment -> viewpager.currentItem = 0
-                R.id.statistics_fragment -> viewpager.currentItem = 1
-                R.id.quiz_fragment -> viewpager.currentItem = 2
+                R.id.all_categories_fragment -> viewpager.currentItem = 0
+                R.id.all_questions_fragment -> viewpager.currentItem = 1
+                R.id.statistics_fragment -> viewpager.currentItem = 2
+                R.id.quiz_fragment -> viewpager.currentItem = 3
             }
 
             true

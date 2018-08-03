@@ -28,7 +28,7 @@
                 android:id="@+id/question_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/form_question"
                 app:layout_constraintStart_toStartOf="@+id/form_question"
                 app:layout_constraintTop_toTopOf="parent"
@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 app:editTextValue="@={viewModel.creationQuestion.observableText}"
+                app:hint="@string/enter_question"
                 app:layout_constraintBottom_toTopOf="@id/form_category_spinner_container"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/question_title"
@@ -49,7 +50,7 @@
                 android:id="@+id/category_spinner_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginTop="30dp"
                 app:layout_constraintBottom_toTopOf="@+id/form_category_spinner_container"
                 app:layout_constraintStart_toStartOf="@+id/form_category_spinner_container"
@@ -59,7 +60,7 @@
             <RelativeLayout
                 android:id="@+id/form_category_spinner_container"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/voice_edittext_height"
+                android:layout_height="50dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/stacked_card_view_background"
                 app:layout_constraintBottom_toTopOf="@id/answers_title"
@@ -70,18 +71,19 @@
                 <Spinner
                     android:id="@+id/form_category_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/voice_edittext_height"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:padding="15dp"
                     app:categories="@{viewModel.categories}"
                     app:itemSelectedCallback="@{(item) -> viewModel.selectCategory((Category) item)}" />
             </RelativeLayout>
 
-            <ImageButton
+            <com.sunilson.quizcreator.presentation.views.CustomButton
                 android:id="@+id/form_add_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_black_24dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:buttonIcon="@drawable/ic_add_black_24dp"
+                app:buttonText=""
                 app:layout_constraintBottom_toBottomOf="@id/form_category_spinner_container"
                 app:layout_constraintLeft_toRightOf="@id/form_category_spinner_container"
                 app:layout_constraintRight_toRightOf="parent"
@@ -91,10 +93,8 @@
                 android:id="@+id/answers_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:layout_marginTop="30dp"
                 app:layout_constraintBottom_toTopOf="@+id/form_answer_container"
-                app:layout_constraintStart_toStartOf="@+id/form_answer_container"
                 app:layout_constraintTop_toBottomOf="@+id/form_category_spinner_container"
                 app:text="@string/answers" />
 
@@ -104,35 +104,43 @@
                 questionType="@{viewModel.creationQuestion.type}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/answers_title">
+                app:layout_constraintTop_toBottomOf="@id/answers_title" />
 
-            </LinearLayout>
-
-            <Button
+            <com.sunilson.quizcreator.presentation.views.CustomButton
                 android:id="@+id/form_add_answer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_answer"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                app:buttonIcon="@drawable/ic_add_black_24dp"
+                app:buttonText="@string/add_answer"
                 app:layout_constraintTop_toBottomOf="@id/form_answer_container" />
 
-            <Button
+            <com.sunilson.quizcreator.presentation.views.CustomButton
                 android:id="@+id/form_save_and_exit"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/save_and_exit"
+                android:layout_height="50dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                app:buttonIcon="@drawable/ic_save_black_24dp"
+                app:buttonText="@string/save_and_exit"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/form_save_and_continue"
-                app:layout_constraintTop_toBottomOf="@id/form_add_answer" />
+                app:layout_constraintTop_toBottomOf="@id/form_add_answer"
+                app:type="CONFIRM" />
 
-            <Button
+            <com.sunilson.quizcreator.presentation.views.CustomButton
                 android:id="@+id/form_save_and_continue"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/save_and_continue"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                app:buttonIcon="@drawable/ic_exit_to_app_black_24dp"
+                app:buttonText="@string/save_and_continue"
                 app:layout_constraintLeft_toRightOf="@id/form_save_and_exit"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/form_add_answer" />
+                app:layout_constraintTop_toTopOf="@id/form_save_and_exit"
+                app:type="CONFIRM" />
 
             <TextView
                 android:id="@+id/form_error_message"
