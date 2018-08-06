@@ -17,13 +17,15 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.R.id.searchbar_background
+import com.sunilson.quizcreator.data.IQuizRepository
 import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.databinding.FragmentAllQuestionBinding
 import com.sunilson.quizcreator.presentation.AddQuestionActivity.AddQuestionActivity
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
 import com.sunilson.quizcreator.presentation.shared.ADD_QUESTIONS_INTENT
 import com.sunilson.quizcreator.presentation.shared.CategorySpinnerAdapter
+import com.sunilson.quizcreator.presentation.shared.Dialogs.DialogListener
+import com.sunilson.quizcreator.presentation.shared.Dialogs.ImportExportDialog.ImportExportDialog
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator
@@ -41,6 +43,9 @@ class AllQuestionsFragment : BaseFragment() {
 
     @Inject
     lateinit var allQuestionsViewModel: AllQuestionsViewModel
+
+    @Inject
+    lateinit var repository: IQuizRepository
 
     lateinit var questionsRecyclerAdapter: QuestionsRecyclerAdapter
 
@@ -88,6 +93,17 @@ class AllQuestionsFragment : BaseFragment() {
             val intent = Intent(context, AddQuestionActivity::class.java)
             intent.putExtra("type", QuestionType.MULTIPLE_CHOICE)
             startActivityForResult(intent, ADD_QUESTIONS_INTENT)
+        }
+
+        view.fab_export_import.setOnClickListener {
+            view.fab.collapse()
+            val dialog = ImportExportDialog.newInstance()
+            dialog.listener = object : DialogListener<Boolean> {
+                override fun onResult(result: Boolean?) {
+                    if (result != null && result) allQuestionsViewModel.loadQuestions()
+                }
+            }
+            dialog.show(fragmentManager, "dialog")
         }
 
         view.searchbar_background.alpha = 0f

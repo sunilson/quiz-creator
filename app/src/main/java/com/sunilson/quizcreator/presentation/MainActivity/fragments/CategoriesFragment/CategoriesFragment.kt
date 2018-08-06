@@ -41,7 +41,7 @@ class CategoriesFragment : BaseFragment() {
         view.category_recycler_view.itemAnimator!!.moveDuration = 300
         view.category_recycler_view.itemAnimator!!.changeDuration = 300
         view.category_recycler_view.adapter = categoriesRecyclerAdapterFactory.create({
-            val dialog = SimpleConfirmDialog.newInstance("", "")
+            val dialog = SimpleConfirmDialog.newInstance(String.format(getString(R.string.delete_category), it.name), getString(R.string.delete_category_confirmation))
             dialog.listener = object : DialogListener<Boolean> {
                 override fun onResult(result: Boolean?) {
                     if (result != null && result) {

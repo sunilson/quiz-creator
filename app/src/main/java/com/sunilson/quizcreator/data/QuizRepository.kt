@@ -1,6 +1,13 @@
 package com.sunilson.quizcreator.data
 
 import android.app.Application
+import android.net.Uri
+import android.os.Environment
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
+import com.google.gson.stream.JsonReader
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.*
 import com.sunilson.quizcreator.presentation.shared.Exceptions.NoQuestionsFoundException
@@ -10,8 +17,10 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
+import java.io.*
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,6 +41,8 @@ interface IQuizRepository {
     fun loadQuestionsOnce(categoryId: String? = null, query: String? = null): Single<List<Question>>
     fun getStatistics(): Flowable<Statistics>
     fun resetStatistics(): Completable
+    fun exportQuestionsAndCategories(): Completable
+    fun importQuestionsAndCategories(path: Uri): Completable
 }
 
 @Singleton
@@ -214,9 +225,14 @@ class QuizRepository @Inject constructor(private val application: Application, p
 
     override fun loadCategories(): Flowable<List<Category>> {
         return database.quizDAO().getAllCategories().map {
-            mutableListOf(
+            val completeList = mutableListOf(
                     Category("general", application.getString(R.string.general))
             ).plus(it)
+
+            completeList.map {
+                it.questionCount = database.quizDAO().countCategoryQuestions(it.id)
+                it
+            }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -303,6 +319,61 @@ class QuizRepository @Inject constructor(private val application: Application, p
 
             it.averageCorrectRatePerCategory = newMap
             it
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun exportQuestionsAndCategories(): Completable {
+        return Single.zip(database.quizDAO().getAllQuestionsOnce(), database.quizDAO().getAllCategoriesOnce(), BiFunction { t1: List<Question>, t2: List<Category> ->
+            val gson = Gson()
+            val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+
+            val jsonObject = JsonObject()
+            jsonObject.add("questions", gson.toJsonTree(t1))
+            jsonObject.add("categories", gson.toJsonTree(t2))
+
+            val file = File(dir, "quiz_export.json")
+            if (!file.exists()) file.createNewFile()
+
+            val outputStream = FileOutputStream(file)
+            val writer = OutputStreamWriter(outputStream)
+            writer.write("")
+            writer.write(jsonObject.toString())
+            writer.close()
+            outputStream.flush()
+            outputStream.close()
+            true
+        }).flatMapCompletable {
+            Completable.complete()
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun importQuestionsAndCategories(path: Uri): Completable {
+        return Completable.create {
+            val gson = Gson()
+            //val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+
+            if (!path.path.endsWith(".json")) {
+                it.onError(Exception(application.getString(R.string.invalid_file)))
+            } else {
+                val jsonReader = if (path.scheme == "content") {
+                    val inputStream = application.contentResolver.openInputStream(path)
+                    JsonReader(InputStreamReader(inputStream))
+                } else {
+                    val file = File(path.path)
+                    JsonReader(FileReader(file))
+                }
+
+                val parser = JsonParser()
+                val element = parser.parse(jsonReader)
+                val jsonObject = element.asJsonObject
+                val questionListType = object : TypeToken<List<Question>>() {}.type
+                val categoryListType = object : TypeToken<List<Category>>() {}.type
+                val questions = gson.fromJson<List<Question>>(jsonObject["questions"], questionListType)
+                val categories = gson.fromJson<List<Category>>(jsonObject["categories"], categoryListType)
+                database.quizDAO().addQuestions(*questions.toTypedArray())
+                database.quizDAO().addCategories(*categories.toTypedArray())
+                it.onComplete()
+            }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 

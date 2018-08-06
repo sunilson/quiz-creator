@@ -1,4 +1,4 @@
-package com.sunilson.quizcreator.Application
+package com.sunilson.quizcreator.presentation.shared.BaseClasses
 
 import android.app.Activity
 import android.app.Application

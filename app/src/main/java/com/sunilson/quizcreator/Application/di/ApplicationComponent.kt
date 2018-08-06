@@ -3,7 +3,7 @@ package com.sunilson.quizcreator.Application.di
 import android.app.Application
 import com.sunilson.quizcreator.data.di.DatabaseModule
 import com.sunilson.quizcreator.data.di.RepositoryModule
-import com.sunilson.quizcreator.Application.BaseApplication
+import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseApplication
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule

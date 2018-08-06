@@ -8,6 +8,7 @@ import com.sunilson.quizcreator.presentation.MainActivity.MainActivity
 import com.sunilson.quizcreator.presentation.MainActivity.di.FragmentBuilder
 import com.sunilson.quizcreator.presentation.MainActivity.di.MainActivityModule
 import com.sunilson.quizcreator.presentation.QuizActivity.QuizActivity
+import com.sunilson.quizcreator.presentation.shared.Dialogs.ImportExportDialog.ImportExportDialog
 import com.sunilson.quizcreator.presentation.shared.Dialogs.NumberSelectionDialog.NumberSelectionDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -30,5 +31,9 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector()
     @DialogFragmentScope
     abstract fun provideNumberSelectionDialog(): NumberSelectionDialog
+
+    @ContributesAndroidInjector()
+    @DialogFragmentScope
+    abstract fun provideImportDialog(): ImportExportDialog
 
 }

@@ -1,6 +1,9 @@
 package com.sunilson.quizcreator.presentation.shared.KotlinExtensions
 
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import android.support.v4.content.ContextCompat
 import android.util.DisplayMetrics
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -26,6 +29,14 @@ fun Float.convertToDp(context: Context): Float {
 
 fun Int.clamp(min: Int, max: Int): Int {
     return Math.max(min, Math.min(this, max))
+}
+
+fun Context.hasPermission(permission: String) : Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+    } else {
+        true
+    }
 }
 
 fun Context.showToast(message: String? = "No message given!", duration: Int = Toast.LENGTH_LONG) {

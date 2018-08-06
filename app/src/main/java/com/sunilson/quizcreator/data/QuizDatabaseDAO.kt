@@ -48,10 +48,16 @@ interface QuizDatabaseDAO {
     fun deleteAllQuiz()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addQuestions(vararg questions: Question)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addQuestion(question: Question)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addCategory(category: Category)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addCategories(vararg category: Category)
 
     @Update
     fun updateCategory(category: Category)
@@ -76,4 +82,7 @@ interface QuizDatabaseDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun setStatistics(statistics: Statistics)
+
+    @Query("SELECT COUNT(*) FROM question WHERE categoryId == :categoryId")
+    fun countCategoryQuestions(categoryId: String): Int
 }

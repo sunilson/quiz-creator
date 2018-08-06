@@ -12,7 +12,7 @@ import android.widget.RelativeLayout
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.databinding.VoiceEdittextBinding
-import com.sunilson.quizcreator.presentation.MainActivity.SpeechRecognizingActivity
+import com.sunilson.quizcreator.presentation.shared.BaseClasses.SpeechRecognizingActivity
 import kotlinx.android.synthetic.main.voice_edittext.view.*
 
 

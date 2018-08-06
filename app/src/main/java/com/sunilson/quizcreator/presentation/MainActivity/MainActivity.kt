@@ -12,12 +12,6 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-interface SpeechRecognizingActivity {
-    fun checkAudioPermissions() : Boolean
-    fun startListening(cb: (String) -> Unit)
-    fun stopListening()
-}
-
 class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
     @Inject

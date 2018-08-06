@@ -1,19 +1,22 @@
 package com.sunilson.quizcreator.presentation.shared.BaseClasses
 
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import android.support.v4.content.ContextCompat
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
-import com.sunilson.quizcreator.presentation.MainActivity.SpeechRecognizingActivity
+import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.hasPermission
 import com.sunilson.quizcreator.presentation.shared.REQUEST_AUDIO_INTENT
 import dagger.android.AndroidInjection
 import javax.inject.Inject
+
+interface SpeechRecognizingActivity {
+    fun checkAudioPermissions(): Boolean
+    fun startListening(cb: (String) -> Unit)
+    fun stopListening()
+}
 
 abstract class BaseActivity : AppCompatActivity(), SpeechRecognizingActivity {
 
@@ -27,7 +30,7 @@ abstract class BaseActivity : AppCompatActivity(), SpeechRecognizingActivity {
     }
 
     override fun startListening(cb: (String) -> Unit) {
-        if(!checkAudioPermissions()) return
+        if (!checkAudioPermissions()) return
         speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -55,19 +58,11 @@ abstract class BaseActivity : AppCompatActivity(), SpeechRecognizingActivity {
     }
 
     override fun checkAudioPermissions(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                true
-            } else {
-                if (shouldShowRequestPermissionRationale(android.Manifest.permission.RECORD_AUDIO)) {
-                    Toast.makeText(this, "App required access to audio", Toast.LENGTH_SHORT).show()
-                }
-
-                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), REQUEST_AUDIO_INTENT)
-                false
-            }
-        } else {
+        return if (hasPermission(android.Manifest.permission.RECORD_AUDIO)) {
             true
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), REQUEST_AUDIO_INTENT)
+            false
         }
     }
 }

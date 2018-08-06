@@ -1,6 +1,8 @@
 package com.sunilson.quizcreator.presentation.shared
 
 const val REQUEST_AUDIO_INTENT = 1
+const val REQUEST_EXTERNAL_STORAGE_INTENT = 5
+const val PICK_IMPORT_FILE = 6
 const val ADD_QUESTIONS_INTENT = 2
 
 //ANIMATION VALUES THAT ARE NOT IN XML
