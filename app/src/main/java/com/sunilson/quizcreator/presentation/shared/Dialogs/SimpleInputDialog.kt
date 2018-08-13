@@ -1,8 +1,13 @@
 package com.sunilson.quizcreator.presentation.shared.Dialogs
 
 import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseDialogFragment
 import kotlinx.android.synthetic.main.input_dialog_body.view.*
@@ -10,6 +15,10 @@ import kotlinx.android.synthetic.main.input_dialog_body.view.*
 class SimpleInputDialog : BaseDialogFragment(), DialogWithResult<String> {
 
     override var listener: DialogListener<String>? = null
+
+    private val imm : InputMethodManager by lazy {
+        context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -27,6 +36,21 @@ class SimpleInputDialog : BaseDialogFragment(), DialogWithResult<String> {
         }
 
         return builder.create()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.dialog_input.requestFocus()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        imm.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        super.onDismiss(dialog)
     }
 
     companion object {

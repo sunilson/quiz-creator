@@ -22,8 +22,9 @@ class StatisticsFragmentViewModel @Inject constructor(repository: IQuizRepositor
     fun loadStatistics() {
         disposable.add(repository.getStatistics().subscribe({
             currentStatistics.set(it)
-            averageDuration.set((it.averageDuration/ 1000).toString() + " Seconds")
+            averageDuration.set((it.averageDuration / 1000).toString() + " Seconds")
         }, {
+            Log.d("Linus", it.message)
             Log.d("Linus", "bla")
         }))
     }

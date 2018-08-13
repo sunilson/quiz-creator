@@ -29,6 +29,7 @@ import com.sunilson.quizcreator.data.models.*
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseRecyclerAdapter
 import com.sunilson.quizcreator.presentation.shared.CategorySpinnerAdapter
+import com.sunilson.quizcreator.presentation.shared.OPTIONAL_THRESHOLD
 import com.sunilson.quizcreator.presentation.views.AnswerView.AnswerView
 import com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
 import com.sunilson.quizcreator.presentation.views.QuizView.QuizView
@@ -40,22 +41,34 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.util.concurrent.TimeUnit
 
-@BindingAdapter("categories")
-fun Spinner.setEntries(categories: List<Category>?) {
+@BindingAdapter("selectedCategory", "categories", requireAll = false)
+fun Spinner.setCategory(category: Category?, categories: List<Category>?) {
     if (categories != null) {
         val adapter = this.adapter as CategorySpinnerAdapter
         adapter.setCategories(categories)
     }
+
+    if (category != null && (this.selectedItem as Category?)?.id != category.id) {
+        this.setSelection((this.adapter as CategorySpinnerAdapter).data.indexOfFirst { it.id == category.id })
+    }
 }
 
-@BindingAdapter("selectedCategory")
-fun Spinner.selectedCategory(item: Category?) {
-    if (item != null) {
-        val adapter = this.adapter as CategorySpinnerAdapter
-        this.setSelection(adapter.getPosition(item))
-    } else {
-        this.setSelection(0)
+@BindingAdapter("selectedCategoryAttrChanged")
+fun Spinner.setCategoryListener(listener: InverseBindingListener) {
+    this.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+            listener.onChange()
+        }
+
+        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+            listener.onChange()
+        }
     }
+}
+
+@InverseBindingAdapter(attribute = "selectedCategory")
+fun Spinner.getCategory(): Category {
+    return this.selectedItem as Category
 }
 
 @BindingAdapter("itemSelectedCallback")
@@ -76,7 +89,6 @@ fun RecyclerView.setEntries(entries: List<AdapterElement>?) {
     }
 }
 
-
 @BindingAdapter("editTextValueAttrChanged")
 fun setTextValueListener(editTextWithVoiceInput: EditTextWithVoiceInput, listener: InverseBindingListener) {
     editTextWithVoiceInput.voice_edittext.addTextChangedListener(object : TextWatcher {
@@ -91,12 +103,14 @@ fun setTextValueListener(editTextWithVoiceInput: EditTextWithVoiceInput, listene
 
 @BindingAdapter("editTextValue")
 fun setTextValue(editTextWithVoiceInput: EditTextWithVoiceInput, value: String?) {
-    if (value != editTextWithVoiceInput.voice_edittext.text.toString()) editTextWithVoiceInput.voice_edittext.setText(value)
+    if (value != null && value != editTextWithVoiceInput.voice_edittext.text.toString() && value.isNotEmpty()) {
+        editTextWithVoiceInput.text = value
+    }
 }
 
 @InverseBindingAdapter(attribute = "editTextValue")
 fun getTextValue(editTextWithVoiceInput: EditTextWithVoiceInput): String? {
-    return editTextWithVoiceInput.voice_edittext.text.toString()
+    return editTextWithVoiceInput.text
 }
 
 @BindingAdapter("showHideWithTransition")
@@ -127,20 +141,6 @@ fun QuizView.setQuiz(quiz: Quiz?) {
         }, 1000)
     }
 }
-
-/*
-
-@BindingAdapter("answers", "answerClickedCallback", requireAll = true)
-fun LinearLayout.setAnswers(answers: List<Answer>, callback: ItemSelectedListener) {
-    answers.forEach { answer ->
-        val textView = TextView(context)
-        textView.text = answer.text
-        textView.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
-        textView.setOnClickListener { callback.itemSelected(answer) }
-        this.addView(textView)
-    }
-}
-*/
 
 @BindingAdapter("answers", "multiplePossible", "answerClickedCallback", requireAll = true)
 fun LinearLayout.setAnswers(question: Question?, multiplePossible: Boolean, callback: ItemSelectedListener) {
@@ -196,11 +196,24 @@ fun View.deleteParent(value: Boolean?) {
             }
         }
     }
+}
 
+@BindingAdapter("childChange")
+fun View.onChildChange(listener: ItemSelectedListener) {
+    (this as ViewGroup).setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
+        override fun onChildViewRemoved(p0: View?, p1: View?) {
+            listener.itemSelected(this@onChildChange.childCount)
+        }
+
+        override fun onChildViewAdded(p0: View?, p1: View?) {
+            listener.itemSelected(this@onChildChange.childCount)
+        }
+    })
 }
 
 @BindingAdapter("initialEditTextAnswers", "questionType", requireAll = false)
-fun LinearLayout.setInitialAnswers(answers: List<Answer>, type: QuestionType?) {
+fun LinearLayout.setInitialAnswers(answers: List<Answer>?, type: QuestionType?) {
+    if (answers == null || answers.isEmpty()) return
     val parent = this.parent as View
     parent.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
@@ -211,7 +224,7 @@ fun LinearLayout.setInitialAnswers(answers: List<Answer>, type: QuestionType?) {
                     if (this@setInitialAnswers.childCount == 0) {
                         TransitionManager.beginDelayedTransition(this@setInitialAnswers.rootView as ViewGroup, Fade())
                         answers.forEachIndexed { index, answer ->
-                            val answerView = EditTextWithVoiceInput(context, index > 3, (type != null && type == QuestionType.MULTIPLE_CHOICE), answer = answer)
+                            val answerView = EditTextWithVoiceInput(context, index > OPTIONAL_THRESHOLD, (type != null && type == QuestionType.MULTIPLE_CHOICE), answer = answer)
                             this@setInitialAnswers.addView(answerView)
                         }
                     }
@@ -313,7 +326,6 @@ fun PieChart.statsTest(statistics: Statistics) {
 
 @BindingAdapter("sevenDayQuizAmount", "sevenDayGoodQuizAmount")
 fun BarChart.sevenDayQuizAmount(days: List<Int>, goodDays: List<Int>) {
-
     if (days.isEmpty()) return
     val entries = days.reversed().mapIndexed { index, value -> BarEntry(index.toFloat(), value.toFloat()) }
     val goodEntries = goodDays.reversed().mapIndexed { index, value -> BarEntry(index.toFloat(), value.toFloat()) }

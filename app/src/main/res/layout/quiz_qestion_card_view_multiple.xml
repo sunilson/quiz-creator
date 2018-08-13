@@ -9,7 +9,9 @@
             type="com.sunilson.quizcreator.presentation.views.QuestionCardView.QuestionCardViewModel" />
 
         <import type="android.view.View" />
+
         <import type="com.sunilson.quizcreator.data.models.Answer" />
+
         <import type="com.sunilson.quizcreator.data.models.QuestionType" />
     </data>
 
@@ -27,10 +29,10 @@
             android:paddingRight="15dp"
             android:text='@{viewModel.question.text}'
             android:textAlignment="center"
+            android:textStyle="bold"
             app:autoSizeMaxTextSize="20sp"
             app:autoSizeMinTextSize="12sp"
             app:autoSizeTextType="uniform"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/question_answers"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -43,23 +45,23 @@
             android:orientation="vertical"
             app:answerClickedCallback="@{viewModel.answerClicked}"
             app:answers="@{viewModel.question}"
-            app:multiplePossible="@{viewModel.multipleAnswersPossible}"
             app:layout_constraintBottom_toTopOf="@id/confirm_question_button"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/question_text" />
+            app:layout_constraintTop_toBottomOf="@id/question_text"
+            app:multiplePossible="@{viewModel.multipleAnswersPossible}" />
 
-        <Button
+        <com.sunilson.quizcreator.presentation.views.CustomButton
             android:id="@+id/confirm_question_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Confirm"
+            android:layout_width="150dp"
+            android:layout_height="@dimen/big_button_height"
             android:visibility="@{ viewModel.showConfirmButton ? View.VISIBLE : View.GONE}"
+            app:buttonIcon="@drawable/ic_check_white_24dp"
+            app:buttonText="@string/confirm"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/question_answers"
-            />
-
+            app:type="CONFIRM" />
     </merge>
 </layout>

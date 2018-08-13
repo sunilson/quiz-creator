@@ -8,7 +8,6 @@ import com.sunilson.quizcreator.presentation.QuizActivity.fragments.ResultFragme
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseActivity
 import com.sunilson.quizcreator.presentation.shared.Dialogs.DialogListener
 import com.sunilson.quizcreator.presentation.shared.Dialogs.SimpleConfirmDialog
-import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -27,13 +26,12 @@ class QuizActivity : BaseActivity(), HasSupportFragmentInjector {
 
         setContentView(R.layout.activity_quiz)
 
-        val quizId = intent.getStringExtra("quizId")
-        if (quizId.isNotEmpty()) {
-            supportFragmentManager.beginTransaction().replace(R.id.frame_layout, QuizFragment.newInstance(quizId)).commit()
-        } else {
-            this.showToast(getString(com.sunilson.quizcreator.R.string.quiz_not_valid))
-            finish()
-        }
+        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, QuizFragment.newInstance(
+                intent.getStringExtra("selectedCategory"),
+                intent.getBooleanExtra("shuffleAnswers", false),
+                intent.getBooleanExtra("onlySingle", false),
+                intent.getIntExtra("maxQuestionAmount", 8)
+        )).commit()
     }
 
     fun showResult() {

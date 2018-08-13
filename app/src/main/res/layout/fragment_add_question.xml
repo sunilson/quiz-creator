@@ -9,29 +9,36 @@
             type="com.sunilson.quizcreator.presentation.AddQuestionActivity.fragments.AddQuestionViewModel" />
 
         <import type="android.view.View" />
-
         <import type="com.sunilson.quizcreator.data.models.Category" />
     </data>
 
     <ScrollView
         android:id="@+id/form_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        >
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
+            android:clipToPadding="false"
+            android:orientation="vertical"
             android:padding="15dp">
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="0px"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
 
             <com.sunilson.quizcreator.presentation.views.DividerHeadline
                 android:id="@+id/question_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:layout_constraintBottom_toTopOf="@+id/form_question"
-                app:layout_constraintStart_toStartOf="@+id/form_question"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="@dimen/divider_bottom_margin"
                 app:text="@string/question" />
 
             <com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
@@ -39,74 +46,155 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                app:editTextValue="@={viewModel.creationQuestion.observableText}"
+                app:editTextValue="@={viewModel.observableQuestion.text}"
                 app:hint="@string/enter_question"
-                app:layout_constraintBottom_toTopOf="@id/form_category_spinner_container"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/question_title"
                 app:optional="false" />
 
             <com.sunilson.quizcreator.presentation.views.DividerHeadline
-                android:id="@+id/category_spinner_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="30dp"
-                app:layout_constraintBottom_toTopOf="@+id/form_category_spinner_container"
-                app:layout_constraintStart_toStartOf="@+id/form_category_spinner_container"
-                app:layout_constraintTop_toBottomOf="@+id/form_question"
+                android:layout_marginBottom="@dimen/divider_bottom_margin"
+                android:layout_marginTop="@dimen/divider_top_margin"
                 app:text="@string/category" />
 
-            <RelativeLayout
-                android:id="@+id/form_category_spinner_container"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/stacked_card_view_background"
-                app:layout_constraintBottom_toTopOf="@id/answers_title"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/form_add_category"
-                app:layout_constraintTop_toBottomOf="@id/form_question">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <Spinner
-                    android:id="@+id/form_category_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:padding="15dp"
-                    app:categories="@{viewModel.categories}"
-                    app:itemSelectedCallback="@{(item) -> viewModel.selectCategory((Category) item)}" />
-            </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/form_category_spinner_container"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/stacked_card_view_background">
 
-            <com.sunilson.quizcreator.presentation.views.CustomButton
-                android:id="@+id/form_add_category"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:buttonIcon="@drawable/ic_add_black_24dp"
-                app:buttonText=""
-                app:layout_constraintBottom_toBottomOf="@id/form_category_spinner_container"
-                app:layout_constraintLeft_toRightOf="@id/form_category_spinner_container"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/form_category_spinner_container" />
+                    <Spinner
+                        android:id="@+id/form_category_spinner"
+                        categories="@{viewModel.categories}"
+                        selectedCategory="@={viewModel.observableQuestion.category}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:padding="15dp" />
+                </RelativeLayout>
+
+                <com.sunilson.quizcreator.presentation.views.CustomButton
+                    android:id="@+id/form_add_category"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:buttonIcon="@drawable/ic_add_black_24dp"
+                    app:buttonText="" />
+            </LinearLayout>
+
+            <com.sunilson.quizcreator.presentation.views.DividerHeadline
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/divider_bottom_margin"
+                android:layout_marginTop="@dimen/divider_top_margin"
+                app:text="@string/answer_options" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/max_answers_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/max_answer_amount"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@id/max_answers_subtitle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/max_answers_value"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/max_answers_subtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Fehlende Antworten werden automatisch aus anderen Fragen befüllt"
+                    android:textColor="@color/unselected"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@id/max_answers_title"
+                    app:layout_constraintRight_toRightOf="@id/max_answers_title"
+                    app:layout_constraintTop_toBottomOf="@id/max_answers_title" />
+
+                <TextView
+                    android:id="@+id/max_answers_value"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="@{viewModel.observableQuestion.maxAnswers + ``}"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@id/max_answers_subtitle"
+                    app:layout_constraintLeft_toRightOf="@id/max_answers_title"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/max_answers_title" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/same_category_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Nur aus selber Kategorie"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@id/same_category_subtitle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/same_category_value"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/same_category_subtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Automatisches befüllen nur mit Antworten aus selber Kategorie erlauben"
+                    android:textColor="@color/unselected"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@id/same_category_title"
+                    app:layout_constraintRight_toRightOf="@id/same_category_title"
+                    app:layout_constraintTop_toBottomOf="@id/same_category_title" />
+
+                <Switch
+                    android:id="@+id/same_category_value"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:checked="@={viewModel.observableQuestion.onlySameCategory}"
+                    app:layout_constraintBottom_toBottomOf="@id/same_category_subtitle"
+                    app:layout_constraintLeft_toRightOf="@id/same_category_title"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/same_category_title" />
+            </android.support.constraint.ConstraintLayout>
 
             <com.sunilson.quizcreator.presentation.views.DividerHeadline
                 android:id="@+id/answers_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                app:layout_constraintBottom_toTopOf="@+id/form_answer_container"
-                app:layout_constraintTop_toBottomOf="@+id/form_category_spinner_container"
+                android:layout_marginTop="@dimen/divider_top_margin"
                 app:text="@string/answers" />
 
             <LinearLayout
                 android:id="@+id/form_answer_container"
-                initialEditTextAnswers="@{viewModel.creationQuestion.answers}"
-                questionType="@{viewModel.creationQuestion.type}"
+                initialEditTextAnswers="@{viewModel.observableQuestion.answers}"
+                childChange="@{(count) -> viewModel.answersChanged((Integer) count)}"
+                questionType="@{viewModel.observableQuestion.type}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/answers_title" />
+                android:orientation="vertical" />
 
             <com.sunilson.quizcreator.presentation.views.CustomButton
                 android:id="@+id/form_add_answer"
@@ -114,33 +202,38 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 app:buttonIcon="@drawable/ic_add_black_24dp"
-                app:buttonText="@string/add_answer"
-                app:layout_constraintTop_toBottomOf="@id/form_answer_container" />
+                app:buttonText="@string/add_answer" />
 
-            <com.sunilson.quizcreator.presentation.views.CustomButton
-                android:id="@+id/form_save_and_exit"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="5dp"
+<!--
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:buttonIcon="@drawable/ic_save_black_24dp"
-                app:buttonText="@string/save_and_exit"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/form_save_and_continue"
-                app:layout_constraintTop_toBottomOf="@id/form_add_answer"
-                app:type="CONFIRM" />
+                android:clipToPadding="false"
+                android:orientation="horizontal">
 
-            <com.sunilson.quizcreator.presentation.views.CustomButton
-                android:id="@+id/form_save_and_continue"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                app:buttonIcon="@drawable/ic_exit_to_app_black_24dp"
-                app:buttonText="@string/save_and_continue"
-                app:layout_constraintLeft_toRightOf="@id/form_save_and_exit"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/form_save_and_exit"
-                app:type="CONFIRM" />
+                <com.sunilson.quizcreator.presentation.views.CustomButton
+                    android:id="@+id/form_save_and_exit"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    app:buttonIcon="@drawable/ic_save_black_24dp"
+                    app:buttonText="@string/save_and_exit"
+                    app:type="CONFIRM" />
+
+                <com.sunilson.quizcreator.presentation.views.CustomButton
+                    android:id="@+id/form_save_and_continue"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:visibility="@{viewModel.editMode ? View.GONE : View.VISIBLE}"
+                    app:buttonIcon="@drawable/ic_exit_to_app_black_24dp"
+                    app:buttonText="@string/save_and_continue"
+                    app:type="CONFIRM" />
+            </LinearLayout>
+-->
 
             <TextView
                 android:id="@+id/form_error_message"
@@ -150,10 +243,9 @@
                 android:textAlignment="center"
                 android:textColor="@color/errorTextColor"
                 android:textSize="18sp"
-                android:visibility="@{viewModel.errorMessage.isEmpty() ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toBottomOf="@id/form_save_and_exit" />
+                android:visibility="@{viewModel.errorMessage.isEmpty() ? View.GONE : View.VISIBLE}" />
 
-        </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
     </ScrollView>
 
 </layout>

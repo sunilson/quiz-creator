@@ -1,22 +1,22 @@
 package com.sunilson.quizcreator.data.models
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import android.databinding.BaseObservable
-import android.databinding.ObservableField
+import android.databinding.Bindable
+import com.sunilson.quizcreator.BR
+import com.sunilson.quizcreator.presentation.shared.ANSWERS_PER_QUIZ_QUESTION
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
 import java.util.*
 
 @Entity(tableName = "question")
 @ForeignKey(entity = Category::class, parentColumns = ["id"], childColumns = ["categoryId"], onDelete = ForeignKey.NO_ACTION)
 class Question(
-        @PrimaryKey
-        var id: String = UUID.randomUUID().toString(),
-        var text: String = "",
+        @PrimaryKey var id: String = UUID.randomUUID().toString(),
+        @ColumnInfo(name = "buttonText") var _text: String = "",
         var categoryId: String = "",
         var answers: MutableList<Answer> = mutableListOf(),
+        @ColumnInfo(name = "maxAnswers") var _maxAnswers: Int = ANSWERS_PER_QUIZ_QUESTION,
+        @ColumnInfo(name = "onlySameCategory") var _onlySameCategory: Boolean = true,
         var type: QuestionType = QuestionType.SINGLE_CHOICE,
         var correctlyAnswered: Boolean = false,
         @Ignore var categoryName: String = ""
@@ -25,13 +25,60 @@ class Question(
     @Ignore
     override val compareByString: String = id
 
+    /*
+    TODO Observable list so dass nicht übr alle answer views iteriert werden muss am schluss
     @Ignore
-    val observableText: ObservableField<String> = object : ObservableField<String>(text) {
-        override fun set(value: String?) {
-            super.set(value)
-            if (value != null) text = value
+    val observableAnswers: ObservableField<List<Answer>> = object : ObservableArrayList<Answer>() {
+        override fun get(index: Int): Answer {
+            return answers[index]
+        }
+
+        override fun set(index: Int, element: Answer?): Answer {
+
         }
     }
+    */
+
+    var text: String
+        @Ignore
+        set(value) {
+            _text = value
+            notifyPropertyChanged(BR.text)
+        }
+        @Ignore
+        @Bindable
+        get() = _text
+
+    var category: Category
+        @Ignore
+        set(value) {
+            categoryId = value.id
+            categoryName = value.name
+            notifyPropertyChanged(BR.category)
+        }
+        @Ignore
+        @Bindable
+        get() = Category(categoryId, categoryName)
+
+    var maxAnswers: Int
+        @Ignore
+        set(value) {
+            _maxAnswers = value
+            notifyPropertyChanged(BR.maxAnswers)
+        }
+        @Ignore
+        @Bindable
+        get() = _maxAnswers
+
+    var onlySameCategory: Boolean
+        @Ignore
+        set(value) {
+            _onlySameCategory = value
+            notifyPropertyChanged(BR.onlySameCategory)
+        }
+        @Ignore
+        @Bindable
+        get() = _onlySameCategory
 }
 
 enum class QuestionType {

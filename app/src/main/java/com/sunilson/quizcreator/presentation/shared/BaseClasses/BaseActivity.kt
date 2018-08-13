@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 interface SpeechRecognizingActivity {
     fun checkAudioPermissions(): Boolean
-    fun startListening(cb: (String) -> Unit)
+    fun startListening(restultCb: (String) -> Unit, endCb: () -> Unit, errorCb: (Int) -> Unit)
     fun stopListening()
 }
 
@@ -22,6 +22,7 @@ abstract class BaseActivity : AppCompatActivity(), SpeechRecognizingActivity {
 
     @Inject
     lateinit var speechRecognizer: SpeechRecognizer
+
     lateinit var speechRecognizerIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +30,7 @@ abstract class BaseActivity : AppCompatActivity(), SpeechRecognizingActivity {
         super.onCreate(savedInstanceState)
     }
 
-    override fun startListening(cb: (String) -> Unit) {
+    override fun startListening(cb: (String) -> Unit, endCb: () -> Unit, errorCb: (Int) -> Unit) {
         if (!checkAudioPermissions()) return
         speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -42,11 +43,17 @@ abstract class BaseActivity : AppCompatActivity(), SpeechRecognizingActivity {
             override fun onPartialResults(p0: Bundle?) {}
             override fun onEvent(p0: Int, p1: Bundle?) {}
             override fun onBeginningOfSpeech() {}
-            override fun onEndOfSpeech() {}
-            override fun onError(p0: Int) {}
+            override fun onEndOfSpeech() {
+                endCb()
+            }
+
+            override fun onError(p0: Int) {
+                errorCb(p0)
+            }
+
             override fun onResults(p0: Bundle?) {
                 val matches = p0?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (matches != null) cb(matches[0])
+                if (matches != null) cb(matches[0].capitalize())
                 else cb("")
             }
         })

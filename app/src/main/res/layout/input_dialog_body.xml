@@ -10,6 +10,8 @@
         android:id="@+id/dialog_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         app:layout_constraintTop_toTopOf="parent"
         android:hint="@string/category_name"
         />

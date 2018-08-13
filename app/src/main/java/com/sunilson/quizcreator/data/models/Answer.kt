@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity(tableName = "answer")
 @ForeignKey(entity = Question::class, parentColumns = ["id"], childColumns = ["questionID"], onDelete = CASCADE)
-class Answer(
+data class Answer(
         @PrimaryKey
         var id: String = UUID.randomUUID().toString(),
         var text: String = "",

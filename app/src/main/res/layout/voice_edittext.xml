@@ -41,28 +41,12 @@
             android:maxLines="1"
             android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding"
             android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding"
-            android:text="@={viewModel.answer.text}"
+            android:text="@={viewModel.text}"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/correct_answer"
             app:layout_constraintRight_toLeftOf="@id/delete_button"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/microphone_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding_icons"
-            android:paddingLeft="10dp"
-            android:paddingRight="15dp"
-            android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding_icons"
-            android:visibility="@{viewModel.voiceEnabled ? View.VISIBLE : View.GONE}"
-            android:src="@drawable/ic_mic_black_24dp"
-            android:tint="#d2d2d2"
-            app:layout_constraintBottom_toBottomOf="@id/voice_edittext"
-            app:layout_constraintLeft_toRightOf="@id/delete_button"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/voice_edittext" />
 
         <ImageView
             android:id="@+id/delete_button"
@@ -79,5 +63,36 @@
             app:layout_constraintLeft_toRightOf="@id/voice_edittext"
             app:layout_constraintRight_toLeftOf="@id/microphone_button"
             app:layout_constraintTop_toTopOf="@id/voice_edittext" />
+
+
+        <View
+            android:id="@+id/voice_active_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/voice_edittext_active_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="invisible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/microphone_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding_icons"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding_icons"
+            android:src="@drawable/ic_mic_black_24dp"
+            android:tint="#d2d2d2"
+            android:visibility="@{viewModel.voiceEnabled ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/voice_edittext"
+            app:layout_constraintLeft_toRightOf="@id/delete_button"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/voice_edittext" />
+
+
     </merge>
 </layout>

@@ -1,5 +1,6 @@
 package com.sunilson.quizcreator.presentation.views
 
+import android.animation.AnimatorInflater
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
@@ -14,8 +15,6 @@ import kotlinx.android.synthetic.main.custom_button.view.*
 
 class CustomButton : FrameLayout {
 
-    //TODO Ripple mit Radius
-
     var type: ButtonType = ButtonType.DEFAULT
         set(value) {
             field = value
@@ -26,10 +25,10 @@ class CustomButton : FrameLayout {
                 ButtonType.CANCEL -> ContextCompat.getDrawable(context, R.drawable.button_cancel_background)
             }
 
-            if (drawable != null) custom_button_container.background = drawable
+            if (drawable != null) background = drawable
         }
 
-    var text: String = ""
+    var buttonText: String = ""
         set(value) {
             field = value
             custom_button_text.text = value
@@ -59,7 +58,6 @@ class CustomButton : FrameLayout {
 
     val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
         inflater.inflate(R.layout.custom_button, this, true)
         val a = context.theme.obtainStyledAttributes(attributeSet, R.styleable.CustomButton, 0, 0)
@@ -68,8 +66,13 @@ class CustomButton : FrameLayout {
             1 -> ButtonType.CONFIRM
             else -> ButtonType.CANCEL
         }
+
+        clipToPadding = false
+        elevation = 10f
+        stateListAnimator = AnimatorInflater.loadStateListAnimator(context, R.animator.button_animator)
+
         icon = a.getDrawable(R.styleable.CustomButton_buttonIcon)
-        text = if (a.getString(R.styleable.CustomButton_buttonText) != null) a.getString(R.styleable.CustomButton_buttonText)
+        buttonText = if (a.getString(R.styleable.CustomButton_buttonText) != null) a.getString(R.styleable.CustomButton_buttonText)
         else ""
         a.recycle()
     }

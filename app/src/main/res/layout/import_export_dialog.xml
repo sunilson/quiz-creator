@@ -39,7 +39,7 @@
             android:id="@+id/export_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:buttonIcon="@drawable/ic_import_export_white_24dp"
+            app:buttonIcon="@drawable/ic_save_black_24dp"
             app:buttonText="Export"
             android:layout_marginLeft="5dp"
             />

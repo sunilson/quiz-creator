@@ -13,9 +13,7 @@ class Statistics(
         var averageCorrectRate: Float = 0f,
         var averageCorrectRatePerCategory: Map<String, Float> = mapOf(),
         var lastAbsolvedDatePerCategory: Map<String, Long> = mapOf(),
-        var averageDuration: Long = 0
-) {
-    override fun toString(): String {
-        return "FinishedQuizAmount: $finishedQuizAmount, UnfinishedQuizAmount: $unfinishedQuizAmount, AverageCorrectRate: $averageCorrectRate, AverageDuration: $averageDuration, AverageCorrectRatePerCategory: ${averageCorrectRatePerCategory["general"]}"
-    }
-}
+        var averageDuration: Long = 0,
+        var singleChoiceCorrectRate: Int = 0,
+        var multipleChoiceCorrectRate: Int = 0
+)

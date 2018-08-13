@@ -8,6 +8,15 @@ import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.NotifyPrope
 
 class EditTextWithVoiceInputViewModel(answer: Answer?, optional: Boolean = false, correctToggable: Boolean = false, voiceEnabled: Boolean = true, hint: String = "") : BaseObservable() {
 
+    var text: String = answer?.text ?: ""
+        set(value) {
+            field = value
+            answer?.text = value
+            notifyPropertyChanged(BR.text)
+        }
+        @Bindable
+        get() = field
+
     @get:Bindable
     var answer: Answer? by NotifyPropertyChangedDelegate(answer, BR.showDivider)
 

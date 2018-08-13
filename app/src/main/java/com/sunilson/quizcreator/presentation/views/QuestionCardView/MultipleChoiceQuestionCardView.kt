@@ -16,6 +16,7 @@ class MultipleChoiceQuestionCardView(context: Context, question: Question, quest
     init {
         this.layoutTransition = LayoutTransition()
         confirm_question_button.setOnClickListener {
+            confirm_question_button.setOnClickListener(null)
             for (i in 0 until question_answers.childCount) {
                 val answerView = question_answers.getChildAt(i) as AnswerView
                 answerView.showAnswerResult()

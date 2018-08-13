@@ -32,13 +32,14 @@ class CreateQuizFragment : BaseFragment() {
         view.category_quiz_spinner.adapter = categorySpinnerAdapter
 
         view.generate_quiz_button.setOnClickListener {
-            disposable.add(createQuizViewModel.generateQuiz().subscribe({
-                val intent = Intent(context, QuizActivity::class.java)
-                intent.putExtra("quizId", it.id)
-                startActivity(intent)
-            }, {
-
-            }))
+            val intent = Intent(context, QuizActivity::class.java)
+            if (createQuizViewModel.selectedCategory.get() != null && createQuizViewModel.selectedCategory.get()!!.id != "all"){
+                intent.putExtra("selectedCategory", createQuizViewModel.selectedCategory.get()!!.id)
+            }
+            intent.putExtra("shuffleAnswers", createQuizViewModel.shuffleAnswers.get())
+            intent.putExtra("onlySingle", createQuizViewModel.singleOrMultiple.get())
+            intent.putExtra("maxQuestionAmount", createQuizViewModel.maxQuestionAmount.get())
+            startActivity(intent)
         }
 
         view.select_question_amount_button.setOnClickListener {

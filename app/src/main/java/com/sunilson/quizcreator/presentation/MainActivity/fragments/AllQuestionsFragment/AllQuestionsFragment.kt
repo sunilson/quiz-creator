@@ -9,23 +9,29 @@ import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
+import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.IQuizRepository
 import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.databinding.FragmentAllQuestionBinding
 import com.sunilson.quizcreator.presentation.AddQuestionActivity.AddQuestionActivity
+import com.sunilson.quizcreator.presentation.MainActivity.OnBackPressedListener
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
 import com.sunilson.quizcreator.presentation.shared.ADD_QUESTIONS_INTENT
 import com.sunilson.quizcreator.presentation.shared.CategorySpinnerAdapter
 import com.sunilson.quizcreator.presentation.shared.Dialogs.DialogListener
 import com.sunilson.quizcreator.presentation.shared.Dialogs.ImportExportDialog.ImportExportDialog
+import com.sunilson.quizcreator.presentation.shared.Dialogs.SimpleConfirmDialog
+import com.sunilson.quizcreator.presentation.shared.EventBus
+import com.sunilson.quizcreator.presentation.shared.EventChannel
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator
@@ -33,7 +39,7 @@ import kotlinx.android.synthetic.main.fragment_all_question.*
 import kotlinx.android.synthetic.main.fragment_all_question.view.*
 import javax.inject.Inject
 
-class AllQuestionsFragment : BaseFragment() {
+class AllQuestionsFragment : BaseFragment(), OnBackPressedListener {
 
     @Inject
     lateinit var questionsRecyclerAdapterFactory: QuestionsRecyclerAdapterFactory
@@ -47,7 +53,15 @@ class AllQuestionsFragment : BaseFragment() {
     @Inject
     lateinit var repository: IQuizRepository
 
+    @Inject
+    lateinit var eventBus: EventBus
+
+    private var searchOpen: Boolean = false
     lateinit var questionsRecyclerAdapter: QuestionsRecyclerAdapter
+
+    private val imm : InputMethodManager by lazy {
+        context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,18 +69,32 @@ class AllQuestionsFragment : BaseFragment() {
         binding.viewModel = allQuestionsViewModel
         val view = binding.root
 
-        questionsRecyclerAdapter = questionsRecyclerAdapterFactory.create({
-            disposable.add(allQuestionsViewModel.deleteQuestion(it).subscribe({
-                questionsRecyclerAdapter.remove(it)
-            }, {
-                context?.showToast(it.message)
-            }))
+        questionsRecyclerAdapter = questionsRecyclerAdapterFactory.create({ question ->
+            val dialog = SimpleConfirmDialog.newInstance(getString(R.string.delete_question), getString(R.string.delete_question_question))
+            dialog.listener = object : DialogListener<Boolean> {
+                override fun onResult(result: Boolean?) {
+                    result?.let {
+                        if (it) {
+                            disposable.add(allQuestionsViewModel.deleteQuestion(question).subscribe({
+                                questionsRecyclerAdapter.remove(question)
+                            }, {
+                                context?.showToast(it.message)
+                            }))
+                        }
+                    }
+                }
+            }
+            dialog.show(fragmentManager, "dialog")
         }, {
             disposable.add(allQuestionsViewModel.updateQuestion(it).subscribe({
                 questionsRecyclerAdapter.update(it)
             }, {
                 context?.showToast(it.message)
             }))
+        }, {
+            val intent = Intent(context, AddQuestionActivity::class.java)
+            intent.putExtra("id", it.id)
+            startActivityForResult(intent, ADD_QUESTIONS_INTENT)
         }, recyclerView = view.question_recyclerview)
 
         view.category_spinner.adapter = categorySpinnerAdapter
@@ -81,18 +109,28 @@ class AllQuestionsFragment : BaseFragment() {
         view.question_recyclerview.setHasFixedSize(true)
         view.question_recyclerview.layoutManager = LinearLayoutManager(context)
 
+        view.fab.setOnFloatingActionsMenuUpdateListener(object : FloatingActionsMenu.OnFloatingActionsMenuUpdateListener {
+            override fun onMenuCollapsed() {
+                view.all_question_overlay.visibility = View.GONE
+            }
+
+            override fun onMenuExpanded() {
+                view.all_question_overlay.visibility = View.VISIBLE
+            }
+        })
+
         view.fab_add_single.setOnClickListener {
             view.fab.collapse()
             val intent = Intent(context, AddQuestionActivity::class.java)
             intent.putExtra("type", QuestionType.SINGLE_CHOICE)
-            startActivityForResult(intent, ADD_QUESTIONS_INTENT)
+            startActivity(intent)
         }
 
         view.fab_add_multiple.setOnClickListener {
             view.fab.collapse()
             val intent = Intent(context, AddQuestionActivity::class.java)
             intent.putExtra("type", QuestionType.MULTIPLE_CHOICE)
-            startActivityForResult(intent, ADD_QUESTIONS_INTENT)
+            startActivity(intent)
         }
 
         view.fab_export_import.setOnClickListener {
@@ -108,60 +146,17 @@ class AllQuestionsFragment : BaseFragment() {
 
         view.searchbar_background.alpha = 0f
 
+        view.searchbar.setOnClickListener {
+            if (searchOpen) closeSearch()
+            else openSearch()
+        }
+
         view.close_searchbar.setOnClickListener {
-            val params = view.searchbar.layoutParams as ConstraintLayout.LayoutParams
-            view.close_searchbar.visibility = View.GONE
-            view.searchbar_edittext.visibility = View.GONE
-            view.category_spinner_container.visibility = View.GONE
-
-            val backgroundAnimator = ObjectAnimator.ofFloat(searchbar_background, "alpha", 1f, 0f).setDuration(300)
-            backgroundAnimator.interpolator = DecelerateInterpolator()
-
-            val animator = ValueAnimator.ofInt(180, 60).setDuration(300)
-            animator.interpolator = AccelerateInterpolator()
-            animator.addUpdateListener {
-                val value = it.animatedValue as Int
-                params.height = value.convertToPx(context!!)
-                view.searchbar.layoutParams = params
-            }
-
-            animator.addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
-                    view.open_searchbar.visibility = View.VISIBLE
-                    view.searchbar_tags.visibility = View.VISIBLE
-                }
-            })
-
-            animator.start()
-            backgroundAnimator.start()
+            closeSearch()
         }
 
         view.open_searchbar.setOnClickListener {
-            val params = view.searchbar.layoutParams as ConstraintLayout.LayoutParams
-            view.open_searchbar.visibility = View.GONE
-            view.searchbar_tags.visibility = View.GONE
-
-            val backgroundAnimator = ObjectAnimator.ofFloat(searchbar_background, "alpha", 0f, 1f).setDuration(300)
-            backgroundAnimator.interpolator = DecelerateInterpolator()
-
-            val animator = ValueAnimator.ofInt(60, 180).setDuration(300)
-            animator.interpolator = AccelerateInterpolator()
-            animator.addUpdateListener {
-                val value = it.animatedValue as Int
-                params.height = value.convertToPx(context!!)
-                view.searchbar.layoutParams = params
-            }
-
-            animator.addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
-                    view.close_searchbar.visibility = View.VISIBLE
-                    view.searchbar_edittext.visibility = View.VISIBLE
-                    view.category_spinner_container.visibility = View.VISIBLE
-                }
-            })
-
-            backgroundAnimator.start()
-            animator.start()
+            openSearch()
         }
 
         return view
@@ -174,6 +169,7 @@ class AllQuestionsFragment : BaseFragment() {
             ADD_QUESTIONS_INTENT -> {
                 if (resultCode == Activity.RESULT_OK) {
                     allQuestionsViewModel.loadQuestions()
+                    eventBus.publishToChannel(EventChannel.RELOAD_CATEGORIES, true)
                 }
             }
         }
@@ -188,6 +184,74 @@ class AllQuestionsFragment : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         allQuestionsViewModel.onDestroy()
+    }
+
+    private fun openSearch() {
+        val params = searchbar.layoutParams as LinearLayout.LayoutParams
+        open_searchbar.visibility = View.GONE
+        searchbar_tags.visibility = View.GONE
+
+        val backgroundAnimator = ObjectAnimator.ofFloat(searchbar_background, "alpha", 0f, 1f).setDuration(300)
+        backgroundAnimator.interpolator = DecelerateInterpolator()
+
+        val animator = ValueAnimator.ofInt(45, 180).setDuration(300)
+        animator.interpolator = AccelerateInterpolator()
+        animator.addUpdateListener {
+            val value = it.animatedValue as Int
+            params.height = value.convertToPx(context!!)
+            searchbar.layoutParams = params
+        }
+
+        animator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                close_searchbar.visibility = View.VISIBLE
+                searchbar_edittext.visibility = View.VISIBLE
+                category_spinner_container.visibility = View.VISIBLE
+                searchOpen = true
+            }
+        })
+
+        backgroundAnimator.start()
+        animator.start()
+    }
+
+    private fun closeSearch() {
+        searchOpen = false
+        val params = searchbar.layoutParams as LinearLayout.LayoutParams
+        close_searchbar.visibility = View.GONE
+        searchbar_edittext.visibility = View.GONE
+        category_spinner_container.visibility = View.GONE
+
+        val backgroundAnimator = ObjectAnimator.ofFloat(searchbar_background, "alpha", 1f, 0f).setDuration(300)
+        backgroundAnimator.interpolator = DecelerateInterpolator()
+
+        val animator = ValueAnimator.ofInt(180, 45).setDuration(300)
+        animator.interpolator = AccelerateInterpolator()
+        animator.addUpdateListener {
+            val value = it.animatedValue as Int
+            params.height = value.convertToPx(context!!)
+            searchbar.layoutParams = params
+        }
+
+        animator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                open_searchbar.visibility = View.VISIBLE
+                searchbar_tags.visibility = View.VISIBLE
+            }
+        })
+
+        imm.hideSoftInputFromWindow(searchbar_edittext.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        animator.start()
+        backgroundAnimator.start()
+    }
+
+    override fun onBackPressed(): Boolean {
+        return if (searchOpen) {
+            closeSearch()
+            false
+        } else {
+            true
+        }
     }
 
     companion object {

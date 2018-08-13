@@ -85,4 +85,7 @@ interface QuizDatabaseDAO {
 
     @Query("SELECT COUNT(*) FROM question WHERE categoryId == :categoryId")
     fun countCategoryQuestions(categoryId: String): Int
+
+    @Query("SELECT * FROM question WHERE id == :id")
+    fun getQuestionOnce(id: String): Single<Question>
 }

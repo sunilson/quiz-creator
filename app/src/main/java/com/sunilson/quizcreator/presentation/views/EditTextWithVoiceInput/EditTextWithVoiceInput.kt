@@ -1,18 +1,23 @@
 package com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput
 
+import android.animation.Animator
 import android.content.Context
+import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.Toast
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.databinding.VoiceEdittextBinding
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.SpeechRecognizingActivity
+import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
 import kotlinx.android.synthetic.main.voice_edittext.view.*
 
 
@@ -21,8 +26,11 @@ class EditTextWithVoiceInput : ConstraintLayout {
     private lateinit var viewModel: EditTextWithVoiceInputViewModel
     private lateinit var binding: VoiceEdittextBinding
 
-    val text: String
-        get() = voice_edittext.text.toString()
+    var text: String
+        get() = viewModel.text
+        set(value) {
+            viewModel.text = value
+        }
 
     val answer: Answer?
         get() = viewModel.answer
@@ -38,6 +46,13 @@ class EditTextWithVoiceInput : ConstraintLayout {
 
     val hint: String
         get() = viewModel.hint
+
+    private var recording: Boolean = false
+    private var ending: Boolean = false
+    private var doHandler: Handler = Handler()
+    private var runnable: Runnable = Runnable {
+        context?.showToast("bla")
+    }
 
     constructor(context: Context, optional: Boolean, correctToggable: Boolean = false, answer: Answer? = null, voiceEnabled: Boolean = true, hint: String = "") : super(context) {
         initBinding(optional, correctToggable, answer, voiceEnabled, hint)
@@ -66,21 +81,82 @@ class EditTextWithVoiceInput : ConstraintLayout {
         layoutParams.setMargins(0, resources.getDimensionPixelSize(R.dimen.voice_edittext_margin), 0, resources.getDimensionPixelSize(R.dimen.voice_edittext_margin))
         this.layoutParams = layoutParams
 
+        microphone_button.setOnLongClickListener {
+            if (!recording) {
+                val anim = ViewAnimationUtils.createCircularReveal(
+                        voice_active_overlay,
+                        voice_active_overlay.right,
+                        voice_active_overlay.bottom,
+                        0f,
+                        Math.max(voice_active_overlay.width, voice_active_overlay.height).toFloat())
+                voice_active_overlay.visibility = View.VISIBLE
+                anim.start()
+                recording = true
+                microphone_button.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close_white_24dp))
+                (context as SpeechRecognizingActivity).startListening({
+                    voice_edittext.setText(it)
+                }, {
+                    endVoiceInput()
+                }, {
+                    endVoiceInput()
+                })
+            }
+            true
+        }
+
+        microphone_button.setOnClickListener {
+            if (recording) (context as SpeechRecognizingActivity).stopListening()
+            else context.showToast("Press button longer to record audio!", Toast.LENGTH_SHORT)
+        }
+
         microphone_button.setOnTouchListener { p0, p1 ->
-            when (p1.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    (context as SpeechRecognizingActivity).startListening {
-                        voice_edittext.setText(it)
+            return@setOnTouchListener when (p1.action) {
+                MotionEvent.ACTION_POINTER_UP,
+                MotionEvent.ACTION_CANCEL,
+                MotionEvent.ACTION_OUTSIDE,
+                MotionEvent.ACTION_UP -> {
+                    if (recording) {
+                        (context as SpeechRecognizingActivity).stopListening()
+                        true
+                    } else {
+                        false
                     }
                 }
-                MotionEvent.ACTION_UP -> {
-                    (context as SpeechRecognizingActivity).stopListening()
-                }
+                else -> false
             }
-            false
         }
 
         viewModel = EditTextWithVoiceInputViewModel(answer, optional, correctToggable, voiceEnabled, hint)
         binding.viewModel = viewModel
+    }
+
+    private fun endVoiceInput() {
+        recording = false
+        if (!ending) {
+            ending = true
+            val anim = ViewAnimationUtils.createCircularReveal(
+                    voice_active_overlay,
+                    voice_active_overlay.right,
+                    voice_active_overlay.bottom,
+                    Math.max(voice_active_overlay.width, voice_active_overlay.height).toFloat(),
+                    0f)
+            anim.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(p0: Animator?) {}
+                override fun onAnimationEnd(p0: Animator?) {
+                    voice_active_overlay.visibility = View.INVISIBLE
+                    microphone_button.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_mic_black_24dp))
+                    ending = false
+                }
+
+                override fun onAnimationCancel(p0: Animator?) {
+                    voice_active_overlay.visibility = View.INVISIBLE
+                    microphone_button.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_mic_black_24dp))
+                    ending = false
+                }
+
+                override fun onAnimationStart(p0: Animator?) {}
+            })
+            anim.start()
+        }
     }
 }

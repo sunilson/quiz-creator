@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.IQuizRepository
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseDialogFragment
@@ -42,7 +41,7 @@ class ImportExportDialog : BaseDialogFragment(), DialogWithResult<Boolean> {
 
         content.export_button.setOnClickListener {
             disposable.add(repository.exportQuestionsAndCategories().subscribe({
-                context?.showToast(getString(R.string.export_successful))
+                context?.showToast(getString(R.string.export_successful) + it)
                 dismiss()
             }, {
                 context?.showToast(getString(R.string.export_error))
@@ -57,14 +56,11 @@ class ImportExportDialog : BaseDialogFragment(), DialogWithResult<Boolean> {
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         if (!context!!.hasPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             requestPermissions(arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_EXTERNAL_STORAGE_INTENT)
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {

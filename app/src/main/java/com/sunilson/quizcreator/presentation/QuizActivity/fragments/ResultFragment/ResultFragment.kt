@@ -12,9 +12,14 @@ import com.sunilson.quizcreator.databinding.FragmentQuizResultBinding
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.BaseFragment
 import com.sunilson.quizcreator.presentation.QuizActivity.QuizActivity
 import com.sunilson.quizcreator.presentation.QuizActivity.QuizViewModel
+import com.sunilson.quizcreator.presentation.shared.AudioService
 import kotlinx.android.synthetic.main.fragment_quiz_result.view.*
+import javax.inject.Inject
 
 class ResultFragment : BaseFragment() {
+
+    @Inject
+    lateinit var audioService: AudioService
 
     val viewModel: QuizViewModel by lazy { (activity!! as QuizActivity).quizViewModel }
 
@@ -25,6 +30,8 @@ class ResultFragment : BaseFragment() {
 
         Handler().postDelayed({
             view.result_checkmark_animation.playAnimation()
+            if (viewModel.wonQuiz) audioService.playWonSound()
+            //else audioService.playLostSound()
 
             val headlineAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_and_slide_up)
             val subtitleAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_and_slide_up)
@@ -68,6 +75,11 @@ class ResultFragment : BaseFragment() {
         }
 
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        audioService.cancelPlayingSounds()
     }
 
     companion object {

@@ -12,12 +12,13 @@ abstract class QuestionCardView(context: Context,
                                 val question: Question,
                                 val questionSubmitted: (Boolean) -> Unit) : ConstraintLayout(context) {
 
-    protected val inflater : LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    protected val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     init {
         setPadding(10.convertToPx(context), 15.convertToPx(context), 2.convertToPx(context), 10.convertToPx(context))
         background = ContextCompat.getDrawable(context, R.drawable.stacked_card_view_background)
         isClickable = true
+        clipToPadding = false
     }
 
     abstract fun initializeViewModel()

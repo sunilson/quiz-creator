@@ -8,7 +8,6 @@
     <string name="save_and_continue">Save and continue</string>
     <string name="enter_question">Enter question</string>
     <string name="question_empty_error">Question can not be empty!</string>
-    <string name="answer_empty_error">One or more answers are empty!</string>
     <string name="question_category_not_set">Question category is not set</string>
     <string name="question_answers_empty">Answers can not be empty</string>
     <string name="category_name_empty">Category name can\'t be empty!</string>
@@ -74,6 +73,24 @@
     <string name="import_export_questions">Import/Export Questions and Categories</string>
     <string name="import_failed">Import failed</string>
     <string name="import_success">Import success</string>
-    <string name="export_successful">Export successful</string>
+    <string name="export_successful">Exported to your downloads folder!</string>
     <string name="export_error">Could not export data</string>
+    <string name="confirm">Confirm</string>
+    <string name="edit_everything">Edit everything</string>
+    <string name="correct_multiple">Correct multiple choice questions</string>
+    <string name="correct_single">Correct single choice questions</string>
+    <string name="statistics">Statistics</string>
+    <string name="quiz">Quiz</string>
+    <string name="answer_options">Answer options</string>
+    <string name="set_max_answer_error">Can\'t set maximum lower than currently added answer amount!</string>
+    <string name="not_enough_answers">Not enough answers available :(</string>
+    <string name="max_answers_minimum">4 max answers is the minimum!</string>
+    <string name="max_answer_amount">Max. answer amount</string>
+    <string name="quiz_options">Quiz options</string>
+    <string name="only_single_choice_subtitle">Only include single choice answers in this quiz</string>
+    <string name="max_question_amount_subtitle">Choose how many questions this quiz should contain</string>
+    <string name="add_new_question">Add a new question</string>
+    <string name="delete_question_question">Do you really want to delete this question?</string>
+    <string name="delete_question">Delete question</string>
+    <string name="press_again_exit">Press again to exit</string>
 </resources>

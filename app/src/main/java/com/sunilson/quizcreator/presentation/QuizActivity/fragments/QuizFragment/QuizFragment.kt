@@ -26,14 +26,15 @@ class QuizFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<FragmentQuizBinding>(inflater, R.layout.fragment_quiz, container, false)
         binding.viewModel = viewModel
-        quizId = arguments?.getString("quizId") ?: ""
-        if (quizId.isEmpty()) activity!!.finish()
-        else {
-            disposable.add(viewModel.loadQuiz(quizId).subscribe({}, {
-                context?.showToast(getString(R.string.quiz_not_valid))
-                activity!!.finish()
-            }))
-        }
+
+        disposable.add(viewModel.generateQuiz(
+                arguments!!.getString("selectedCategory"),
+                arguments!!.getBoolean("shuffleAnswers"),
+                arguments!!.getBoolean("onlySingle"),
+                arguments!!.getInt("maxQuestionAmount")).subscribe({}, {
+            context?.showToast(it.message)
+            activity!!.finish()
+        }))
 
         val view = binding.root
         view.quiz_view.quizFinishedCallback = {
@@ -50,9 +51,12 @@ class QuizFragment : BaseFragment() {
     }
 
     companion object {
-        fun newInstance(quizId: String): QuizFragment {
+        fun newInstance(selectedCategory: String?, shuffleAnswers: Boolean, onlySingle: Boolean, maxQuestionAmount: Int): QuizFragment {
             val bundle = Bundle()
-            bundle.putString("quizId", quizId)
+            if (selectedCategory != null) bundle.putString("selectedCategory", selectedCategory)
+            bundle.putBoolean("onlySingle", onlySingle)
+            bundle.putBoolean("shuffleAnswers", shuffleAnswers)
+            bundle.putInt("maxQuestionAmount", maxQuestionAmount)
             val fragment = QuizFragment()
             fragment.arguments = bundle
             return fragment

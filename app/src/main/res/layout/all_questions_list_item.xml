@@ -20,53 +20,83 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_margin"
         android:background="@drawable/stacked_card_view_background"
-        android:orientation="horizontal">
+        android:clipToPadding="false"
+        android:padding="@dimen/card_padding">
 
-        <LinearLayout
-            android:id="@+id/question_list_item_top_bar"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/question_list_item_icon"
+            questionIcon="@{obj.type}"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/card_padding"
-            app:layout_constraintBottom_toTopOf="@id/question_list_item_content"
+            android:tint="@color/iconColor"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/question_list_item_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingRight="10dp"
+            android:text="@{obj.text}"
+            android:textSize="@dimen/card_title_text_size"
+            app:layout_constraintBottom_toTopOf="@id/question_list_item_text_category"
+            app:layout_constraintLeft_toRightOf="@id/question_list_item_icon"
+            app:layout_constraintRight_toLeftOf="@id/question_list_item_edit"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Dies ist eine Frage" />
+
+        <TextView
+            android:id="@+id/question_list_item_text_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{obj.categoryName}"
+            android:textColor="@color/unselected"
+            android:textSize="@dimen/card_subtitle_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/question_list_item_text"
+            app:layout_constraintRight_toRightOf="@id/question_list_item_text"
+            app:layout_constraintTop_toBottomOf="@id/question_list_item_text"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Kategorie" />
+
+        <com.sunilson.quizcreator.presentation.views.CustomButton
+            android:id="@+id/question_list_item_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            app:buttonIcon="@drawable/ic_edit_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@id/question_list_item_text_category"
+            app:layout_constraintLeft_toRightOf="@id/question_list_item_text"
+            app:layout_constraintRight_toLeftOf="@id/question_list_item_answers_delete"
+            app:layout_constraintTop_toTopOf="@id/question_list_item_text" />
+
+
+        <com.sunilson.quizcreator.presentation.views.CustomButton
+            android:id="@+id/question_list_item_answers_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            app:buttonIcon="@drawable/ic_delete_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@id/question_list_item_edit"
+            app:layout_constraintLeft_toRightOf="@id/question_list_item_edit"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@id/question_list_item_edit"
+            app:type="CANCEL" />
 
-            <ImageView
-                questionIcon="@{obj.type}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="10dp" />
-
-            <TextView
-                android:id="@+id/question_list_item_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingRight="10dp"
-                android:text="@{obj.text}"
-                android:textSize="@dimen/card_title_text_size"
-                tools:text="Dies ist eine Frage" />
-
-            <TextView
-                android:id="@+id/question_list_item_text_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{obj.categoryName}"
-                android:maxWidth="50dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="Kategorie" />
-
-        </LinearLayout>
-
-
+        <!--
         <android.support.constraint.ConstraintLayout
             android:id="@+id/question_list_item_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:clipToPadding="false"
             android:padding="15dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -79,39 +109,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@id/question_list_item_answers_save"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.sunilson.quizcreator.presentation.views.CustomButton
-                android:id="@+id/question_list_item_answers_save"
-                android:layout_width="0dp"
+                android:id="@+id/question_list_item_edit"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/big_button_height"
                 android:layout_marginTop="@dimen/big_button_height_top_margin"
-                app:buttonText="@string/save"
-                app:buttonIcon="@drawable/ic_save_black_24dp"
-                app:type="CONFIRM"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/question_list_item_answers_delete"
+                app:buttonIcon="@drawable/ic_edit_black_24dp"
+                app:buttonText="@string/edit_everything"
                 app:layout_constraintTop_toBottomOf="@id/question_list_item_answers" />
 
-            <com.sunilson.quizcreator.presentation.views.CustomButton
-                android:id="@+id/question_list_item_answers_delete"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/big_button_height"
-                app:buttonText="@string/delete"
-                app:buttonIcon="@drawable/ic_delete_black_24dp"
-                app:type="CANCEL"
-                app:layout_constraintBottom_toBottomOf="@id/question_list_item_answers_save"
-                app:layout_constraintLeft_toRightOf="@id/question_list_item_answers_save"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/question_list_item_answers_save" />
+
 
         </android.support.constraint.ConstraintLayout>
-
-
+        -->
     </android.support.constraint.ConstraintLayout>
 
 </layout>

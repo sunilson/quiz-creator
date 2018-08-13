@@ -6,7 +6,7 @@ import android.arch.persistence.room.TypeConverters
 import com.sunilson.quizcreator.data.models.*
 
 
-@Database(entities = [(Answer::class), (Question::class), (Quiz::class), (Category::class), (Statistics::class)], version = 12)
+@Database(entities = [(Answer::class), (Question::class), (Quiz::class), (Category::class), (Statistics::class)], version = 18)
 @TypeConverters(com.sunilson.quizcreator.data.TypeConverters::class)
 abstract class QuizDatabase : RoomDatabase() {
     abstract fun quizDAO(): QuizDatabaseDAO

@@ -8,10 +8,10 @@ import com.sunilson.quizcreator.data.IQuizRepository
 import com.sunilson.quizcreator.data.models.Category
 import io.reactivex.disposables.CompositeDisposable
 
-abstract class BaseViewModel(val repository: IQuizRepository)  {
+abstract class BaseViewModel(val repository: IQuizRepository) {
 
     val categories: ObservableList<Category> = ObservableArrayList<Category>()
-    var selectedCategory: Category? = null
+    var selectedCategory: ObservableField<Category?> = ObservableField()
 
     val errorMessage: ObservableField<String> = ObservableField("")
     val loading: ObservableBoolean = ObservableBoolean(true)
@@ -25,12 +25,8 @@ abstract class BaseViewModel(val repository: IQuizRepository)  {
         })
     }
 
-    open fun selectCategory(category: Category) {
-        selectedCategory = category
-    }
-
     fun unselectCategory(value: Boolean) {
-        if (!value) selectedCategory = null
+        if (!value) selectedCategory.set(null)
     }
 
     fun onDestroy() {
