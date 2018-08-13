@@ -5,6 +5,7 @@ import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.MenuItem
+import android.widget.Toast
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseActivity
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
@@ -62,7 +63,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         if (canClose) {
             if(backPressed) super.onBackPressed()
             else {
-                showToast(getString(R.string.press_again_exit))
+                showToast(getString(R.string.press_again_exit), Toast.LENGTH_SHORT)
                 backPressed = true
                 Handler().postDelayed({
                     backPressed = false

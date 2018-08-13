@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseDialogFragment
@@ -36,16 +34,6 @@ class SimpleInputDialog : BaseDialogFragment(), DialogWithResult<String> {
         }
 
         return builder.create()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.dialog_input.requestFocus()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
