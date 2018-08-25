@@ -55,7 +55,7 @@
                 android:clickable="true"
                 android:focusableInTouchMode="true"
                 android:focusable="true"
-                android:elevation="6dp">
+                android:elevation="4dp">
 
                 <FrameLayout
                     android:id="@+id/searchbar_background"
@@ -92,7 +92,7 @@
                     android:layout_height="@dimen/voice_edittext_height"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@drawable/stacked_card_view_background"
+                    android:background="@drawable/single_card_view_background"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/searchbar_edittext">

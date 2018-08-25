@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_margin"
-        android:background="@drawable/stacked_card_view_background"
+        android:background="@drawable/single_card_view_background_ripple"
         android:clipToPadding="false"
         android:padding="@dimen/card_padding">
 
@@ -55,6 +55,7 @@
             android:layout_marginLeft="10dp"
             android:visibility='@{obj.id == "general" ? View.GONE : View.VISIBLE}'
             app:buttonIcon="@drawable/ic_edit_black_24dp"
+            app:iconOnly="true"
             app:layout_constraintBottom_toBottomOf="@id/question_count"
             app:layout_constraintLeft_toRightOf="@id/category_title"
             app:layout_constraintRight_toLeftOf="@id/category_delete"
@@ -65,9 +66,9 @@
             android:id="@+id/category_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:visibility='@{obj.id == "general" ? View.GONE : View.VISIBLE}'
             app:buttonIcon="@drawable/ic_delete_black_24dp"
+            app:iconOnly="true"
             app:layout_constraintBottom_toBottomOf="@id/question_count"
             app:layout_constraintLeft_toRightOf="@id/category_edit"
             app:layout_constraintRight_toRightOf="parent"

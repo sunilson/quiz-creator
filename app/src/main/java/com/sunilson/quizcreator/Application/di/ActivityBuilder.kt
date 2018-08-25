@@ -8,6 +8,7 @@ import com.sunilson.quizcreator.presentation.MainActivity.MainActivity
 import com.sunilson.quizcreator.presentation.MainActivity.di.FragmentBuilder
 import com.sunilson.quizcreator.presentation.MainActivity.di.MainActivityModule
 import com.sunilson.quizcreator.presentation.QuizActivity.QuizActivity
+import com.sunilson.quizcreator.presentation.QuizActivity.di.QuizActivityModule
 import com.sunilson.quizcreator.presentation.shared.Dialogs.ImportExportDialog.ImportExportDialog
 import com.sunilson.quizcreator.presentation.shared.Dialogs.NumberSelectionDialog.NumberSelectionDialog
 import dagger.Module
@@ -24,7 +25,7 @@ abstract class ActivityBuilder {
     @ActivityScope
     abstract fun provideAddQuestionActivity(): AddQuestionActivity
 
-    @ContributesAndroidInjector(modules = [com.sunilson.quizcreator.presentation.QuizActivity.di.FragmentBuilder::class])
+    @ContributesAndroidInjector(modules = [com.sunilson.quizcreator.presentation.QuizActivity.di.FragmentBuilder::class, QuizActivityModule::class])
     @ActivityScope
     abstract fun provideQuizActivity(): QuizActivity
 

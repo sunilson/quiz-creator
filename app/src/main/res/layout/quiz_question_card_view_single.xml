@@ -19,22 +19,8 @@
 
         <TextView
             android:id="@+id/question_text"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text='@{viewModel.question.text}'
-            android:textAlignment="center"
-            app:autoSizeMaxTextSize="20sp"
-            app:autoSizeMinTextSize="12sp"
-            app:autoSizeTextType="uniform"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/question_answers"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            style="@style/question_card_question"
+            android:text='@{viewModel.question.text}' />
 
         <LinearLayout
             android:id="@+id/question_answers"
@@ -42,13 +28,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="vertical"
-            app:multiplePossible="@{viewModel.multipleAnswersPossible}"
             app:answerClickedCallback="@{viewModel.answerClicked}"
             app:answers="@{viewModel.question}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/question_text" />
+            app:multiplePossible="@{viewModel.multipleAnswersPossible}" />
 
     </merge>
 </layout>

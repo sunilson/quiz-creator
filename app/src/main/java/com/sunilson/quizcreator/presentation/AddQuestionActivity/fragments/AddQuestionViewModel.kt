@@ -36,7 +36,7 @@ class AddQuestionViewModel @Inject constructor(val application: Application, val
             override fun onItemRangeRemoved(sender: ObservableList<Category>?, positionStart: Int, itemCount: Int) {}
             override fun onItemRangeMoved(sender: ObservableList<Category>?, fromPosition: Int, toPosition: Int, itemCount: Int) {}
             override fun onItemRangeInserted(sender: ObservableList<Category>?, positionStart: Int, itemCount: Int) {
-                oldCategory = categories.find { it.id == localSettingsManager.getLastUsedCategory() }
+                oldCategory = categories.find { it.id == localSettingsManager.lastUsedCategory }
                 if (oldCategory != null) question?.category = oldCategory!!
             }
 
@@ -49,7 +49,7 @@ class AddQuestionViewModel @Inject constructor(val application: Application, val
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 question?.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
                     override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                        localSettingsManager.setLastUsedCategory(question!!.category.id)
+                        localSettingsManager.lastUsedCategory = question!!.category.id
                     }
                 })
             }
@@ -61,8 +61,7 @@ class AddQuestionViewModel @Inject constructor(val application: Application, val
     }
 
     fun createQuestion(): Completable {
-        errorMessage.set("")
-        return repository.addQuestion(question!!).doOnError { errorMessage.set(it.message) }
+        return repository.addQuestion(question!!)
     }
 
     fun addCategory(name: String): Completable {

@@ -18,7 +18,7 @@ class EditTextWithVoiceInputViewModel(answer: Answer?, optional: Boolean = false
         get() = field
 
     @get:Bindable
-    var answer: Answer? by NotifyPropertyChangedDelegate(answer, BR.showDivider)
+    var answer: Answer? by NotifyPropertyChangedDelegate(answer, BR.answer)
 
     @get:Bindable
     var optional: Boolean by NotifyPropertyChangedDelegate(optional, BR.optional)

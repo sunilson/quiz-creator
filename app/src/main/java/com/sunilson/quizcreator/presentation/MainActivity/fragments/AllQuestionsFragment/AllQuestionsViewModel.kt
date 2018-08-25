@@ -8,6 +8,7 @@ import com.sunilson.quizcreator.Application.di.scopes.FragmentScope
 import com.sunilson.quizcreator.data.IQuizRepository
 import com.sunilson.quizcreator.data.models.Category
 import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.Quiz
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseViewModel
 import com.sunilson.quizcreator.presentation.shared.EventBus
 import com.sunilson.quizcreator.presentation.shared.EventChannel
@@ -38,7 +39,6 @@ class AllQuestionsViewModel @Inject constructor(val application: Application, re
             searchCategories.addAll(it)
         })
     }
-
     fun selectSearchCategory(category: Category?) {
         if (category == null) {
             this.selectedSearchCategory.set(null)

@@ -35,6 +35,9 @@ interface QuizDatabaseDAO {
     @Query("SELECT * FROM quiz")
     fun getAllQuiz(): Flowable<List<Quiz>>
 
+    @Query("SELECT * FROM quiz WHERE finished == 1")
+    fun getAllFinishedQuiz(): Flowable<List<Quiz>>
+
     @Query("SELECT * FROM quiz")
     fun getAllQuizOnce(): Single<List<Quiz>>
 

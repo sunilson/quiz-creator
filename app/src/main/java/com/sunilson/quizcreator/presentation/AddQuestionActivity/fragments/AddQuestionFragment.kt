@@ -112,13 +112,13 @@ class AddQuestionFragment : BaseFragment() {
             dialog.show(fragmentManager, "dialog")
         }
 
-       /* view.form_save_and_exit.setOnClickListener {
-            saveAndExit()
-        }
+        /* view.form_save_and_exit.setOnClickListener {
+             saveAndExit()
+         }
 
-        view.form_save_and_continue.setOnClickListener {
-            saveAndContinue()
-        }*/
+         view.form_save_and_continue.setOnClickListener {
+             saveAndContinue()
+         }*/
 
         return view
     }
@@ -129,7 +129,9 @@ class AddQuestionFragment : BaseFragment() {
         disposable.add(viewModel.createQuestion().subscribe({
             eventBus.publishToChannel(EventChannel.RELOAD_QUESTIONS, null)
             (activity!! as AddQuestionActivity).restart(this)
-        }, {}))
+        }, {
+            context?.showToast(it.message)
+        }))
     }
 
     private fun saveAndExit() {
@@ -138,7 +140,9 @@ class AddQuestionFragment : BaseFragment() {
         disposable.add(viewModel.createQuestion().subscribe({
             eventBus.publishToChannel(EventChannel.RELOAD_QUESTIONS, null)
             activity?.finish()
-        }, {}))
+        }, {
+            context?.showToast(it.message)
+        }))
     }
 
     override fun onAttach(context: Context?) {

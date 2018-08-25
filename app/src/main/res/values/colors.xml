@@ -28,4 +28,6 @@
     <color name="button_cancel_background">#F44336</color>
     <color name="button_cancel_background_selected">#EF5350</color>
 
+    <color name="item_ripple_color">#8ec2b8b8</color>
+
 </resources>

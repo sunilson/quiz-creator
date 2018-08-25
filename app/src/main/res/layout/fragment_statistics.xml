@@ -19,6 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipToPadding="false"
             android:orientation="vertical"
             android:padding="15dp">
 
@@ -38,9 +39,9 @@
 
             <LinearLayout
                 android:id="@+id/category_success_rates"
-                categorySuccessRates="@{viewModel.currentStatistics.averageCorrectRatePerCategory}"
-                categoryDates="@{viewModel.currentStatistics.lastAbsolvedDatePerCategory}"
                 categories="@{viewModel.categories}"
+                categoryDates="@{viewModel.currentStatistics.lastAbsolvedDatePerCategory}"
+                categorySuccessRates="@{viewModel.currentStatistics.averageCorrectRatePerCategory}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
@@ -76,8 +77,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginBottom="20dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -112,6 +113,17 @@
                     app:progress_label="@string/correct_multiple" />
 
             </LinearLayout>
+
+            <com.sunilson.quizcreator.presentation.views.CustomButton
+                android:id="@+id/reset_statistics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="30dp"
+                app:buttonIcon="@drawable/ic_delete_black_24dp"
+                app:buttonText="@string/reset_statistics"
+                app:type="CANCEL" />
         </LinearLayout>
     </ScrollView>
 

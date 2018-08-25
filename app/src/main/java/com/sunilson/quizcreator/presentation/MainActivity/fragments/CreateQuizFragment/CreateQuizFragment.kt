@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,12 @@ class CreateQuizFragment : BaseFragment() {
     lateinit var categorySpinnerAdapter: CategorySpinnerAdapter
 
     @Inject
+    lateinit var quizArchiveRecyclerAdapterFactory: QuizArchiveRecyclerAdapterFactory
+
+    @Inject
     lateinit var createQuizViewModel: CreateQuizViewModel
+
+    private lateinit var adapter: QuizArchiveRecyclerAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<FragmentCreateQuizBinding>(inflater, R.layout.fragment_create_quiz, container, false)
@@ -33,7 +39,7 @@ class CreateQuizFragment : BaseFragment() {
 
         view.generate_quiz_button.setOnClickListener {
             val intent = Intent(context, QuizActivity::class.java)
-            if (createQuizViewModel.selectedCategory.get() != null && createQuizViewModel.selectedCategory.get()!!.id != "all"){
+            if (createQuizViewModel.selectedCategory.get() != null && createQuizViewModel.selectedCategory.get()!!.id != "all") {
                 intent.putExtra("selectedCategory", createQuizViewModel.selectedCategory.get()!!.id)
             }
             intent.putExtra("shuffleAnswers", createQuizViewModel.shuffleAnswers.get())
@@ -53,6 +59,14 @@ class CreateQuizFragment : BaseFragment() {
             }
             dialog.show(fragmentManager, "dialog")
         }
+
+        adapter = quizArchiveRecyclerAdapterFactory.create({
+            val intent = Intent(activity, QuizActivity::class.java)
+            intent.putExtra("id", it.id)
+            startActivity(intent)
+        }, view.quiz_archive_recyclerview)
+        view.quiz_archive_recyclerview.layoutManager = LinearLayoutManager(context)
+        view.quiz_archive_recyclerview.adapter = adapter
 
         return view
     }

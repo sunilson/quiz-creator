@@ -74,7 +74,7 @@ class EditTextWithVoiceInput : ConstraintLayout {
         binding = VoiceEdittextBinding.inflate(inflater, this, true)
 
         if (optional) delete_button.visibility = View.VISIBLE
-        background = ContextCompat.getDrawable(context, R.drawable.stacked_card_view_background)
+        background = ContextCompat.getDrawable(context, R.drawable.single_card_view_background)
 
         val layoutParams = LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
         layoutParams.height = resources.getDimensionPixelSize(R.dimen.voice_edittext_height)

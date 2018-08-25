@@ -34,7 +34,7 @@
     <string name="one_answer_correct_error">Atleast 1 correct answer required!</string>
     <string name="shuffle_answers">Shuffle answers</string>
     <string name="only_single_choice">Only single choice</string>
-    <string name="view_questions">View_questions</string>
+    <string name="view_questions">View questions</string>
     <string name="Exit">Exit Quiz</string>
     <string name="store_quiz_error">Could not store quiz!</string>
     <string name="success_rates_for_categories">Success rates for categories</string>
@@ -93,4 +93,9 @@
     <string name="delete_question_question">Do you really want to delete this question?</string>
     <string name="delete_question">Delete question</string>
     <string name="press_again_exit">Press again to exit</string>
+    <string name="quiz_archive">Quiz Archive</string>
+    <string name="archive_item_questions">%1$s questions correct of %2$s</string>
+    <string name="reset_statistics">Reset Statistics</string>
+    <string name="reset_statistics_question">Do you really want to delete your statistics and all archived quizzes?</string>
+    <string name="max_answers_description">Bestimmt die Größe des Antwort Pools. Fehlende Antworten werden automatisch befüllt. Im Quiz werden 4 Antworten aus dem Pool zufällig gewählt.</string>
 </resources>

@@ -44,9 +44,10 @@
             <com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInput
                 android:id="@+id/form_question"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_marginBottom="10dp"
                 app:editTextValue="@={viewModel.observableQuestion.text}"
+                app:voiceEnabled="true"
                 app:hint="@string/enter_question"
                 app:optional="false" />
 
@@ -70,7 +71,7 @@
                     android:layout_height="50dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/stacked_card_view_background">
+                    android:background="@drawable/single_card_view_background">
 
                     <Spinner
                         android:id="@+id/form_category_spinner"
@@ -117,7 +118,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Fehlende Antworten werden automatisch aus anderen Fragen befüllt"
+                    android:text="@string/max_answers_description"
                     android:textColor="@color/unselected"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"

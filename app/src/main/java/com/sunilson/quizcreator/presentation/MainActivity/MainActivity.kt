@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager
 import android.view.MenuItem
 import android.widget.Toast
 import com.sunilson.quizcreator.R
+import com.sunilson.quizcreator.presentation.MainActivity.fragments.TutorialFragment.TutorialFragment
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseActivity
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
 import dagger.android.AndroidInjector
@@ -46,6 +47,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
             true
         }
+
+        supportFragmentManager.beginTransaction().addToBackStack("tutorial").replace(R.id.tutorial_frame_layout, TutorialFragment.newInstane()).commit()
 
         //setSupportActionBar(toolbar)
         //title = getString(R.string.app_name)

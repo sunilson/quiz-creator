@@ -2,12 +2,12 @@
     android:shape="rectangle">
 
     <solid android:color="@color/button_confirm_background_selected" />
-
+<!--
     <stroke
         android:width="2dp"
         android:color="@color/button_confirm_stroke"
         />
-
+ -->
     <corners android:radius="@dimen/global_border_radius" />
 
 </shape>

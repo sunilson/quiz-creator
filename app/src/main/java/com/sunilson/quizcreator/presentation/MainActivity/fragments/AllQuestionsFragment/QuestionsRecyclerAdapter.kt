@@ -32,7 +32,7 @@ class QuestionsRecyclerAdapter(
         val holder = ViewHolder(binding)
 
 
-        binding.root.question_list_item_text.setOnClickListener {
+        binding.root.question_list_item.setOnClickListener {
             editQuestionCallback(data[holder.adapterPosition])
             /*
             val originalQuestion = data[holder.adapterPosition]
@@ -78,7 +78,6 @@ class QuestionsRecyclerAdapter(
             })
             */
         }
-
         binding.root.question_list_item_edit.setOnClickListener {
             //slideToggle(binding.root.question_list_item_content, holder.adapterPosition)
             editQuestionCallback(data[holder.adapterPosition])

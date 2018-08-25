@@ -2,6 +2,7 @@ package com.sunilson.quizcreator.presentation.views
 
 import android.animation.AnimatorInflater
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
@@ -18,14 +19,15 @@ class CustomButton : FrameLayout {
     var type: ButtonType = ButtonType.DEFAULT
         set(value) {
             field = value
+            if (!iconOnly) {
+                val drawable = when (field) {
+                    ButtonType.DEFAULT -> ContextCompat.getDrawable(context, R.drawable.button_default_background)
+                    ButtonType.CONFIRM -> ContextCompat.getDrawable(context, R.drawable.button_confirm_background)
+                    ButtonType.CANCEL -> ContextCompat.getDrawable(context, R.drawable.button_cancel_background)
+                }
 
-            val drawable = when (field) {
-                ButtonType.DEFAULT -> ContextCompat.getDrawable(context, R.drawable.button_default_background)
-                ButtonType.CONFIRM -> ContextCompat.getDrawable(context, R.drawable.button_confirm_background)
-                ButtonType.CANCEL -> ContextCompat.getDrawable(context, R.drawable.button_cancel_background)
+                if (drawable != null) background = drawable
             }
-
-            if (drawable != null) background = drawable
         }
 
     var buttonText: String = ""
@@ -48,6 +50,40 @@ class CustomButton : FrameLayout {
                 custom_button_icon.setImageDrawable(field)
             } else {
                 custom_button_icon.visibility = View.GONE
+            }
+        }
+
+    var small: Boolean = false
+        set(value) {
+            field = value
+            if (value) {
+                custom_button_icon.layoutParams.height = 15.convertToPx(context)
+                custom_button_icon.layoutParams.width = 15.convertToPx(context)
+                val padding = 6.convertToPx(context)
+                custom_button_container.setPadding(padding, padding, padding, padding)
+            } else {
+                custom_button_icon.layoutParams.height = 20.convertToPx(context)
+                custom_button_icon.layoutParams.width = 20.convertToPx(context)
+                val padding = 12.convertToPx(context)
+                custom_button_container.setPadding(padding, padding, padding, padding)
+            }
+        }
+
+    var iconOnly: Boolean = false
+        set(value) {
+            field = value
+            if (field) {
+                background = ContextCompat.getDrawable(context, R.drawable.button_empty_background)
+                val color = when (type) {
+                    ButtonType.DEFAULT -> ContextCompat.getColor(context, R.color.button_default_background)
+                    ButtonType.CONFIRM -> ContextCompat.getColor(context, R.color.button_confirm_background)
+                    ButtonType.CANCEL -> ContextCompat.getColor(context, R.color.button_cancel_background)
+                }
+                custom_button_icon.setColorFilter(color)
+            }
+            else {
+                custom_button_icon.setColorFilter(Color.WHITE)
+                type = type
             }
         }
 
@@ -74,6 +110,8 @@ class CustomButton : FrameLayout {
         icon = a.getDrawable(R.styleable.CustomButton_buttonIcon)
         buttonText = if (a.getString(R.styleable.CustomButton_buttonText) != null) a.getString(R.styleable.CustomButton_buttonText)
         else ""
+        small = a.getBoolean(R.styleable.CustomButton_small, false)
+        iconOnly = a.getBoolean(R.styleable.CustomButton_iconOnly, false)
         a.recycle()
     }
 }

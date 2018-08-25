@@ -13,13 +13,18 @@ import javax.inject.Inject
 @ActivityScope
 class QuizViewModel @Inject constructor(repository: IQuizRepository) : BaseViewModel(repository) {
     var currentQuiz: ObservableField<Quiz?> = ObservableField()
-    val finalDuration: Int by lazy {
-        (currentQuiz.get()!!.duration / 1000).toInt()
-    }
+    val finalDuration: Int
+        get() {
+            return if (currentQuiz.get() != null) (currentQuiz.get()!!.duration / 1000).toInt()
+            else 0
+        }
 
-    val correctQuestions: Int by lazy {
-        currentQuiz.get()!!.correctAnswers
-    }
+    val correctQuestions: Int
+        get() {
+            return if (currentQuiz.get() != null) currentQuiz.get()!!.correctAnswers
+            else 0
+        }
+
 
     val wonQuiz: Boolean
         get() {
@@ -31,13 +36,21 @@ class QuizViewModel @Inject constructor(repository: IQuizRepository) : BaseViewM
             }
         }
 
+    fun loadQuiz(id: String) {
+        loading.set(true)
+        disposable.add(repository.loadQuiz(id).subscribe({
+            currentQuiz.set(it)
+        }, {
+
+        }))
+    }
+
     fun generateQuiz(selectedCategory: String?, shuffleAnswers: Boolean, onlySingle: Boolean, maxQuestionAmount: Int): Single<Quiz> {
         loading.set(true)
         return repository.generateQuiz(selectedCategory, shuffleAnswers, onlySingle, maxQuestionAmount).doOnSuccess {
             currentQuiz.set(it)
         }
     }
-
 
     fun storeQuiz(): Completable {
         return repository.storeQuiz(currentQuiz.get()!!)

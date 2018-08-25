@@ -11,7 +11,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "android.support.single_card_view_background.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -36,8 +36,8 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:design:28.0.0-alpha3'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.single_card_view_background:runner:1.0.2'
+    androidTestImplementation 'com.android.support.single_card_view_background.espresso:espresso-core:3.0.2'
     implementation group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-ktx', version: '2.0.0-beta01'
 
     implementation 'com.google.dagger:dagger:2.14.1'
@@ -58,7 +58,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
-    implementation 'com.airbnb.android:lottie:2.5.5'
+    implementation 'com.airbnb.android:lottie:2.6.0-beta19'
     implementation group: 'joda-time', name: 'joda-time', version: '2.10'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     compile group: 'io.resourcepool', name: 'little-bob', version: '1.0'

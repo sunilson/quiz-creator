@@ -5,6 +5,7 @@ import com.sunilson.quizcreator.presentation.MainActivity.fragments.AllQuestions
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.CategoriesFragment.CategoriesFragment
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.CreateQuizFragment.CreateQuizFragment
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.StatisticsFragment.StatisticsFragment
+import com.sunilson.quizcreator.presentation.MainActivity.fragments.TutorialFragment.TutorialFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -26,5 +27,9 @@ abstract class FragmentBuilder {
     @ContributesAndroidInjector
     @FragmentScope
     abstract fun contributeCategoryFragment(): CategoriesFragment
+
+    @ContributesAndroidInjector
+    @FragmentScope
+    abstract fun contributeTutorialragment(): TutorialFragment
 
 }

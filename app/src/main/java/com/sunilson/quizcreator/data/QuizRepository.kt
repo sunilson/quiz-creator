@@ -39,6 +39,7 @@ interface IQuizRepository {
     fun loadCategories(): Flowable<List<Category>>
     fun loadCategoriesOnce(): Single<List<Category>>
     fun loadQuiz(id: String): Single<Quiz>
+    fun loadFinishedQuizzes(): Flowable<List<Quiz>>
     fun loadQuestions(categoryId: String? = null, query: String? = null): Flowable<List<Question>>
     fun loadQuestionsOnce(categoryId: String? = null, query: String? = null): Single<List<Question>>
     fun getStatistics(): Flowable<Statistics>
@@ -406,6 +407,12 @@ class QuizRepository @Inject constructor(private val application: Application, p
 
             it.averageCorrectRatePerCategory = newMap
             it
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun loadFinishedQuizzes(): Flowable<List<Quiz>> {
+        return database.quizDAO().getAllFinishedQuiz().map { list ->
+            list.sortedBy { it.timestamp }.reversed()
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 

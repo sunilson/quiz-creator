@@ -36,6 +36,7 @@ class ResultFragment : BaseFragment() {
             val headlineAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_and_slide_up)
             val subtitleAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_and_slide_up)
             val buttonAnimation = AnimationUtils.loadAnimation(context, R.anim.scale_up)
+            val buttonAnimation2 = AnimationUtils.loadAnimation(context, R.anim.scale_up)
 
             headlineAnimation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(p0: Animation?) {}
@@ -68,10 +69,34 @@ class ResultFragment : BaseFragment() {
             })
             view.button_exit_quiz.startAnimation(buttonAnimation)
 
+            buttonAnimation.startOffset = 2500
+            buttonAnimation2.startOffset = 2700
+            buttonAnimation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationRepeat(p0: Animation?) {}
+                override fun onAnimationEnd(p0: Animation?) {}
+                override fun onAnimationStart(p0: Animation?) {
+                    view.button_view_archive.visibility = View.VISIBLE
+                }
+            })
+            buttonAnimation2.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationRepeat(p0: Animation?) {}
+                override fun onAnimationEnd(p0: Animation?) {}
+                override fun onAnimationStart(p0: Animation?) {
+                    view.button_exit_quiz.visibility = View.VISIBLE
+                }
+            })
+
+            view.button_view_archive.startAnimation(buttonAnimation)
+            view.button_exit_quiz.startAnimation(buttonAnimation2)
+
         }, 500)
 
         view.button_exit_quiz.setOnClickListener {
             activity?.finish()
+        }
+
+        view.button_view_archive.setOnClickListener {
+            (activity as QuizActivity).showArchive()
         }
 
         return view

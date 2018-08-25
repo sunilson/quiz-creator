@@ -11,15 +11,37 @@ class LocalSettingsManager @Inject constructor(context: Application) {
 
     private val sharedPrefs: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
 
-    fun getLastUsedCategory(): String? {
-        return sharedPrefs.getString("lastCategory", null)
-    }
+    var lastUsedCategory: String?
+        get() {
+            return sharedPrefs.getString("lastCategory", null)
+        }
+        set(value) {
+            if (value != null && value.isNotEmpty()) {
+                val editor = sharedPrefs.edit()
+                editor.putString("lastCategory", value)
+                editor.commit()
+            }
+        }
 
-    fun setLastUsedCategory(id: String) {
-        if(id.isNotEmpty()) {
+    var maxQuestionAmount: Int
+        get() {
+            return sharedPrefs.getInt("maxQuestionAmount", 10)
+        }
+        set(value) {
+            if (value > 0) {
+                val editor = sharedPrefs.edit()
+                editor.putInt("maxQuestionAmount", value)
+                editor.commit()
+            }
+        }
+
+    var tutorial: Boolean
+        get() {
+            return sharedPrefs.getBoolean("tutorial", true)
+        }
+        set(value) {
             val editor = sharedPrefs.edit()
-            editor.putString("lastCategory", id)
+            editor.putBoolean("tutorial", value)
             editor.commit()
         }
-    }
 }

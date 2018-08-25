@@ -16,10 +16,11 @@
 
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/question_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_margin"
-        android:background="@drawable/stacked_card_view_background"
+        android:background="@drawable/single_card_view_background_ripple"
         android:clipToPadding="false"
         android:padding="@dimen/card_padding">
 
@@ -70,6 +71,7 @@
             android:id="@+id/question_list_item_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:iconOnly="true"
             android:layout_marginLeft="10dp"
             app:buttonIcon="@drawable/ic_edit_black_24dp"
             app:layout_constraintBottom_toBottomOf="@id/question_list_item_text_category"
@@ -82,7 +84,7 @@
             android:id="@+id/question_list_item_answers_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            app:iconOnly="true"
             android:layout_weight="1"
             app:buttonIcon="@drawable/ic_delete_black_24dp"
             app:layout_constraintBottom_toBottomOf="@id/question_list_item_edit"

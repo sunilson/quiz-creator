@@ -2,6 +2,7 @@ package com.sunilson.quizcreator.presentation.shared.KotlinExtensions
 
 import android.content.res.ColorStateList
 import android.databinding.BindingAdapter
+import android.databinding.DataBindingUtil
 import android.databinding.InverseBindingAdapter
 import android.databinding.InverseBindingListener
 import android.support.v4.content.ContextCompat
@@ -12,6 +13,7 @@ import android.text.TextWatcher
 import android.transition.ChangeBounds
 import android.transition.Fade
 import android.transition.TransitionManager
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -26,6 +28,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.*
+import com.sunilson.quizcreator.databinding.ArchiveQuestionAnswerBinding
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseRecyclerAdapter
 import com.sunilson.quizcreator.presentation.shared.CategorySpinnerAdapter
@@ -35,6 +38,7 @@ import com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTe
 import com.sunilson.quizcreator.presentation.views.QuizView.QuizView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.archive_question_answer.view.*
 import kotlinx.android.synthetic.main.voice_edittext.view.*
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -142,6 +146,25 @@ fun QuizView.setQuiz(quiz: Quiz?) {
     }
 }
 
+@BindingAdapter("archiveAnswers")
+fun LinearLayout.setArchiveAnswers(question: Question?) {
+    question?.answers?.forEachIndexed { index, answer ->
+        val binding = DataBindingUtil.inflate<ArchiveQuestionAnswerBinding>(LayoutInflater.from(context), R.layout.archive_question_answer, this, true)
+        val view = binding.root
+        if (index == question.answers.size - 1) view.answer_divider.visibility = View.GONE
+        binding.answer = answer
+    }
+}
+
+@BindingAdapter("backgroundQuestionTint")
+fun View.setBackgroundTint(correct: Boolean) {
+    if (correct) {
+
+    } else {
+
+    }
+}
+
 @BindingAdapter("answers", "multiplePossible", "answerClickedCallback", requireAll = true)
 fun LinearLayout.setAnswers(question: Question?, multiplePossible: Boolean, callback: ItemSelectedListener) {
     question?.answers?.forEachIndexed { index, answer ->
@@ -152,9 +175,7 @@ fun LinearLayout.setAnswers(question: Question?, multiplePossible: Boolean, call
                     val child = getChildAt(i) as AnswerView
                     child.showAnswerResult()
                 }
-            } else {
-                answerView.mark()
-            }
+            } else answerView.mark()
             callback.itemSelected(answer)
         }
         this.addView(answerView)
@@ -326,10 +347,15 @@ fun PieChart.statsTest(statistics: Statistics) {
 
 @BindingAdapter("sevenDayQuizAmount", "sevenDayGoodQuizAmount")
 fun BarChart.sevenDayQuizAmount(days: List<Int>, goodDays: List<Int>) {
-    if (days.isEmpty()) return
+
+    if(days.isEmpty()) {
+        this.clear()
+        this.invalidate()
+        return
+    }
+
     val entries = days.reversed().mapIndexed { index, value -> BarEntry(index.toFloat(), value.toFloat()) }
     val goodEntries = goodDays.reversed().mapIndexed { index, value -> BarEntry(index.toFloat(), value.toFloat()) }
-
 
     val dataSet = BarDataSet(entries, context.getString(R.string.finished))
     dataSet.color = ContextCompat.getColor(context, R.color.unselected)
@@ -389,6 +415,11 @@ fun LinearLayout.categorySuccessRates(rates: Map<String, Float>, dates: Map<Stri
             this.addView(view)
         }
     }
+}
+
+@BindingAdapter("formatTimestamp")
+fun TextView.formatTimestamp(timestamp: String) {
+    this.text = DateTimeFormat.forPattern("HH:mm - dd.MM.yyyy").print(DateTime(timestamp.toLong()))
 }
 
 @BindingAdapter("changeListener")

@@ -151,6 +151,8 @@ class AllQuestionsFragment : BaseFragment(), OnBackPressedListener {
             else openSearch()
         }
 
+        view.swipe_layout.setProgressViewOffset(true, 100, 200)
+
         view.close_searchbar.setOnClickListener {
             closeSearch()
         }
