@@ -37,7 +37,7 @@ class TutorialSlider(context: Context, attributeSet: AttributeSet) : FrameLayout
 
             override fun onPageSelected(p0: Int) {
                 //pagination.activeItem = p0
-                next_text.text = if (p0 == slides.size - 1) "Fertig" else "Weiter"
+                next_text.text = if (p0 == slides.size - 1) context.getString(R.string.done) else context.getString(R.string.next)
                 back.visibility = if (p0 == 0) View.INVISIBLE else View.VISIBLE
                 pagination.activeItem = p0
             }

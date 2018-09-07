@@ -2,12 +2,12 @@ package com.sunilson.quizcreator.presentation.shared.BaseClasses
 
 import android.R
 import android.content.Context
+import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.annotation.LayoutRes
 
 abstract class BaseSpinnerArrayAdapter<T>(context: Context, @LayoutRes resource: Int) : ArrayAdapter<T>(context, resource) {
 

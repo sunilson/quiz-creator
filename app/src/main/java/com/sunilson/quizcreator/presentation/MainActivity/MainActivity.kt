@@ -10,6 +10,7 @@ import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.presentation.MainActivity.fragments.TutorialFragment.TutorialFragment
 import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseActivity
 import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.showToast
+import com.sunilson.quizcreator.presentation.shared.LocalSettingsManager
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -20,6 +21,9 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    @Inject
+    lateinit var localSettingsManager: LocalSettingsManager
 
     private var backPressed: Boolean = false
 
@@ -48,7 +52,9 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
             true
         }
 
-        supportFragmentManager.beginTransaction().addToBackStack("tutorial").replace(R.id.tutorial_frame_layout, TutorialFragment.newInstane()).commit()
+        if(!localSettingsManager.tutorial) {
+            supportFragmentManager.beginTransaction().addToBackStack("tutorial").replace(R.id.tutorial_frame_layout, TutorialFragment.newInstane()).commit()
+        }
 
         //setSupportActionBar(toolbar)
         //title = getString(R.string.app_name)

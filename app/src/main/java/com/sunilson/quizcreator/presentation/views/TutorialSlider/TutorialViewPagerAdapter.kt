@@ -1,6 +1,7 @@
 package com.sunilson.quizcreator.presentation.views.TutorialSlider
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,12 @@ class TutorialViewPagerAdapter(val context: Context, val slides: List<TutorialSl
         val inflater = LayoutInflater.from(context)
         val layout = inflater.inflate(R.layout.tutorial_slide, container, false) as ViewGroup
         layout.slide_text.text = slides[position].text
+        layout.slide_graphic.setImageDrawable(ContextCompat.getDrawable(context, slides[position].image))
+        slides[position].size?.let {
+            layout.slide_graphic.layoutParams.width = it.first
+            layout.slide_graphic.layoutParams.height = it.second
+            layout.slide_graphic.requestLayout()
+        }
         container.addView(layout)
         return layout
     }

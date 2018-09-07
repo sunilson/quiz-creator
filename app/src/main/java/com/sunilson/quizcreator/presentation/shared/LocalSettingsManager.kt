@@ -37,7 +37,7 @@ class LocalSettingsManager @Inject constructor(context: Application) {
 
     var tutorial: Boolean
         get() {
-            return sharedPrefs.getBoolean("tutorial", true)
+            return sharedPrefs.getBoolean("tutorial", false)
         }
         set(value) {
             val editor = sharedPrefs.edit()

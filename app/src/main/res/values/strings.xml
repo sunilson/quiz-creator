@@ -87,7 +87,7 @@
     <string name="max_answers_minimum">4 max answers is the minimum!</string>
     <string name="max_answer_amount">Max. answer amount</string>
     <string name="quiz_options">Quiz options</string>
-    <string name="only_single_choice_subtitle">Only include single choice answers in this quiz</string>
+    <string name="only_single_choice_subtitle">Only include single choice questions in this quiz</string>
     <string name="max_question_amount_subtitle">Choose how many questions this quiz should contain</string>
     <string name="add_new_question">Add a new question</string>
     <string name="delete_question_question">Do you really want to delete this question?</string>
@@ -97,5 +97,20 @@
     <string name="archive_item_questions">%1$s questions correct of %2$s</string>
     <string name="reset_statistics">Reset Statistics</string>
     <string name="reset_statistics_question">Do you really want to delete your statistics and all archived quizzes?</string>
-    <string name="max_answers_description">Bestimmt die Größe des Antwort Pools. Fehlende Antworten werden automatisch befüllt. Im Quiz werden 4 Antworten aus dem Pool zufällig gewählt.</string>
+    <string name="max_answers_description">Defines the size of the answer pool. Missing answers will automatically be imported from other questions until max is reached. During a quiz, 4 random answers will be picked from the answer pool.</string>
+    <string name="same_category_subtitle">Only allow automatic import of answers from questions of the same category</string>
+    <string name="only_from_same_category">Only from same category</string>
+    <string name="tutorial_category_tab">In the \'Category\'-tab you can create and edit categories. These are used to sort your questions.</string>
+    <string name="tutorial_question_tab">You can view, create and edit questions in the \'Questions\'-tab</string>
+    <string name="tutorial_microphone">By pressing and holding the microphone button, you can enter text via speech</string>
+    <string name="tutorial_answer_pool">Each question can contain up to 20 answers. In the quiz, 4 answers will randomly be chosen.</string>
+    <string name="tutorial_answer_options">With the \'Max. Answers\' option you can define how big the answer pool of the question for randomly choosing the 4 answers  should be. If you enter less answers than the set maximum, answers from other questions will be imported automatically.</string>
+    <string name="tutorial_quiz">In the \'Quiz\'-tab you can create a new quiz or view an archive of your previous ones.</string>
+    <string name="tutorial_statistics">In the \'Statistics\'-tab you can view how well you did in your previous quizzes.</string>
+    <string name="welcome">Welcome to \'Quiz Creator\'</string>
+    <string name="tutorial_end">That\'s it, have fun! You can write feedback about the app to weisslinus@gmail.com</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="done">Done</string>
+    <string name="finished_quiz">Finished Quiz!</string>
 </resources>

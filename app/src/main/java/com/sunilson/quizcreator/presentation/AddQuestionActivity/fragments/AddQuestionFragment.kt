@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.view.*
+import android.widget.ScrollView
 import android.widget.Toast
 import com.sunilson.quizcreator.R
 import com.sunilson.quizcreator.data.models.Answer
@@ -128,6 +129,7 @@ class AddQuestionFragment : BaseFragment() {
         viewModel.question?.answers = form_answer_container.getAnswers()
         disposable.add(viewModel.createQuestion().subscribe({
             eventBus.publishToChannel(EventChannel.RELOAD_QUESTIONS, null)
+            eventBus.publishToChannel(EventChannel.RELOAD_CATEGORIES, null)
             (activity!! as AddQuestionActivity).restart(this)
         }, {
             context?.showToast(it.message)
@@ -139,6 +141,7 @@ class AddQuestionFragment : BaseFragment() {
         viewModel.question?.answers = form_answer_container.getAnswers()
         disposable.add(viewModel.createQuestion().subscribe({
             eventBus.publishToChannel(EventChannel.RELOAD_QUESTIONS, null)
+            eventBus.publishToChannel(EventChannel.RELOAD_CATEGORIES, null)
             activity?.finish()
         }, {
             context?.showToast(it.message)
@@ -163,6 +166,9 @@ class AddQuestionFragment : BaseFragment() {
                 Answer(text = getString(R.string.answer_default_text)))
         if (transition) android.transition.TransitionManager.beginDelayedTransition(view.form_container, ChangeBounds())
         view.form_answer_container.addView(answerView)
+        view.form_container.post {
+            view.form_container.fullScroll(ScrollView.FOCUS_DOWN)
+        }
     }
 
     override fun onDestroy() {
