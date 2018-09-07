@@ -21,14 +21,12 @@ class TutorialFragment : BaseFragment(), OnBackPressedListener {
         val view = inflater.inflate(R.layout.fragment_tutorial, container, false)
         view.slider.slides = listOf(
                 TutorialSlide(getString(R.string.welcome), R.drawable.web_hi_res_512, Pair(300, 300)),
-                TutorialSlide(getString(R.string.tutorial_category_tab), R.drawable.tutorial_categories),
                 TutorialSlide(getString(R.string.tutorial_question_tab), R.drawable.tutorial_create_question),
                 TutorialSlide(getString(R.string.tutorial_microphone), R.drawable.tutorial_microphone),
                 TutorialSlide(getString(R.string.tutorial_answer_pool), R.drawable.tutorial_add_answers),
                 TutorialSlide(getString(R.string.tutorial_answer_options), R.drawable.tutorial_answer_options),
                 TutorialSlide(getString(R.string.tutorial_quiz), R.drawable.tutorial_quiz),
-                TutorialSlide(getString(R.string.tutorial_statistics), R.drawable.tutorial_statistics),
-                TutorialSlide(getString(R.string.tutorial_end), R.drawable.web_hi_res_512, Pair(300, 300))
+                TutorialSlide(getString(R.string.tutorial_statistics), R.drawable.tutorial_statistics)
         )
         view.slider.setTutorialListener {
             localSettingsManager.tutorial = true
