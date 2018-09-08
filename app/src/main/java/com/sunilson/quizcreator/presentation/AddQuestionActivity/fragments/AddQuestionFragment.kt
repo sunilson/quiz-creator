@@ -166,9 +166,9 @@ class AddQuestionFragment : BaseFragment() {
                 Answer(text = getString(R.string.answer_default_text)))
         if (transition) android.transition.TransitionManager.beginDelayedTransition(view.form_container, ChangeBounds())
         view.form_answer_container.addView(answerView)
-        view.form_container.post {
+        view.form_container.postDelayed({
             view.form_container.fullScroll(ScrollView.FOCUS_DOWN)
-        }
+        }, 500)
     }
 
     override fun onDestroy() {

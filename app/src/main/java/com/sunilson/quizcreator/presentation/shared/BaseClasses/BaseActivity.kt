@@ -31,7 +31,10 @@ abstract class BaseActivity : AppCompatActivity(), SpeechRecognizingActivity {
     }
 
     override fun startListening(cb: (String) -> Unit, endCb: () -> Unit, errorCb: (Int) -> Unit) {
-        if (!checkAudioPermissions()) return
+        if (!checkAudioPermissions()) {
+            endCb()
+            return
+        }
         speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
