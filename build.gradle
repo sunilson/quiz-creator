@@ -6,7 +6,7 @@ buildscript {
         google()
         jcenter()
         //maven { url 'https://jitpack.io' }
-        //mavenCentral()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.2'
@@ -15,6 +15,10 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+}
+
+plugins {
+    id("io.gitlab.arturbosch.detekt").version("1.7.4")
 }
 
 allprojects {
@@ -30,3 +34,26 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt) {
+    include "**/*.kt"
+    include "**/*.kts"
+    exclude "**/resources/**"
+    exclude "**/build/**"
+    autoCorrect = true
+}
+
+detekt {
+    input = files(rootProject.rootDir)
+    config = files("$rootDir/config/detekt/detekt.yml")
+    parallel = true
+    ignoreFailures = false
+
+    reports {
+        html.enabled = true // observe findings in your browser with structure and code snippets
+        xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
+        txt.enabled = true // similar to the console output, contains issue signature to manually edit baseline files
+    }
+}
+
+tasks.detekt.jvmTarget = "1.8"

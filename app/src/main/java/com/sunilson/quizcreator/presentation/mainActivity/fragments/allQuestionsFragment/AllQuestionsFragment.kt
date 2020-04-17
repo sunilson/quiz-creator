@@ -56,6 +56,7 @@ class AllQuestionsFragment : BaseFragment(), OnBackPressedListener {
     }
 
 
+    @Suppress("LongMethod")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

@@ -15,10 +15,10 @@ import com.sunilson.quizcreator.data.models.Question
 import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.data.models.Quiz
 import com.sunilson.quizcreator.presentation.shared.AudioService
-import com.sunilson.quizcreator.presentation.shared.stack_fade_in_duration
-import com.sunilson.quizcreator.presentation.shared.timer_fade_delay_between
-import com.sunilson.quizcreator.presentation.shared.timer_fade_half_duration
-import com.sunilson.quizcreator.presentation.shared.timer_fade_scale_duration
+import com.sunilson.quizcreator.presentation.shared.STACK_FADE_IN_DURATION
+import com.sunilson.quizcreator.presentation.shared.TIMER_FADE_DELAY_BETWEEN
+import com.sunilson.quizcreator.presentation.shared.TIMER_FADE_HALF_DURATION
+import com.sunilson.quizcreator.presentation.shared.TIMER_FADE_SCALE_DURATION
 import com.sunilson.quizcreator.presentation.views.questionCardView.MultipleChoiceQuestionCardView
 import com.sunilson.quizcreator.presentation.views.questionCardView.SingleChoiceQuestionCardView
 import com.sunilson.quizcreator.presentation.views.stackedCardsView.StackAnimationTypes
@@ -40,14 +40,14 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
                 val animator1 = ObjectAnimator.ofFloat(start_timer, "alpha", 0f, 1f)
                 val animator2 = ObjectAnimator.ofFloat(start_timer, "alpha", 1f, 0f)
 
-                animator1.duration = timer_fade_half_duration
-                animator2.duration = timer_fade_half_duration
-                animators1.duration = timer_fade_scale_duration
-                animators2.duration = timer_fade_scale_duration
+                animator1.duration = TIMER_FADE_HALF_DURATION
+                animator2.duration = TIMER_FADE_HALF_DURATION
+                animators1.duration = TIMER_FADE_SCALE_DURATION
+                animators2.duration = TIMER_FADE_SCALE_DURATION
 
                 val animatorSet = AnimatorSet()
                 animatorSet.playTogether(animators1, animators2)
-                animatorSet.play(animator2).after(timer_fade_delay_between).after(animator1)
+                animatorSet.play(animator2).after(TIMER_FADE_DELAY_BETWEEN).after(animator1)
                 animatorSet.addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator?) {
                         super.onAnimationEnd(animation)
@@ -58,7 +58,7 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
                         } else {
                             start_timer.visibility = View.GONE
                             val alphaAnimator = ObjectAnimator.ofFloat(stack_view, "alpha", 0f, 1f)
-                            alphaAnimator.duration = stack_fade_in_duration
+                            alphaAnimator.duration = STACK_FADE_IN_DURATION
                             alphaAnimator.start()
 
                             field = value
@@ -92,12 +92,18 @@ class QuizView(context: Context, val attrs: AttributeSet) : RelativeLayout(conte
         } else {
             audioService?.playErrorSound()
         }
-        Handler().postDelayed({
-            stack_view.removeCard(if (correct) StackAnimationTypes.TRANSLATE_RIGHT else StackAnimationTypes.TRANSLATE_LEFT) {
+        Handler().postDelayed(
+            {
+                stack_view.removeCard(
+                    if (correct) {
+                        StackAnimationTypes.TRANSLATE_RIGHT
+                    } else {
+                        StackAnimationTypes.TRANSLATE_LEFT
+                    }
+                ) { checkFinished() }
                 checkFinished()
-            }
-            checkFinished()
-        }, nextCardDelay.toLong())
+            }, nextCardDelay.toLong()
+        )
     }
 
     private fun checkFinished() {

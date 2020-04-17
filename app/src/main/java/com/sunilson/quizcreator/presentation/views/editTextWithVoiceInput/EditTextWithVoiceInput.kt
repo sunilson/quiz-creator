@@ -82,6 +82,7 @@ class EditTextWithVoiceInput : ConstraintLayout {
     }
 
 
+    @Suppress("LongMethod")
     private fun initBinding(
         optional: Boolean,
         correctToggable: Boolean = false,

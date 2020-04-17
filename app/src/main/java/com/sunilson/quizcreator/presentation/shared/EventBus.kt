@@ -3,18 +3,18 @@ package com.sunilson.quizcreator.presentation.shared
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class EventBus () {
+class EventBus {
 
-    private val reload_questions_subject: PublishSubject<Any> = PublishSubject.create()
-    private val reload_categories_subject: PublishSubject<Any> = PublishSubject.create()
+    private val reloadQuestionsSubject: PublishSubject<Any> = PublishSubject.create()
+    private val reloadCategoriesSubject: PublishSubject<Any> = PublishSubject.create()
 
     fun subscribeToChannel(channel: EventChannel): Observable<Any> {
         return when (channel) {
             EventChannel.RELOAD_QUESTIONS -> {
-                reload_questions_subject.hide()
+                reloadQuestionsSubject.hide()
             }
             EventChannel.RELOAD_CATEGORIES -> {
-                reload_categories_subject.hide()
+                reloadCategoriesSubject.hide()
             }
         }
     }
@@ -22,10 +22,10 @@ class EventBus () {
     fun publishToChannel(channel: EventChannel, data: Any?) {
         when (channel) {
             EventChannel.RELOAD_QUESTIONS -> {
-                reload_questions_subject.onNext(data ?: true)
+                reloadQuestionsSubject.onNext(data ?: true)
             }
             EventChannel.RELOAD_CATEGORIES -> {
-                reload_categories_subject.onNext(data ?: true)
+                reloadCategoriesSubject.onNext(data ?: true)
             }
         }
     }

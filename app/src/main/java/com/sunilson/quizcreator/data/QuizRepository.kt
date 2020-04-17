@@ -34,7 +34,6 @@ import java.io.OutputStreamWriter
 import java.util.*
 
 
-
 interface IQuizRepository {
     fun generateQuiz(
         categoryId: String? = null,
@@ -64,7 +63,7 @@ interface IQuizRepository {
 }
 
 
-class QuizRepository (
+class QuizRepository(
     private val application: Application,
     private val database: QuizDatabase
 ) : IQuizRepository {
@@ -141,6 +140,7 @@ class QuizRepository (
         return result
     }
 
+    @Suppress("ComplexMethod", "LongMethod", "NestedBlockDepth")
     private fun processQuizQuestions(
         questions: List<Question>,
         allQuestions: List<Question>,
@@ -173,14 +173,17 @@ class QuizRepository (
         quizQuestions = quizQuestions.map {
             if (it.maxAnswers != it.answers.size) {
                 var noQuestionFoundCount = 0
-                while (it.answers.size < it.maxAnswers || it.answers.size < ANSWERS_PER_QUIZ_QUESTION) {
+                while (it.answers.size < it.maxAnswers
+                    || it.answers.size < ANSWERS_PER_QUIZ_QUESTION
+                ) {
                     var answer: Answer? = null
                     var usedCategory: String? = null
 
                     if (it.onlySameCategory) {
                         //Find answer in answerpool category, if none found use random Answer
-                        answer =
-                            answerPool[it.categoryId]!!.find { a -> !it.answers.any { answer2 -> answer2.id == a.id } }
+                        answer = answerPool[it.categoryId]!!.find { a ->
+                            !it.answers.any { answer2 -> answer2.id == a.id }
+                        }
                     } else {
                         //Use list instead of map to randomize category order
                         val categoryList = answerPool.toList().toMutableList()
@@ -197,7 +200,8 @@ class QuizRepository (
                         }
                     }
 
-                    //If no answer has been found, try refilling the answer pool 2 times, if still not found, use placeholder answer
+                    //If no answer has been found, try refilling the answer pool 2 times,
+                    // if still not found, use placeholder answer
                     if (answer == null) {
                         if (noQuestionFoundCount < 2) {
                             //Reset pool
@@ -268,6 +272,7 @@ class QuizRepository (
         }
     }
 
+    @Suppress("ComplexMethod", "LongMethod", "NestedBlockDepth")
     private fun calculateStatistics(res: List<Quiz>, quiz: Quiz): Statistics {
         val result = Statistics()
         val allQuizes = res.toMutableList()
@@ -288,15 +293,23 @@ class QuizRepository (
         finishedQuizes.forEach { q ->
             wholeDuration += q.duration
             q.questions.forEach { question ->
-                if (correctPerCategoryAmount[question.categoryId] == null) correctPerCategoryAmount[question.categoryId] =
-                    0
-                if (allPerCategoryAmount[question.categoryId] == null) allPerCategoryAmount[question.categoryId] =
-                    0
-                if (categoryDates[question.categoryId] == null) categoryDates[question.categoryId] =
-                    q.timestamp
+                if (correctPerCategoryAmount[question.categoryId] == null) {
+                    correctPerCategoryAmount[question.categoryId] = 0
+                }
 
-                if (question.type == QuestionType.SINGLE_CHOICE) singleChoiceAnswered++
-                else multipleChoiceAnswered++
+                if (allPerCategoryAmount[question.categoryId] == null) {
+                    allPerCategoryAmount[question.categoryId] = 0
+                }
+
+                if (categoryDates[question.categoryId] == null) {
+                    categoryDates[question.categoryId] = q.timestamp
+                }
+
+                if (question.type == QuestionType.SINGLE_CHOICE) {
+                    singleChoiceAnswered++
+                } else {
+                    multipleChoiceAnswered++
+                }
 
                 val currentVal = allPerCategoryAmount[question.categoryId]!!
                 allPerCategoryAmount[question.categoryId] = currentVal + 1
@@ -305,12 +318,16 @@ class QuizRepository (
                     val currentCorrectVal = correctPerCategoryAmount[question.categoryId]!!
                     correctPerCategoryAmount[question.categoryId] = currentCorrectVal + 1
 
-                    if (question.type == QuestionType.SINGLE_CHOICE) singleChoiceCorrect++
-                    else multipleChoiceCorrect++
+                    if (question.type == QuestionType.SINGLE_CHOICE) {
+                        singleChoiceCorrect++
+                    } else {
+                        multipleChoiceCorrect++
+                    }
                 }
 
-                if (categoryDates[question.categoryId]!! < q.timestamp) categoryDates[question.categoryId] =
-                    q.timestamp
+                if (categoryDates[question.categoryId]!! < q.timestamp) {
+                    categoryDates[question.categoryId] = q.timestamp
+                }
             }
         }
 
@@ -542,27 +559,37 @@ class QuizRepository (
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
-    private fun validateQuestion(question: Question): Completable? {
-        if (question.text.isEmpty()) {
-            return Completable.error(IllegalArgumentException(application.getString(R.string.question_empty_error)))
+    private fun validateQuestion(question: Question) = when {
+        question.text.isEmpty() -> {
+            Completable.error(
+                IllegalArgumentException(
+                    application.getString(R.string.question_empty_error)
+                )
+            )
         }
-
-        if (question.categoryId.isEmpty()) {
-            return Completable.error(IllegalArgumentException(application.getString(R.string.question_category_not_set)))
+        question.categoryId.isEmpty() -> {
+            Completable.error(
+                IllegalArgumentException(
+                    application.getString(R.string.question_category_not_set)
+                )
+            )
         }
-
-        question.answers.forEach {
-            if (it.text.isEmpty()) {
-                return Completable.error(IllegalArgumentException(application.getString(R.string.question_answers_empty)))
-            }
+        !question.answers.any { it.correctAnswer } -> {
+            Completable.error(
+                IllegalArgumentException(
+                    application.getString(R.string.question_no_correct_answer_error)
+                )
+            )
         }
+        question.answers.any { it.text.isEmpty() } -> {
+            Completable.error(
+                IllegalArgumentException(
+                    application.getString(R.string.question_answers_empty)
+                )
+            )
 
-        if (!question.answers.any { it.correctAnswer }) {
-            return Completable.error(IllegalArgumentException(application.getString(R.string.question_no_correct_answer_error)))
         }
-
         //TODO Check If Category exists!
-
-        return null
+        else -> null
     }
 }

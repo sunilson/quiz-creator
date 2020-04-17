@@ -87,10 +87,6 @@ class TutorialSliderPagination(context: Context, attributeSet: AttributeSet) :
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER
     }
-
-    private enum class Direction {
-        LEFT, RIGHT, NONE
-    }
 }
 
 typealias  TutorialPaginationListener = (Int) -> Unit

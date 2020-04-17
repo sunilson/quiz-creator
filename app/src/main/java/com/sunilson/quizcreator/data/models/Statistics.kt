@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "statistics")
+@Suppress("LongParameterList")
 class Statistics(
     @PrimaryKey var id: String = "statistics",
     var finishedQuizAmount: Int = 0,

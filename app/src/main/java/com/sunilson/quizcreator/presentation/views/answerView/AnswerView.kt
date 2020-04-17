@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.sunilson.quizcreator.data.models.Answer
 import com.sunilson.quizcreator.databinding.QuizQuestionAnswerBinding
-import com.sunilson.quizcreator.presentation.shared.error_animation_duration
+import com.sunilson.quizcreator.presentation.shared.ERROR_ANIMATION_DURATION
 
 class AnswerView : ConstraintLayout {
 
@@ -49,7 +49,7 @@ class AnswerView : ConstraintLayout {
                 unmark()
                 Handler().postDelayed({
                     answerViewModel.correct = false
-                }, error_animation_duration)
+                }, ERROR_ANIMATION_DURATION)
             }
             this.setOnClickListener(null)
         }

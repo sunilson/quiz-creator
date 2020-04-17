@@ -10,11 +10,11 @@ const val MAX_ANSWERS_PER_QUESTION = 20
 const val OPTIONAL_THRESHOLD = 0
 
 //ANIMATION VALUES THAT ARE NOT IN XML
-const val error_animation_duration: Long = 1000
-const val timer_fade_half_duration: Long = 500
-const val timer_fade_delay_between: Long = 300
-const val stack_fade_in_duration: Long = 2000
-const val timer_fade_scale_duration: Long = 1000
+const val ERROR_ANIMATION_DURATION: Long = 1000
+const val TIMER_FADE_HALF_DURATION: Long = 500
+const val TIMER_FADE_DELAY_BETWEEN: Long = 300
+const val STACK_FADE_IN_DURATION: Long = 2000
+const val TIMER_FADE_SCALE_DURATION: Long = 1000
 
 //Statistic Constants
 

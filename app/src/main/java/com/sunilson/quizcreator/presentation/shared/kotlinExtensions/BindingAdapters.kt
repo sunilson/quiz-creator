@@ -180,15 +180,6 @@ fun LinearLayout.setArchiveAnswers(question: Question?) {
     }
 }
 
-@BindingAdapter("backgroundQuestionTint")
-fun View.setBackgroundTint(correct: Boolean) {
-    if (correct) {
-
-    } else {
-
-    }
-}
-
 @BindingAdapter("answers", "multiplePossible", "answerClickedCallback", requireAll = true)
 fun LinearLayout.setAnswers(
     question: Question?,
@@ -351,6 +342,7 @@ fun setCorrectAnswerListener(view: ImageView, listener: InverseBindingListener) 
     "correctAnswerToggable",
     requireAll = false
 )
+@Suppress("LongMethod")
 fun setCorrectAnswer(
     view: ImageView,
     answer: Answer?,

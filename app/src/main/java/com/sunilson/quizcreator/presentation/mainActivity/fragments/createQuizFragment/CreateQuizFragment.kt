@@ -43,7 +43,9 @@ class CreateQuizFragment : BaseFragment() {
 
         view.generate_quiz_button.setOnClickListener {
             val intent = Intent(context, QuizActivity::class.java)
-            if (createQuizViewModel.selectedCategory.get() != null && createQuizViewModel.selectedCategory.get()!!.id != "all") {
+            if (createQuizViewModel.selectedCategory.get() != null
+                && createQuizViewModel.selectedCategory.get()!!.id != "all"
+            ) {
                 intent.putExtra("selectedCategory", createQuizViewModel.selectedCategory.get()!!.id)
             }
             intent.putExtra("shuffleAnswers", createQuizViewModel.shuffleAnswers.get())

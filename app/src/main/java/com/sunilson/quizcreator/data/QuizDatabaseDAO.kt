@@ -13,7 +13,8 @@ import com.sunilson.quizcreator.data.models.Statistics
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-@Dao()
+@Dao
+@Suppress("TooManyFunctions")
 interface QuizDatabaseDAO {
 
     @Query("SELECT * FROM question")

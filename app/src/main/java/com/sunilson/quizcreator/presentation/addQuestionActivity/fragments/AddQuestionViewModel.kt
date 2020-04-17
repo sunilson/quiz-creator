@@ -66,8 +66,7 @@ class AddQuestionViewModel (
                 sender: ObservableList<Category>?,
                 positionStart: Int,
                 itemCount: Int
-            ) {
-            }
+            ) {}
         })
         loadCategories()
 
