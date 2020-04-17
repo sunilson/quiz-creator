@@ -5,11 +5,8 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import com.sunilson.quizcreator.R
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class AudioService @Inject constructor(val application: Application) {
+class AudioService (private val application: Application) {
 
     private val soundPool = SoundPool.Builder().setMaxStreams(1).build()
     private val correctSound: Int
@@ -20,9 +17,7 @@ class AudioService @Inject constructor(val application: Application) {
     init {
         correctSound = soundPool.load(application, R.raw.correct, 1)
         wrongSound = soundPool.load(application, R.raw.wrong, 1)
-        soundPool.setOnLoadCompleteListener { soundPool, i, i2 ->
-            soundsLoaded = true
-        }
+        soundPool.setOnLoadCompleteListener { _, _, _ -> soundsLoaded = true }
     }
 
     fun playErrorSound() {

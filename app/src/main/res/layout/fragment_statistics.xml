@@ -5,125 +5,126 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.sunilson.quizcreator.presentation.MainActivity.fragments.StatisticsFragment.StatisticsFragmentViewModel" />
+                name="viewModel"
+                type="com.sunilson.quizcreator.presentation.mainActivity.fragments.statisticsFragment.StatisticsFragmentViewModel" />
 
         <import type="android.view.View" />
     </data>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:padding="15dp">
-
-            <com.sunilson.quizcreator.presentation.views.DividerHeadline
-                android:id="@+id/category_success_rates_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:text="@string/question_success_rates" />
-
-            <com.sunilson.quizcreator.presentation.views.CustomProgressBar.CustomProgressBar
-                android:id="@+id/whole_success_rate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:progress="@{viewModel.currentStatistics.averageCorrectRate}"
-                app:progress_label="@string/all_categories" />
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+            <com.sunilson.quizcreator.presentation.views.DividerHeadline
+                    android:id="@+id/category_success_rates_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:text="@string/question_success_rates" />
+
+            <com.sunilson.quizcreator.presentation.views.customProgressBar.CustomProgressBar
+                    android:id="@+id/whole_success_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:progress="@{viewModel.currentStatistics.averageCorrectRate}"
+                    app:progress_label="@string/all_categories" />
 
             <LinearLayout
-                android:id="@+id/category_success_rates"
-                categories="@{viewModel.categories}"
-                categoryDates="@{viewModel.currentStatistics.lastAbsolvedDatePerCategory}"
-                categorySuccessRates="@{viewModel.currentStatistics.averageCorrectRatePerCategory}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                    android:id="@+id/category_success_rates"
+                    categories="@{viewModel.categories}"
+                    categoryDates="@{viewModel.currentStatistics.lastAbsolvedDatePerCategory}"
+                    categorySuccessRates="@{viewModel.currentStatistics.averageCorrectRatePerCategory}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
             <com.sunilson.quizcreator.presentation.views.DividerHeadline
-                android:id="@+id/seven_day_bar_chart_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="40dp"
-                app:text="@string/finished_quizes_in_last_7_days" />
+                    android:id="@+id/seven_day_bar_chart_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="40dp"
+                    app:text="@string/finished_quizes_in_last_7_days" />
 
             <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/seven_daybar_chart"
-                sevenDayGoodQuizAmount="@{viewModel.currentStatistics.finishedGoodQuizAmountSevenDays}"
-                sevenDayQuizAmount="@{viewModel.currentStatistics.finishedQuizAmountSevenDays}"
-                android:layout_width="match_parent"
-                android:layout_height="250dp" />
+                    android:id="@+id/seven_daybar_chart"
+                    sevenDayGoodQuizAmount="@{viewModel.currentStatistics.finishedGoodQuizAmountSevenDays}"
+                    sevenDayQuizAmount="@{viewModel.currentStatistics.finishedQuizAmountSevenDays}"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp" />
 
             <com.sunilson.quizcreator.presentation.views.DividerHeadline
-                android:id="@+id/other_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="40dp"
-                app:text="@string/other_statistics" />
+                    android:id="@+id/other_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="40dp"
+                    app:text="@string/other_statistics" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:layout_weight="1"
-                        android:text="Average Quiz Duration"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_weight="1"
+                            android:text="Average Quiz Duration"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.averageDuration}"
-                        android:textSize="14sp" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.averageDuration}"
+                            android:textSize="14sp" />
                 </LinearLayout>
 
-                <com.sunilson.quizcreator.presentation.views.CustomProgressBar.CustomProgressBar
-                    android:id="@+id/single_success_rate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    app:progress="@{viewModel.currentStatistics.singleChoiceCorrectRate}"
-                    app:progress_label="@string/correct_single" />
+                <com.sunilson.quizcreator.presentation.views.customProgressBar.CustomProgressBar
+                        android:id="@+id/single_success_rate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        app:progress="@{viewModel.currentStatistics.singleChoiceCorrectRate}"
+                        app:progress_label="@string/correct_single" />
 
-                <com.sunilson.quizcreator.presentation.views.CustomProgressBar.CustomProgressBar
-                    android:id="@+id/multiple_success_rate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:progress="@{viewModel.currentStatistics.multipleChoiceCorrectRate}"
-                    app:progress_label="@string/correct_multiple" />
+                <com.sunilson.quizcreator.presentation.views.customProgressBar.CustomProgressBar
+                        android:id="@+id/multiple_success_rate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:progress="@{viewModel.currentStatistics.multipleChoiceCorrectRate}"
+                        app:progress_label="@string/correct_multiple" />
 
             </LinearLayout>
 
             <com.sunilson.quizcreator.presentation.views.CustomButton
-                android:id="@+id/reset_statistics"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="30dp"
-                app:buttonIcon="@drawable/ic_delete_black_24dp"
-                app:buttonText="@string/reset_statistics"
-                app:type="CANCEL" />
+                    android:id="@+id/reset_statistics"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="30dp"
+                    app:buttonIcon="@drawable/ic_delete_black_24dp"
+                    app:buttonText="@string/reset_statistics"
+                    app:type="CANCEL" />
         </LinearLayout>
     </ScrollView>
 

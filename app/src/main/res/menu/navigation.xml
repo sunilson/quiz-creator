@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/all_categories_fragment"
-        android:icon="@drawable/ic_folder_black_24dp"
-        android:title="@string/categories" />
+            android:id="@+id/all_categories_fragment"
+            android:icon="@drawable/ic_folder_black_24dp"
+            android:title="@string/categories" />
 
     <item
-        android:id="@+id/all_questions_fragment"
-        android:icon="@drawable/ic_playlist_add_black_24dp"
-        android:title="@string/questions" />
+            android:id="@+id/all_questions_fragment"
+            android:icon="@drawable/ic_playlist_add_black_24dp"
+            android:title="@string/questions" />
 
     <item
-        android:id="@+id/statistics_fragment"
-        android:icon="@drawable/ic_trending_up_black_24dp"
-        android:title="@string/statistics" />
+            android:id="@+id/statistics_fragment"
+            android:icon="@drawable/ic_trending_up_black_24dp"
+            android:title="@string/statistics" />
 
     <item
-        android:id="@+id/quiz_fragment"
-        android:icon="@drawable/ic_play_arrow_black_24dp"
-        android:title="@string/quiz" />
+            android:id="@+id/quiz_fragment"
+            android:icon="@drawable/ic_play_arrow_black_24dp"
+            android:title="@string/quiz" />
 
 </menu>

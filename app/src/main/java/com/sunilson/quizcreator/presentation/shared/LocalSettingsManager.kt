@@ -3,13 +3,11 @@ package com.sunilson.quizcreator.presentation.shared
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class LocalSettingsManager @Inject constructor(context: Application) {
+class LocalSettingsManager (context: Application) {
 
-    private val sharedPrefs: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+    private val sharedPrefs: SharedPreferences =
+        context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
 
     var lastUsedCategory: String?
         get() {

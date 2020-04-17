@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bitmap
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:tint="@color/wrong"
-    android:src="@drawable/ic_cancel_black_24dp"/>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+        android:tint="@color/wrong"
+        android:src="@drawable/ic_cancel_black_24dp" />

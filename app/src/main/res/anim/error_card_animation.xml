@@ -2,53 +2,46 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
 
     <translate
-        android:toXDelta="20"
-        android:toYDelta="0"
-        android:duration="100"
-        android:startOffset="0"
-        android:interpolator="@android:anim/anticipate_overshoot_interpolator"
-        />
+            android:toXDelta="20"
+            android:toYDelta="0"
+            android:duration="100"
+            android:startOffset="0"
+            android:interpolator="@android:anim/anticipate_overshoot_interpolator" />
     <translate
-        android:toXDelta="-20"
-        android:toYDelta="0"
-        android:duration="100"
-        android:startOffset="100"
-        android:interpolator="@android:anim/anticipate_overshoot_interpolator"
-        />
+            android:toXDelta="-20"
+            android:toYDelta="0"
+            android:duration="100"
+            android:startOffset="100"
+            android:interpolator="@android:anim/anticipate_overshoot_interpolator" />
     <translate
-        android:toXDelta="10"
-        android:toYDelta="0"
-        android:duration="100"
-        android:startOffset="200"
-        android:interpolator="@android:anim/anticipate_overshoot_interpolator"
-        />
+            android:toXDelta="10"
+            android:toYDelta="0"
+            android:duration="100"
+            android:startOffset="200"
+            android:interpolator="@android:anim/anticipate_overshoot_interpolator" />
     <translate
-        android:toXDelta="-10"
-        android:toYDelta="0"
-        android:duration="100"
-        android:startOffset="300"
-        android:interpolator="@android:anim/anticipate_overshoot_interpolator"
-        />
+            android:toXDelta="-10"
+            android:toYDelta="0"
+            android:duration="100"
+            android:startOffset="300"
+            android:interpolator="@android:anim/anticipate_overshoot_interpolator" />
     <translate
-        android:toXDelta="5"
-        android:toYDelta="0"
-        android:duration="100"
-        android:startOffset="400"
-        android:interpolator="@android:anim/anticipate_overshoot_interpolator"
-        />
+            android:toXDelta="5"
+            android:toYDelta="0"
+            android:duration="100"
+            android:startOffset="400"
+            android:interpolator="@android:anim/anticipate_overshoot_interpolator" />
     <translate
-        android:toXDelta="-5"
-        android:toYDelta="0"
-        android:duration="100"
-        android:startOffset="500"
-        android:interpolator="@android:anim/anticipate_overshoot_interpolator"
-        />
+            android:toXDelta="-5"
+            android:toYDelta="0"
+            android:duration="100"
+            android:startOffset="500"
+            android:interpolator="@android:anim/anticipate_overshoot_interpolator" />
     <translate
-        android:toXDelta="0"
-        android:toYDelta="0"
-        android:duration="100"
-        android:startOffset="600"
-        android:interpolator="@android:anim/anticipate_overshoot_interpolator"
-        />
+            android:toXDelta="0"
+            android:toYDelta="0"
+            android:duration="100"
+            android:startOffset="600"
+            android:interpolator="@android:anim/anticipate_overshoot_interpolator" />
 
 </set>

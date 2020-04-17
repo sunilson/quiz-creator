@@ -3,22 +3,15 @@ package com.sunilson.quizcreator.presentation.shared
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.sunilson.quizcreator.Application.di.scopes.FragmentScope
 import com.sunilson.quizcreator.data.models.Category
-import com.sunilson.quizcreator.presentation.shared.BaseClasses.BaseSpinnerArrayAdapter
-import javax.inject.Inject
+import com.sunilson.quizcreator.presentation.shared.baseClasses.BaseSpinnerArrayAdapter
 
-@FragmentScope
-class CategorySpinnerAdapter @Inject constructor(context: Context) : BaseSpinnerArrayAdapter<Category>(context, android.R.layout.simple_list_item_1) {
+class CategorySpinnerAdapter(context: Context) :
+    BaseSpinnerArrayAdapter<Category>(context, android.R.layout.simple_list_item_1) {
 
     fun setCategories(cateogries: List<Category>) {
         data.clear()
         data.addAll(cateogries)
-        notifyDataSetChanged()
-    }
-
-    fun addCategory(category: Category) {
-        data.add(category)
         notifyDataSetChanged()
     }
 
@@ -28,10 +21,15 @@ class CategorySpinnerAdapter @Inject constructor(context: Context) : BaseSpinner
         return res.second!!
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val res = getViewHolder(android.R.layout.simple_spinner_item, convertView, parent)
         res.first.textView.text = data[position].name
-        res.second!!.setPadding(0, res.second!!.paddingTop, res.second!!.paddingRight, res.second!!.paddingBottom)
+        res.second!!.setPadding(
+            0,
+            res.second!!.paddingTop,
+            res.second!!.paddingRight,
+            res.second!!.paddingBottom
+        )
         return res.second!!
     }
 
@@ -42,5 +40,4 @@ class CategorySpinnerAdapter @Inject constructor(context: Context) : BaseSpinner
 
         return -1
     }
-
 }

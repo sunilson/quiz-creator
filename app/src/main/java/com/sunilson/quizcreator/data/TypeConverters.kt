@@ -1,9 +1,13 @@
 package com.sunilson.quizcreator.data
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.sunilson.quizcreator.data.models.*
+import com.sunilson.quizcreator.data.models.Answer
+import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.QuestionType
+import com.sunilson.quizcreator.data.models.Quiz
+import com.sunilson.quizcreator.data.models.Statistics
 
 
 class TypeConverters {

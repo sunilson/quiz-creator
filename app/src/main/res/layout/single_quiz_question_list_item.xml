@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
         <variable
-            name="obj"
-            type="com.sunilson.quizcreator.data.models.Question" />
+                name="obj"
+                type="com.sunilson.quizcreator.data.models.Question" />
 
         <import type="java.util.Date" />
 
@@ -15,28 +14,28 @@
     </data>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_margin="15dp"
-        android:background="@drawable/stacked_card_view_ripple"
-        android:clipToPadding="false"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="@dimen/card_padding">
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/stacked_card_view_ripple"
+            android:clipToPadding="false"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="@dimen/card_padding">
         <!-- android:backgroundTint="@{obj.correctlyAnswered ? @color/correct : @color/wrong}" -->
 
         <TextView
-            android:id="@+id/question_text"
-            style="@style/question_card_question"
-            android:text='@{obj.text}'
-            android:layout_marginBottom="15dp"
-            android:textColor="@{obj.correctlyAnswered ? @color/correct : @color/wrong}" />
+                android:id="@+id/question_text"
+                style="@style/question_card_question"
+                android:text='@{obj.text}'
+                android:layout_marginBottom="15dp"
+                android:textColor="@{obj.correctlyAnswered ? @color/correct : @color/wrong}" />
 
         <LinearLayout
-            archiveAnswers="@{obj}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
+                archiveAnswers="@{obj}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
 
     </LinearLayout>
 

@@ -1,25 +1,34 @@
 package com.sunilson.quizcreator.data.models
 
-import android.arch.persistence.room.*
-import android.databinding.BaseObservable
-import android.databinding.Bindable
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.sunilson.quizcreator.BR
 import com.sunilson.quizcreator.presentation.shared.ANSWERS_PER_QUIZ_QUESTION
-import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
+import com.sunilson.quizcreator.presentation.shared.baseClasses.AdapterElement
 import java.util.*
 
 @Entity(tableName = "question")
-@ForeignKey(entity = Category::class, parentColumns = ["id"], childColumns = ["categoryId"], onDelete = ForeignKey.NO_ACTION)
+@ForeignKey(
+    entity = Category::class,
+    parentColumns = ["id"],
+    childColumns = ["categoryId"],
+    onDelete = ForeignKey.NO_ACTION
+)
 class Question(
-        @PrimaryKey var id: String = UUID.randomUUID().toString(),
-        @ColumnInfo(name = "buttonText") var _text: String = "",
-        var categoryId: String = "",
-        var answers: MutableList<Answer> = mutableListOf(),
-        @ColumnInfo(name = "maxAnswers") var _maxAnswers: Int = ANSWERS_PER_QUIZ_QUESTION,
-        @ColumnInfo(name = "onlySameCategory") var _onlySameCategory: Boolean = true,
-        var type: QuestionType = QuestionType.SINGLE_CHOICE,
-        var correctlyAnswered: Boolean = false,
-        @Ignore var categoryName: String = ""
+    @PrimaryKey var id: String = UUID.randomUUID().toString(),
+    @ColumnInfo(name = "buttonText") var _text: String = "",
+    var categoryId: String = "",
+    var answers: MutableList<Answer> = mutableListOf(),
+    @ColumnInfo(name = "maxAnswers") var _maxAnswers: Int = ANSWERS_PER_QUIZ_QUESTION,
+    @ColumnInfo(name = "onlySameCategory") var _onlySameCategory: Boolean = true,
+    var type: QuestionType = QuestionType.SINGLE_CHOICE,
+    var correctlyAnswered: Boolean = false,
+    @Ignore var categoryName: String = ""
 ) : BaseObservable(), AdapterElement {
 
     @Ignore

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-            name="viewModel"
-            type="com.sunilson.quizcreator.presentation.views.QuestionCardView.QuestionCardViewModel" />
+                name="viewModel"
+                type="com.sunilson.quizcreator.presentation.views.questionCardView.QuestionCardViewModel" />
 
         <import type="android.view.View" />
 
@@ -14,23 +15,23 @@
     </data>
 
     <merge
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/question_text"
-            style="@style/question_card_question"
-            android:text='@{viewModel.question.text}' />
+                android:id="@+id/question_text"
+                style="@style/question_card_question"
+                android:text='@{viewModel.question.text}' />
 
         <LinearLayout
-            android:id="@+id/question_answers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical"
-            app:answerClickedCallback="@{viewModel.answerClicked}"
-            app:answers="@{viewModel.question}"
-            app:multiplePossible="@{viewModel.multipleAnswersPossible}" />
+                android:id="@+id/question_answers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                app:answerClickedCallback="@{viewModel.answerClicked}"
+                app:answers="@{viewModel.question}"
+                app:multiplePossible="@{viewModel.multipleAnswersPossible}" />
 
     </merge>
 </layout>

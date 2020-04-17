@@ -2,15 +2,9 @@ package com.sunilson.quizcreator.data.di
 
 import com.sunilson.quizcreator.data.IQuizRepository
 import com.sunilson.quizcreator.data.QuizRepository
-import dagger.Binds
-import dagger.Module
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidApplication
+import org.koin.dsl.module
 
-@Module
-abstract class RepositoryModule {
-
-    @Binds
-    @Singleton
-    abstract fun provideRepository(quizRepository: QuizRepository) : IQuizRepository
-
+val repositoryModule = module {
+    single<IQuizRepository> { QuizRepository(androidApplication(), get()) }
 }

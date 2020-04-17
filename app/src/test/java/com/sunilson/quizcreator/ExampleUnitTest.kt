@@ -1,8 +1,7 @@
 package com.sunilson.quizcreator
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit single_card_view_background, which will execute on the development machine (host).

@@ -9,11 +9,16 @@ import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.data.models.*
+import com.sunilson.quizcreator.data.models.Answer
+import com.sunilson.quizcreator.data.models.Category
+import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.QuestionType
+import com.sunilson.quizcreator.data.models.Quiz
+import com.sunilson.quizcreator.data.models.Statistics
 import com.sunilson.quizcreator.presentation.shared.ANSWERS_PER_QUIZ_QUESTION
-import com.sunilson.quizcreator.presentation.shared.Exceptions.NoQuestionsFoundException
 import com.sunilson.quizcreator.presentation.shared.GOOD_THRESHOLD
-import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.popRandomElement
+import com.sunilson.quizcreator.presentation.shared.exceptions.NoQuestionsFoundException
+import com.sunilson.quizcreator.presentation.shared.kotlinExtensions.popRandomElement
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -21,13 +26,23 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.FileReader
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Singleton
+
+
 
 interface IQuizRepository {
-    fun generateQuiz(categoryId: String? = null, shuffleAnswers: Boolean = false, onlySingleChoice: Boolean = false, questionAmount: Int = 10): Single<Quiz>
+    fun generateQuiz(
+        categoryId: String? = null,
+        shuffleAnswers: Boolean = false,
+        onlySingleChoice: Boolean = false,
+        questionAmount: Int = 10
+    ): Single<Quiz>
+
     fun storeQuiz(quiz: Quiz): Completable
     fun addQuestion(question: Question): Completable
     fun deleteQuestion(questionId: String): Completable
@@ -48,8 +63,11 @@ interface IQuizRepository {
     fun importQuestionsAndCategories(path: Uri): Completable
 }
 
-@Singleton
-class QuizRepository @Inject constructor(private val application: Application, private val database: QuizDatabase) : IQuizRepository {
+
+class QuizRepository (
+    private val application: Application,
+    private val database: QuizDatabase
+) : IQuizRepository {
 
     override fun addQuestion(question: Question): Completable {
 
@@ -78,11 +96,18 @@ class QuizRepository @Inject constructor(private val application: Application, p
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun generateQuiz(categoryId: String?, shuffleAnswers: Boolean, onlySingleChoice: Boolean, questionAmount: Int): Single<Quiz> {
+    override fun generateQuiz(
+        categoryId: String?,
+        shuffleAnswers: Boolean,
+        onlySingleChoice: Boolean,
+        questionAmount: Int
+    ): Single<Quiz> {
         return Single.create<Quiz> {
             val allQuestions = database.quizDAO().getAllQuestionsOnce().blockingGet()
             val quizQuestions = if (onlySingleChoice && categoryId != null) {
-                database.quizDAO().getAllQuestionsOnce(QuestionType.SINGLE_CHOICE, arrayOf(categoryId)).blockingGet()
+                database.quizDAO()
+                    .getAllQuestionsOnce(QuestionType.SINGLE_CHOICE, arrayOf(categoryId))
+                    .blockingGet()
             } else if (onlySingleChoice) {
                 database.quizDAO().getAllQuestionsOnce(QuestionType.SINGLE_CHOICE).blockingGet()
             } else if (categoryId != null) {
@@ -90,9 +115,16 @@ class QuizRepository @Inject constructor(private val application: Application, p
             } else {
                 allQuestions
             }
-            if (quizQuestions.isEmpty()) it.onError(NoQuestionsFoundException(application.getString(R.string.no_questions_found)))
+            if (quizQuestions.isEmpty()) it.onError(
+                NoQuestionsFoundException(
+                    application.getString(
+                        R.string.no_questions_found
+                    )
+                )
+            )
 
-            val quiz = processQuizQuestions(quizQuestions, allQuestions, questionAmount, shuffleAnswers)
+            val quiz =
+                processQuizQuestions(quizQuestions, allQuestions, questionAmount, shuffleAnswers)
             database.quizDAO().addQuiz(quiz)
             it.onSuccess(quiz)
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -109,14 +141,20 @@ class QuizRepository @Inject constructor(private val application: Application, p
         return result
     }
 
-    private fun processQuizQuestions(questions: List<Question>, allQuestions: List<Question>, questionAmount: Int, shuffleAnswers: Boolean): Quiz {
+    private fun processQuizQuestions(
+        questions: List<Question>,
+        allQuestions: List<Question>,
+        questionAmount: Int,
+        shuffleAnswers: Boolean
+    ): Quiz {
         var quizQuestions = questions.shuffled().take(questionAmount)
         val random = Random()
 
         //Generate answer pool
         var answerPool = mutableMapOf<String, MutableList<Answer>>()
         allQuestions.forEach { question ->
-            if (answerPool[question.categoryId] == null) answerPool[question.categoryId] = mutableListOf()
+            if (answerPool[question.categoryId] == null) answerPool[question.categoryId] =
+                mutableListOf()
             question.answers.forEach {
                 val copy = it.copy()
                 copy.correctAnswer = false
@@ -141,14 +179,16 @@ class QuizRepository @Inject constructor(private val application: Application, p
 
                     if (it.onlySameCategory) {
                         //Find answer in answerpool category, if none found use random Answer
-                        answer = answerPool[it.categoryId]!!.find { a -> !it.answers.any { answer2 -> answer2.id == a.id } }
+                        answer =
+                            answerPool[it.categoryId]!!.find { a -> !it.answers.any { answer2 -> answer2.id == a.id } }
                     } else {
                         //Use list instead of map to randomize category order
                         val categoryList = answerPool.toList().toMutableList()
                         categoryList.shuffle()
                         //Search in all categories in the answer pool, but randomized
                         for (entry in categoryList) {
-                            answer = entry.second.find { a -> !it.answers.any { a2 -> a2.id == a.id } }
+                            answer =
+                                entry.second.find { a -> !it.answers.any { a2 -> a2.id == a.id } }
                             if (answer != null) {
                                 //Set category where answer has been found, so we can remove it later
                                 usedCategory = entry.first
@@ -165,7 +205,8 @@ class QuizRepository @Inject constructor(private val application: Application, p
                             noQuestionFoundCount++
                         } else {
                             //Add placeholder answer, last resort
-                            answer = Answer(text = application.getString(R.string.not_enough_answers))
+                            answer =
+                                Answer(text = application.getString(R.string.not_enough_answers))
                             it.answers.add(answer)
                         }
                     } else {
@@ -247,9 +288,12 @@ class QuizRepository @Inject constructor(private val application: Application, p
         finishedQuizes.forEach { q ->
             wholeDuration += q.duration
             q.questions.forEach { question ->
-                if (correctPerCategoryAmount[question.categoryId] == null) correctPerCategoryAmount[question.categoryId] = 0
-                if (allPerCategoryAmount[question.categoryId] == null) allPerCategoryAmount[question.categoryId] = 0
-                if (categoryDates[question.categoryId] == null) categoryDates[question.categoryId] = q.timestamp
+                if (correctPerCategoryAmount[question.categoryId] == null) correctPerCategoryAmount[question.categoryId] =
+                    0
+                if (allPerCategoryAmount[question.categoryId] == null) allPerCategoryAmount[question.categoryId] =
+                    0
+                if (categoryDates[question.categoryId] == null) categoryDates[question.categoryId] =
+                    q.timestamp
 
                 if (question.type == QuestionType.SINGLE_CHOICE) singleChoiceAnswered++
                 else multipleChoiceAnswered++
@@ -265,7 +309,8 @@ class QuizRepository @Inject constructor(private val application: Application, p
                     else multipleChoiceCorrect++
                 }
 
-                if (categoryDates[question.categoryId]!! < q.timestamp) categoryDates[question.categoryId] = q.timestamp
+                if (categoryDates[question.categoryId]!! < q.timestamp) categoryDates[question.categoryId] =
+                    q.timestamp
             }
         }
 
@@ -290,26 +335,31 @@ class QuizRepository @Inject constructor(private val application: Application, p
 
         result.finishedQuizAmount = finishedQuizes.size
         result.unfinishedQuizAmount = allQuizes.size - finishedQuizes.size
-        if ((singleChoiceAnswered + multipleChoiceAnswered) != 0) result.averageCorrectRate = ((singleChoiceCorrect + multipleChoiceCorrect) * 100f) / (singleChoiceAnswered + multipleChoiceAnswered)
+        if ((singleChoiceAnswered + multipleChoiceAnswered) != 0) result.averageCorrectRate =
+            ((singleChoiceCorrect + multipleChoiceCorrect) * 100f) / (singleChoiceAnswered + multipleChoiceAnswered)
         result.averageCorrectRatePerCategory = categoryRateResult
-        if (finishedQuizes.isNotEmpty()) result.averageDuration = wholeDuration / finishedQuizes.size
+        if (finishedQuizes.isNotEmpty()) result.averageDuration =
+            wholeDuration / finishedQuizes.size
         result.finishedQuizAmountSevenDays = finishedQuizLastSevenDays
         result.finishedGoodQuizAmountSevenDays = finishedGoodQuizLastSevenDays
         result.lastAbsolvedDatePerCategory = categoryDates
-        if (singleChoiceAnswered != 0) result.singleChoiceCorrectRate = (singleChoiceCorrect * 100) / singleChoiceAnswered
-        if (multipleChoiceAnswered != 0) result.multipleChoiceCorrectRate = (multipleChoiceCorrect * 100) / multipleChoiceAnswered
+        if (singleChoiceAnswered != 0) result.singleChoiceCorrectRate =
+            (singleChoiceCorrect * 100) / singleChoiceAnswered
+        if (multipleChoiceAnswered != 0) result.multipleChoiceCorrectRate =
+            (multipleChoiceCorrect * 100) / multipleChoiceAnswered
 
         return result
     }
 
     override fun loadQuestionOnce(id: String): Single<Question> {
-        return database.quizDAO().getQuestionOnce(id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        return database.quizDAO().getQuestionOnce(id).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadCategories(): Flowable<List<Category>> {
         return database.quizDAO().getAllCategories().map {
             val completeList = mutableListOf(
-                    Category("general", application.getString(R.string.general))
+                Category("general", application.getString(R.string.general))
             ).plus(it)
 
             completeList.map {
@@ -322,16 +372,18 @@ class QuizRepository @Inject constructor(private val application: Application, p
     override fun loadCategoriesOnce(): Single<List<Category>> {
         return database.quizDAO().getAllCategoriesOnce().map {
             mutableListOf(
-                    Category("general", application.getString(R.string.general))
+                Category("general", application.getString(R.string.general))
             ).plus(it)
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadQuestions(categoryId: String?, query: String?): Flowable<List<Question>> {
         val result = if (categoryId != null) {
-            database.quizDAO().getAllQuestions(arrayOf(categoryId)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            database.quizDAO().getAllQuestions(arrayOf(categoryId)).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
         } else {
-            database.quizDAO().getAllQuestions().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            database.quizDAO().getAllQuestions().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
         }
 
         return result.map { questions ->
@@ -347,9 +399,11 @@ class QuizRepository @Inject constructor(private val application: Application, p
     override fun loadQuestionsOnce(categoryId: String?, query: String?): Single<List<Question>> {
 
         val result = if (categoryId != null) {
-            database.quizDAO().getAllQuestionsOnce(arrayOf(categoryId)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            database.quizDAO().getAllQuestionsOnce(arrayOf(categoryId)).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
         } else {
-            database.quizDAO().getAllQuestionsOnce().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            database.quizDAO().getAllQuestionsOnce().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
         }
 
         return result.map { questions ->
@@ -363,12 +417,15 @@ class QuizRepository @Inject constructor(private val application: Application, p
     }
 
     override fun loadQuiz(id: String): Single<Quiz> {
-        return database.quizDAO().getQuizOnce(id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        return database.quizDAO().getQuizOnce(id).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun addCategory(category: Category): Completable {
         return database.quizDAO().getAllCategoriesOnce().flatMapCompletable { categories ->
-            if (categories.any { it.name == category.name }) Completable.error(IllegalArgumentException(application.getString(R.string.duplicate_category_error)))
+            if (categories.any { it.name == category.name }) Completable.error(
+                IllegalArgumentException(application.getString(R.string.duplicate_category_error))
+            )
             else {
                 database.quizDAO().addCategory(category)
                 Completable.complete()
@@ -417,26 +474,31 @@ class QuizRepository @Inject constructor(private val application: Application, p
     }
 
     override fun exportQuestionsAndCategories(): Single<String> {
-        return Single.zip(database.quizDAO().getAllQuestionsOnce(), database.quizDAO().getAllCategoriesOnce(), BiFunction { t1: List<Question>, t2: List<Category> ->
-            val gson = Gson()
-            val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+        return Single.zip(
+            database.quizDAO().getAllQuestionsOnce(),
+            database.quizDAO().getAllCategoriesOnce(),
+            BiFunction { t1: List<Question>, t2: List<Category> ->
+                val gson = Gson()
+                val dir =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                        .absolutePath
 
-            val jsonObject = JsonObject()
-            jsonObject.add("questions", gson.toJsonTree(t1))
-            jsonObject.add("categories", gson.toJsonTree(t2))
+                val jsonObject = JsonObject()
+                jsonObject.add("questions", gson.toJsonTree(t1))
+                jsonObject.add("categories", gson.toJsonTree(t2))
 
-            val file = File(dir, "quiz_export.json")
-            if (!file.exists()) file.createNewFile()
+                val file = File(dir, "quiz_export.json")
+                if (!file.exists()) file.createNewFile()
 
-            val outputStream = FileOutputStream(file)
-            val writer = OutputStreamWriter(outputStream)
-            writer.write("")
-            writer.write(jsonObject.toString())
-            writer.close()
-            outputStream.flush()
-            outputStream.close()
-            dir
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                val outputStream = FileOutputStream(file)
+                val writer = OutputStreamWriter(outputStream)
+                writer.write("")
+                writer.write(jsonObject.toString())
+                writer.close()
+                outputStream.flush()
+                outputStream.close()
+                dir
+            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun importQuestionsAndCategories(path: Uri): Completable {
@@ -444,7 +506,8 @@ class QuizRepository @Inject constructor(private val application: Application, p
             val gson = Gson()
             //val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
 
-            if (!path.path.endsWith(".json")) {
+
+            if (path.path?.endsWith(".json") == false) {
                 it.onError(Exception(application.getString(R.string.invalid_file)))
             } else {
                 val jsonReader = if (path.scheme == "content") {
@@ -460,8 +523,10 @@ class QuizRepository @Inject constructor(private val application: Application, p
                 val jsonObject = element.asJsonObject
                 val questionListType = object : TypeToken<List<Question>>() {}.type
                 val categoryListType = object : TypeToken<List<Category>>() {}.type
-                val questions = gson.fromJson<List<Question>>(jsonObject["questions"], questionListType)
-                val categories = gson.fromJson<List<Category>>(jsonObject["categories"], categoryListType)
+                val questions =
+                    gson.fromJson<List<Question>>(jsonObject["questions"], questionListType)
+                val categories =
+                    gson.fromJson<List<Category>>(jsonObject["categories"], categoryListType)
                 database.quizDAO().addQuestions(*questions.toTypedArray())
                 database.quizDAO().addCategories(*categories.toTypedArray())
                 it.onComplete()

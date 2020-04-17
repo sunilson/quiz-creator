@@ -2,14 +2,11 @@ package com.sunilson.quizcreator.presentation.shared
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class EventBus @Inject constructor() {
+class EventBus () {
 
-    val reload_questions_subject: PublishSubject<Any> = PublishSubject.create()
-    val reload_categories_subject: PublishSubject<Any> = PublishSubject.create()
+    private val reload_questions_subject: PublishSubject<Any> = PublishSubject.create()
+    private val reload_categories_subject: PublishSubject<Any> = PublishSubject.create()
 
     fun subscribeToChannel(channel: EventChannel): Observable<Any> {
         return when (channel) {

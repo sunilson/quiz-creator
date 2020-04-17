@@ -1,7 +1,15 @@
 package com.sunilson.quizcreator.data
 
-import android.arch.persistence.room.*
-import com.sunilson.quizcreator.data.models.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import com.sunilson.quizcreator.data.models.Category
+import com.sunilson.quizcreator.data.models.Question
+import com.sunilson.quizcreator.data.models.QuestionType
+import com.sunilson.quizcreator.data.models.Quiz
+import com.sunilson.quizcreator.data.models.Statistics
 import io.reactivex.Flowable
 import io.reactivex.Single
 

@@ -4,14 +4,14 @@ import android.animation.AnimatorInflater
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
+import com.sunilson.quizcreator.presentation.shared.kotlinExtensions.convertToPx
 import kotlinx.android.synthetic.main.custom_button.view.*
 
 class CustomButton : FrameLayout {
@@ -21,9 +21,18 @@ class CustomButton : FrameLayout {
             field = value
             if (!iconOnly) {
                 val drawable = when (field) {
-                    ButtonType.DEFAULT -> ContextCompat.getDrawable(context, R.drawable.button_default_background)
-                    ButtonType.CONFIRM -> ContextCompat.getDrawable(context, R.drawable.button_confirm_background)
-                    ButtonType.CANCEL -> ContextCompat.getDrawable(context, R.drawable.button_cancel_background)
+                    ButtonType.DEFAULT -> ContextCompat.getDrawable(
+                        context,
+                        R.drawable.button_default_background
+                    )
+                    ButtonType.CONFIRM -> ContextCompat.getDrawable(
+                        context,
+                        R.drawable.button_confirm_background
+                    )
+                    ButtonType.CANCEL -> ContextCompat.getDrawable(
+                        context,
+                        R.drawable.button_cancel_background
+                    )
                 }
 
                 if (drawable != null) background = drawable
@@ -75,13 +84,21 @@ class CustomButton : FrameLayout {
             if (field) {
                 background = ContextCompat.getDrawable(context, R.drawable.button_empty_background)
                 val color = when (type) {
-                    ButtonType.DEFAULT -> ContextCompat.getColor(context, R.color.button_default_background)
-                    ButtonType.CONFIRM -> ContextCompat.getColor(context, R.color.button_confirm_background)
-                    ButtonType.CANCEL -> ContextCompat.getColor(context, R.color.button_cancel_background)
+                    ButtonType.DEFAULT -> ContextCompat.getColor(
+                        context,
+                        R.color.button_default_background
+                    )
+                    ButtonType.CONFIRM -> ContextCompat.getColor(
+                        context,
+                        R.color.button_confirm_background
+                    )
+                    ButtonType.CANCEL -> ContextCompat.getColor(
+                        context,
+                        R.color.button_cancel_background
+                    )
                 }
                 custom_button_icon.setColorFilter(color)
-            }
-            else {
+            } else {
                 custom_button_icon.setColorFilter(Color.WHITE)
                 type = type
             }
@@ -105,11 +122,11 @@ class CustomButton : FrameLayout {
 
         clipToPadding = false
         elevation = 10f
-        stateListAnimator = AnimatorInflater.loadStateListAnimator(context, R.animator.button_animator)
+        stateListAnimator =
+            AnimatorInflater.loadStateListAnimator(context, R.animator.button_animator)
 
         icon = a.getDrawable(R.styleable.CustomButton_buttonIcon)
-        buttonText = if (a.getString(R.styleable.CustomButton_buttonText) != null) a.getString(R.styleable.CustomButton_buttonText)
-        else ""
+        buttonText = a.getString(R.styleable.CustomButton_buttonText) ?: ""
         small = a.getBoolean(R.styleable.CustomButton_small, false)
         iconOnly = a.getBoolean(R.styleable.CustomButton_iconOnly, false)
         a.recycle()
