@@ -73,7 +73,7 @@
     <string name="import_export_questions">Import/Export Questions and Categories</string>
     <string name="import_failed">Import failed</string>
     <string name="import_success">Import success</string>
-    <string name="export_successful">Exported to your downloads folder!</string>
+    <string name="export_successful">Exported to chosen file</string>
     <string name="export_error">Could not export data</string>
     <string name="confirm">Confirm</string>
     <string name="edit_everything">Edit everything</string>

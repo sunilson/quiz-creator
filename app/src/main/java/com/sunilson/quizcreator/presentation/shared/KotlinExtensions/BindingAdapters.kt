@@ -403,7 +403,7 @@ fun BarChart.sevenDayQuizAmount(days: List<Int>, goodDays: List<Int>) {
 fun LinearLayout.categorySuccessRates(rates: Map<String, Float>, dates: Map<String, Long>, categories: List<Category>) {
     if (rates.size <= categories.size) {
         this.removeAllViews()
-        rates.forEach { s, fl ->
+        rates.forEach { (s, fl) ->
             val view = com.sunilson.quizcreator.presentation.views.CustomProgressBar.CustomProgressBar(
                     context,
                     categories.find { it.id == s }!!.name,

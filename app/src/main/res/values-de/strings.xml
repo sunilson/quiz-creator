@@ -38,7 +38,7 @@
     <string name="invalid_file">Keine gültige Datei ausgewählt!</string>
     <string name="import_failed">Import fehlgeschlagen</string>
     <string name="import_success">Import erfolgreich</string>
-    <string name="export_successful">Fragen wurden in deinen Downloads Ordner exportiert!</string>
+    <string name="export_successful">Fragen wurden in gewähltes File epxortiert</string>
     <string name="save">Speichern</string>
     <string name="delete">Löschen</string>
     <string name="add_answer_here">Hier Antwort einfügen</string>
