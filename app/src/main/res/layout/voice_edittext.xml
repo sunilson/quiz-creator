@@ -5,93 +5,94 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.sunilson.quizcreator.presentation.views.EditTextWithVoiceInput.EditTextWithVoiceInputViewModel" />
+                name="viewModel"
+                type="com.sunilson.quizcreator.presentation.views.editTextWithVoiceInput.EditTextWithVoiceInputViewModel" />
 
         <import type="android.view.View" />
     </data>
 
 
-    <merge xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <merge
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <ImageView
-            android:id="@+id/correct_answer"
-            correctAnswer="@={viewModel.answer}"
-            correctAnswerToggable="@{viewModel.correctToggable}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding_icons"
-            android:paddingLeft="5dp"
-            android:paddingRight="10dp"
-            android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding_icons"
-            android:src="@drawable/ic_check_circle_black_24dp"
-            app:layout_constraintBottom_toBottomOf="@id/voice_edittext"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/voice_edittext"
-            app:layout_constraintTop_toTopOf="@id/voice_edittext" />
+                android:id="@+id/correct_answer"
+                correctAnswer="@={viewModel.answer}"
+                correctAnswerToggable="@{viewModel.correctToggable}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding_icons"
+                android:paddingRight="10dp"
+                android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding_icons"
+                android:src="@drawable/ic_check_circle_black_24dp"
+                app:layout_constraintBottom_toBottomOf="@id/voice_edittext"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/voice_edittext"
+                app:layout_constraintTop_toTopOf="@id/voice_edittext" />
 
         <EditText
-            android:id="@+id/voice_edittext"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="@{viewModel.hint}"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding"
-            android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding"
-            android:text="@={viewModel.text}"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/correct_answer"
-            app:layout_constraintRight_toLeftOf="@id/delete_button"
-            app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/voice_edittext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@{viewModel.hint}"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding"
+                android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding"
+                android:text="@={viewModel.text}"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/correct_answer"
+                app:layout_constraintRight_toLeftOf="@id/delete_button"
+                app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding_icons"
-            android:paddingLeft="15dp"
-            android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding_icons"
-            android:src="@drawable/ic_cancel_black_24dp"
-            android:tint="#bbff0000"
-            android:visibility="@{viewModel.optional ? View.VISIBLE : View.GONE}"
-            app:deleteParent="@{true}"
-            app:layout_constraintBottom_toBottomOf="@id/voice_edittext"
-            app:layout_constraintLeft_toRightOf="@id/voice_edittext"
-            app:layout_constraintRight_toLeftOf="@id/microphone_button"
-            app:layout_constraintTop_toTopOf="@id/voice_edittext" />
+                android:id="@+id/delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding_icons"
+                android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding_icons"
+                android:src="@drawable/ic_cancel_black_24dp"
+                android:visibility="@{viewModel.optional ? View.VISIBLE : View.GONE}"
+                app:deleteParent="@{true}"
+                app:layout_constraintBottom_toBottomOf="@id/voice_edittext"
+                app:layout_constraintLeft_toRightOf="@id/voice_edittext"
+                app:layout_constraintRight_toLeftOf="@id/microphone_button"
+                app:layout_constraintTop_toTopOf="@id/voice_edittext"
+                app:tint="#bbff0000" />
 
 
         <View
-            android:id="@+id/voice_active_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/voice_edittext_active_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:visibility="invisible"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/voice_active_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/voice_edittext_active_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:visibility="invisible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/microphone_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding_icons"
-            android:paddingLeft="10dp"
-            android:paddingRight="15dp"
-            android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding_icons"
-            android:src="@drawable/ic_mic_black_24dp"
-            android:tint="#d2d2d2"
-            android:visibility="@{viewModel.voiceEnabled ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@id/voice_edittext"
-            app:layout_constraintLeft_toRightOf="@id/delete_button"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/voice_edittext" />
+                android:id="@+id/microphone_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="@dimen/voice_edit_text_top_and_bottom_padding_icons"
+                android:paddingRight="15dp"
+                android:paddingBottom="@dimen/voice_edit_text_top_and_bottom_padding_icons"
+                android:src="@drawable/ic_mic_black_24dp"
+                android:visibility="@{viewModel.voiceEnabled ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@id/voice_edittext"
+                app:layout_constraintLeft_toRightOf="@id/delete_button"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/voice_edittext"
+                app:tint="#d2d2d2" />
 
 
     </merge>

@@ -6,14 +6,14 @@
 
         <variable
             name="viewModel"
-            type="com.sunilson.quizcreator.presentation.MainActivity.fragments.CreateQuizFragment.CreateQuizViewModel" />
+            type="com.sunilson.quizcreator.presentation.mainActivity.fragments.createQuizFragment.CreateQuizViewModel" />
 
         <import type="android.view.View" />
 
         <import type="com.sunilson.quizcreator.data.models.Category" />
     </data>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -55,7 +55,7 @@
                 android:layout_marginTop="@dimen/divider_top_margin"
                 app:text="@string/quiz_options" />
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -92,9 +92,9 @@
                     app:layout_constraintLeft_toRightOf="@id/only_single_title"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/only_single_title" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp">
@@ -135,7 +135,7 @@
                     app:layout_constraintLeft_toRightOf="@id/max_questions_title"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/max_questions_title" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <com.sunilson.quizcreator.presentation.views.CustomButton
@@ -155,11 +155,11 @@
                 android:layout_marginTop="@dimen/divider_top_margin"
                 app:text="@string/quiz_archive" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/quiz_archive_recyclerview"
                 entries="@{viewModel.quizzes}"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>

@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.sunilson.quizcreator.presentation.views.QuestionCardView.QuestionCardViewModel" />
+            type="com.sunilson.quizcreator.presentation.views.questionCardView.QuestionCardViewModel" />
 
         <import type="android.view.View" />
 

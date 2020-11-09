@@ -1,11 +1,11 @@
 package com.sunilson.quizcreator.data.models
 
-import android.arch.persistence.room.*
-import android.databinding.BaseObservable
-import android.databinding.Bindable
+import androidx.room.*
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import com.sunilson.quizcreator.BR
 import com.sunilson.quizcreator.presentation.shared.ANSWERS_PER_QUIZ_QUESTION
-import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
+import com.sunilson.quizcreator.presentation.shared.baseClasses.AdapterElement
 import java.util.*
 
 @Entity(tableName = "question")

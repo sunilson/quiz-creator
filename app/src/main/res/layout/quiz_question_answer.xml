@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.sunilson.quizcreator.presentation.views.AnswerView.AnswerViewModel" />
+            type="com.sunilson.quizcreator.presentation.views.answerView.AnswerViewModel" />
 
         <import type="android.view.View" />
     </data>

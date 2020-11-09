@@ -4,17 +4,18 @@ import android.animation.AnimatorInflater
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.sunilson.quizcreator.R
-import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.convertToPx
+import com.sunilson.quizcreator.presentation.shared.extensions.convertToPx
 import kotlinx.android.synthetic.main.custom_button.view.*
 
-class CustomButton : FrameLayout {
+class CustomButton(context: Context, attributeSet: AttributeSet) :
+    FrameLayout(context, attributeSet) {
 
     var type: ButtonType = ButtonType.DEFAULT
         set(value) {
@@ -94,7 +95,7 @@ class CustomButton : FrameLayout {
 
     val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-    constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
+    init {
         inflater.inflate(R.layout.custom_button, this, true)
         val a = context.theme.obtainStyledAttributes(attributeSet, R.styleable.CustomButton, 0, 0)
         type = when (a.getInt(R.styleable.CustomButton_type, 0)) {
@@ -102,14 +103,11 @@ class CustomButton : FrameLayout {
             1 -> ButtonType.CONFIRM
             else -> ButtonType.CANCEL
         }
-
         clipToPadding = false
         elevation = 10f
         stateListAnimator = AnimatorInflater.loadStateListAnimator(context, R.animator.button_animator)
-
         icon = a.getDrawable(R.styleable.CustomButton_buttonIcon)
-        buttonText = if (a.getString(R.styleable.CustomButton_buttonText) != null) a.getString(R.styleable.CustomButton_buttonText)
-        else ""
+        buttonText = a.getString(R.styleable.CustomButton_buttonText).orEmpty()
         small = a.getBoolean(R.styleable.CustomButton_small, false)
         iconOnly = a.getBoolean(R.styleable.CustomButton_iconOnly, false)
         a.recycle()

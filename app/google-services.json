@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1005682617645",
+    "firebase_url": "https://quiz-creator-4e9ea.firebaseio.com",
+    "project_id": "quiz-creator-4e9ea",
+    "storage_bucket": "quiz-creator-4e9ea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005682617645:android:78829aeb1e6a67ae1eb7a4",
+        "android_client_info": {
+          "package_name": "com.sunilson.quizcreator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005682617645-rh6rq79r03jaciahvd455hqk3p3sv5h0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeK3OsVtxryI0Okw_yJGArZ6wvgfSgRSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005682617645-rh6rq79r03jaciahvd455hqk3p3sv5h0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

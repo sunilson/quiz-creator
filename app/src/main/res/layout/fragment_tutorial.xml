@@ -5,7 +5,7 @@
     android:background="@color/white"
     >
 
-    <com.sunilson.quizcreator.presentation.views.TutorialSlider.TutorialSlider
+    <com.sunilson.quizcreator.presentation.views.tutorialSlider.TutorialSlider
         android:id="@+id/slider"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

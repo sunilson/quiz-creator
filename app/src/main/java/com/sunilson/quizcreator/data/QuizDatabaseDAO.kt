@@ -1,11 +1,11 @@
 package com.sunilson.quizcreator.data
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.sunilson.quizcreator.data.models.*
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-@Dao()
+@Dao
 interface QuizDatabaseDAO {
 
     @Query("SELECT * FROM question")

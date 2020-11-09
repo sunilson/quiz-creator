@@ -15,7 +15,7 @@
     </data>
 
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/question_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             questionIcon="@{obj.type}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="@color/iconColor"
+            app:tint="@color/iconColor"
             android:paddingRight="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -127,6 +127,6 @@
 
         </android.support.constraint.ConstraintLayout>
         -->
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

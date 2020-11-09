@@ -19,7 +19,7 @@ class DividerHeadline(context: Context, attributeSet: AttributeSet) : LinearLayo
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.divider_headline, this, true)
         val a = context.theme.obtainStyledAttributes(attributeSet, R.styleable.DividerHeadline, 0, 0)
-        this.text = a.getString(R.styleable.DividerHeadline_text)
+        this.text = a.getString(R.styleable.DividerHeadline_text).orEmpty()
         a.recycle()
         orientation = LinearLayout.VERTICAL
     }

@@ -18,7 +18,7 @@
         android:textAlignment="center"
         android:textSize="60sp" />
 
-    <com.sunilson.quizcreator.presentation.views.StackedCardsView.StackedCardsView
+    <com.sunilson.quizcreator.presentation.views.stackedCardsView.StackedCardsView
         android:id="@+id/stack_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.sunilson.quizcreator.presentation.QuizActivity.QuizViewModel" />
+            type="com.sunilson.quizcreator.presentation.quizActivity.QuizViewModel" />
 
         <import type="android.view.View" />
 
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.sunilson.quizcreator.presentation.views.QuizView.QuizView
+        <com.sunilson.quizcreator.presentation.views.quizView.QuizView
             android:id="@+id/quiz_view"
             app:nextCardDelay="4000"
             android:layout_width="match_parent"

@@ -15,9 +15,9 @@ import com.sunilson.quizcreator.data.models.QuestionType
 import com.sunilson.quizcreator.data.models.Quiz
 import com.sunilson.quizcreator.data.models.Statistics
 import com.sunilson.quizcreator.presentation.shared.ANSWERS_PER_QUIZ_QUESTION
-import com.sunilson.quizcreator.presentation.shared.Exceptions.NoQuestionsFoundException
+import com.sunilson.quizcreator.presentation.shared.exceptions.NoQuestionsFoundException
 import com.sunilson.quizcreator.presentation.shared.GOOD_THRESHOLD
-import com.sunilson.quizcreator.presentation.shared.KotlinExtensions.popRandomElement
+import com.sunilson.quizcreator.presentation.shared.extensions.popRandomElement
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single

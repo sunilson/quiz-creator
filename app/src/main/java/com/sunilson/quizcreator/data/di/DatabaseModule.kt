@@ -1,7 +1,7 @@
 package com.sunilson.quizcreator.data.di
 
 import android.app.Application
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import com.sunilson.quizcreator.data.QuizDatabase
 import dagger.Module
 import dagger.Provides

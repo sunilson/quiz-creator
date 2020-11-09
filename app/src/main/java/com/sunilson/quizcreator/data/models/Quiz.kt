@@ -1,8 +1,8 @@
 package com.sunilson.quizcreator.data.models
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
-import com.sunilson.quizcreator.presentation.shared.BaseClasses.AdapterElement
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.sunilson.quizcreator.presentation.shared.baseClasses.AdapterElement
 import java.util.*
 
 @Entity(tableName = "quiz")
